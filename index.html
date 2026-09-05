@@ -695,13 +695,13 @@
         <div id="modalResultDetails" style="background: rgba(4, 15, 33, 0.85); border-radius: 12px; padding: 14px; text-align: left; font-size: 14px; line-height: 1.6; color: #e2e8f0; margin-bottom: 14px;">
         </div>
 
-        <!-- Các nút mở game trong popup (2 cột gọn gàng) -->
+        <!-- Các nút mở game trong popup -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
-          <button class="btn-action" style="padding: 12px 6px; font-size: 13px; background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%); color:#fff;" onclick="launchGame('normal')">
-            🔥 Vào FF Thường
+          <button class="btn-action" style="padding: 13px 4px; font-size: 13px; white-space: nowrap; background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%); color:#fff;" onclick="launchGame('normal')">
+            🔥 Free Fire
           </button>
-          <button class="btn-action" style="padding: 12px 6px; font-size: 13px; background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color:#fff;" onclick="launchGame('max')">
-            ⚡ Vào FF MAX
+          <button class="btn-action" style="padding: 13px 4px; font-size: 13px; white-space: nowrap; background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color:#fff;" onclick="launchGame('max')">
+            ⚡ Free Fire MAX
           </button>
         </div>
 
@@ -860,7 +860,7 @@
     // Hàm khởi động mở ứng dụng game
     function launchGame(version) {
       playBeep(850, 'triangle', 0.2);
-      const name = version === 'max' ? 'Free Fire MAX' : 'Free Fire Thường';
+      const name = version === 'max' ? 'Free Fire MAX' : 'Free Fire';
       showToast(`⚡ Đang khởi chạy ${name}...`);
       setTimeout(() => {
         if (version === 'max') {
