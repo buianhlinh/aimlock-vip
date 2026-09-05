@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#020710" />
+  <meta name="msapplication-navbutton-color" content="#020710" />
+  <title>TRANG QUẢN TRỊ TẠO KEY - BÙI ANH LINH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00d2ff;
+      --primary-glow: rgba(0, 210, 255, 0.4);
+      --secondary: #0066ff;
+      --bg-dark: #020710;
+      --card-bg: rgba(6, 18, 38, 0.85);
+      --card-border: rgba(0, 210, 255, 0.35);
+      --text: #e0f2fe;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      background-color: #020710 !important;
+      background: #020710 !important;
+      min-height: 100%;
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+    }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #020710 !important;
+      background: #020710 radial-gradient(circle at 50% 20%, #0a254e 0%, #051329 45%, #020710 100%) no-repeat fixed !important;
+      background-size: cover !important;
+      background-attachment: fixed !important;
+      color: var(--text);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: max(20px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(30px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+    }
+
+    .card-box {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 35px 25px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(0, 150, 255, 0.25);
+      text-align: center;
+    }
+
+    .title-main {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 0 0 15px rgba(0, 210, 255, 0.7);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 25px;
+    }
+
+    .input-wrapper {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .label-txt {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .input-box, .custom-select {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(4, 15, 33, 0.85);
+      border: 1.5px solid rgba(0, 210, 255, 0.35);
+      border-radius: 12px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-box:focus, .custom-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+    }
+
+    .custom-select option {
+      background: #06152d;
+      color: #fff;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 15px 24px;
+      background: linear-gradient(135deg, #0052cc 0%, #00a2ff 50%, #00f0ff 100%);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: #020710;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.45);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.15);
+    }
+
+    /* Result Box */
+    .result-box {
+      margin-top: 25px;
+      padding: 20px;
+      background: rgba(4, 15, 33, 0.9);
+      border: 1.5px solid var(--primary);
+      border-radius: 16px;
+      text-align: center;
+      display: none;
+    }
+
+    .key-display {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #4ade80;
+      background: #030a16;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px dashed #4ade80;
+      margin: 12px 0;
+      word-break: break-all;
+    }
+
+    .btn-copy {
+      padding: 10px 20px;
+      background: #10b981;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover {
+      background: #059669;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(50px);
+      background: rgba(6, 26, 56, 0.95);
+      border: 1.5px solid var(--primary);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- BƯỚC 1: XÁC THỰC MẬT KHẨU ADMIN -->
+  <div class="card-box" id="adminAuthBox">
+    <h1 class="title-main">🔒 QUẢN TRỊ VIÊN BÙI ANH LINH</h1>
+    <p class="subtitle">Vui lòng nhập mật khẩu quản trị để tạo Key</p>
+
+    <div class="input-wrapper">
+      <input type="password" id="adminPassword" class="input-box" placeholder="Nhập mật khẩu Admin..." autofocus />
+    </div>
+
+    <button class="btn-action" onclick="verifyAdmin()">
+      XÁC NHẬN MỞ KHÓA
+    </button>
+  </div>
+
+  <!-- BƯỚC 2: BẢNG TẠO KEY -->
+  <div class="card-box hidden" id="generatorBox">
+    <h1 class="title-main">⚡ TẠO KEY BẢN QUYỀN VIP ⚡</h1>
+    <p class="subtitle">Hệ thống cấp mã tự động có giới hạn thời gian</p>
+
+    <!-- Chọn thời hạn -->
+    <div class="input-wrapper">
+      <label class="label-txt">⏱️ CHỌN THỜI HẠN KEY:</label>
+      <select class="custom-select" id="keyDuration">
+        <option value="1H">⏳ 1 Giờ</option>
+        <option value="2H">⏳ 2 Giờ</option>
+        <option value="1D" selected>📅 1 Ngày (24 Giờ)</option>
+        <option value="7D">📅 7 Ngày (1 Tuần)</option>
+        <option value="30D">👑 30 Ngày (1 Tháng)</option>
+        <option value="LT">♾️ Vĩnh Viễn (Lifetime)</option>
+      </select>
+    </div>
+
+    <!-- Nhập Mã Máy để khóa 1 thiết bị -->
+    <div class="input-wrapper">
+      <label class="label-txt">📱 MÃ THIẾT BỊ KHÁCH GỬI (ĐỂ KHÓA 1 MÁY):</label>
+      <input type="text" id="targetDeviceId" class="input-box" placeholder="Ví dụ: BL-8F3D (Để trống nếu tạo key không khóa máy)" style="text-transform: uppercase;" />
+      <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+        💡 <em>Dán mã máy khách gửi từ Zalo vào đây để Key chỉ chạy đúng trên máy đó.</em>
+      </div>
+    </div>
+
+    <!-- Tên khách hàng (ghi chú) -->
+    <div class="input-wrapper">
+      <label class="label-txt">👤 TÊN KHÁCH HÀNG (TÙY CHỌN):</label>
+      <input type="text" id="customerNote" class="input-box" placeholder="Ví dụ: Khách Tuấn Free Fire..." />
+    </div>
+
+    <!-- Nút tạo -->
+    <button class="btn-action" onclick="generateLicenseKey()">
+      ⚡ TẠO KEY NGAY ⚡
+    </button>
+
+    <!-- Hộp hiển thị kết quả -->
+    <div class="result-box" id="resultBox">
+      <div style="font-size: 13px; color: var(--text-muted);" id="keyInfoTitle">KEY BẢN QUYỀN MỚI TẠO:</div>
+      <div class="key-display" id="generatedKeyText">BL-1D-XXXXXX-XXXX</div>
+      <div style="font-size: 13px; color: #38bdf8; margin-bottom: 12px;" id="expiryTimeText">
+        Hạn sử dụng: 24 giờ
+      </div>
+      <button class="btn-copy" onclick="copyKey()">
+        📋 SAO CHÉP KEY GỬI KHÁCH
+      </button>
+    </div>
+
+    <!-- Lịch sử tạo gần đây -->
+    <div style="margin-top: 25px; text-align: left;">
+      <label class="label-txt" style="font-size: 11px;">📋 LỊCH SỬ TẠO KEY GẦN ĐÂY:</label>
+      <div id="historyList" style="max-height: 160px; overflow-y: auto; font-size: 13px; color: #cbd5e1; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px;">
+        Chưa có key nào được tạo.
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SECRET_SALT = "BUILINH_VIP_AIMLOCK_2026";
+    const ADMIN_PASS = "builinh2026"; // Mật khẩu truy cập trang Admin
+
+    function verifyAdmin() {
+      const pass = document.getElementById('adminPassword').value.trim();
+      if (pass === ADMIN_PASS || pass.toLowerCase() === 'builinh') {
+        document.getElementById('adminAuthBox').classList.add('hidden');
+        document.getElementById('generatorBox').classList.remove('hidden');
+        loadHistory();
+      } else {
+        showToast('✕ Sai mật khẩu quản trị!');
+      }
+    }
+
+    document.getElementById('adminPassword').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') verifyAdmin();
+    });
+
+    function toBase36(num) {
+      const digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let res = "";
+      while (num > 0) {
+        res = digits[num % 36] + res;
+        num = Math.floor(num / 36);
+      }
+      return res || "0";
+    }
+
+    function generateChecksum(str) {
+      let hash = 5381;
+      for (let i = 0; i < str.length; i++) {
+        hash = (((hash << 5) + hash) + str.charCodeAt(i)) & 0x7FFFFFFF;
+      }
+      const digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let res = "";
+      while (hash > 0) {
+        res = digits[hash % 36] + res;
+        hash = Math.floor(hash / 36);
+      }
+      return res.padStart(4, "0").slice(-4);
+    }
+
+    function generateLicenseKey() {
+      const type = document.getElementById('keyDuration').value;
+      let rawDev = document.getElementById('targetDeviceId').value.trim().toUpperCase();
+      let cleanDev = rawDev ? rawDev.replace(/^BL-/, '').trim() : '';
+      const note = document.getElementById('customerNote').value.trim() || (cleanDev ? `Khách máy BL-${cleanDev}` : 'Khách lẻ');
+
+      let durationSeconds = 0;
+      let durationName = "";
+
+      if (type === '1H') { durationSeconds = 3600; durationName = "1 Giờ"; }
+      else if (type === '2H') { durationSeconds = 7200; durationName = "2 Giờ"; }
+      else if (type === '1D') { durationSeconds = 86400; durationName = "1 Ngày (24h)"; }
+      else if (type === '7D') { durationSeconds = 604800; durationName = "7 Ngày (1 Tuần)"; }
+      else if (type === '30D') { durationSeconds = 2592000; durationName = "30 Ngày (1 Tháng)"; }
+      else if (type === 'LT') { durationSeconds = 999999999; durationName = "Vĩnh Viễn"; }
+
+      const now = Math.floor(Date.now() / 1000);
+      const expiryTimestamp = now + durationSeconds;
+      const timeHex = toBase36(expiryTimestamp);
+
+      let finalKey = "";
+      if (cleanDev) {
+        // Tạo key gắn chặt vào 1 thiết bị duy nhất
+        const checksum = generateChecksum(timeHex + SECRET_SALT + type + cleanDev);
+        finalKey = `BL-${type}-${cleanDev}-${timeHex}-${checksum}`;
+      } else {
+        // Tạo key tự do (không khóa máy)
+        const checksum = generateChecksum(timeHex + SECRET_SALT + type);
+        finalKey = `BL-${type}-${timeHex}-${checksum}`;
+      }
+
+      // Hiển thị ra màn hình
+      document.getElementById('resultBox').style.display = 'block';
+      document.getElementById('generatedKeyText').innerText = finalKey;
+
+      const expiryDate = new Date(expiryTimestamp * 1000).toLocaleString('vi-VN');
+      const lockNotice = cleanDev 
+        ? `<br><span style="color:#4ade80;">🔒 Khóa duy nhất vào thiết bị: BL-${cleanDev}</span>` 
+        : `<br><span style="color:#f59e0b;">🌐 Key tự do (không khóa thiết bị)</span>`;
+
+      document.getElementById('expiryTimeText').innerHTML = (type === 'LT' 
+        ? "Thời hạn: Vĩnh viễn không giới hạn" 
+        : `Hết hạn lúc: ${expiryDate}`) + lockNotice;
+
+      // Lưu lịch sử
+      const devNote = cleanDev ? `[BL-${cleanDev}] ${note}` : note;
+      saveToHistory(finalKey, durationName, devNote, expiryDate);
+      showToast('✓ Đã tạo Key thành công!');
+    }
+
+    function copyKey() {
+      const key = document.getElementById('generatedKeyText').innerText;
+      navigator.clipboard.writeText(key).then(() => {
+        showToast('📋 Đã sao chép Key vào khay nhớ tạm!');
+      });
+    }
+
+    function saveToHistory(key, duration, note, expiry) {
+      let history = JSON.parse(localStorage.getItem('builinh_keys') || '[]');
+      history.unshift({ key, duration, note, expiry, created: new Date().toLocaleTimeString('vi-VN') });
+      if (history.length > 20) history.pop();
+      localStorage.setItem('builinh_keys', JSON.stringify(history));
+      renderHistory(history);
+    }
+
+    function loadHistory() {
+      let history = JSON.parse(localStorage.getItem('builinh_keys') || '[]');
+      renderHistory(history);
+    }
+
+    function renderHistory(history) {
+      const container = document.getElementById('historyList');
+      if (history.length === 0) {
+        container.innerHTML = "Chưa có key nào được tạo.";
+        return;
+      }
+      container.innerHTML = history.map(item => `
+        <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 6px 0;">
+          <strong style="color: #4ade80;">${item.key}</strong> (${item.duration}) - <em>${item.note}</em><br>
+          <span style="font-size: 11px; color: #94a3b8;">Hết hạn: ${item.expiry}</span>
+        </div>
+      `).join('');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+  </script>
+</body>
+</html>

@@ -2,7 +2,12 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#020710" />
+  <meta name="msapplication-navbutton-color" content="#020710" />
+  <meta name="apple-touch-fullscreen" content="yes" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -16,8 +21,8 @@
       --primary-glow: rgba(0, 210, 255, 0.4);
       --secondary: #0066ff;
       --accent: #3a86ff;
-      --bg-dark: #030a16;
-      --card-bg: rgba(6, 18, 38, 0.75);
+      --bg-dark: #020710;
+      --card-bg: rgba(6, 18, 38, 0.85);
       --card-border: rgba(0, 210, 255, 0.35);
       --text: #e0f2fe;
       --text-muted: #94a3b8;
@@ -31,24 +36,51 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+      background-color: #020710 !important;
+      background: #020710 !important;
+      min-height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       font-family: 'Rajdhani', sans-serif;
-      background: radial-gradient(circle at 50% 20%, #0a254e 0%, #051329 45%, #020710 100%);
+      background-color: #020710 !important;
+      background: #020710 radial-gradient(circle at 50% 20%, #0a254e 0%, #051329 45%, #020710 100%) no-repeat fixed !important;
+      background-size: cover !important;
+      background-attachment: fixed !important;
       color: var(--text);
       min-height: 100vh;
+      min-height: -webkit-fill-available;
+      width: 100%;
+      margin: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 25px 15px;
+      justify-content: flex-start;
+      padding-top: max(20px, env(safe-area-inset-top));
+      padding-bottom: max(35px, env(safe-area-inset-bottom));
+      padding-left: max(10px, env(safe-area-inset-left));
+      padding-right: max(10px, env(safe-area-inset-right));
       overflow-x: hidden;
       position: relative;
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+      -webkit-overflow-scrolling: touch;
     }
 
     /* Ambient Background Glow */
     .bg-glow {
       position: fixed;
-      width: 500px;
-      height: 500px;
+      width: 100vw;
+      height: 100vw;
+      max-width: 500px;
+      max-height: 500px;
       background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
       top: -100px;
       left: 50%;
@@ -91,14 +123,15 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 35px 25px;
+      padding: 30px 18px;
       width: 100%;
-      max-width: 450px;
+      max-width: 460px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
                   0 0 35px rgba(0, 150, 255, 0.25),
                   inset 0 0 20px rgba(0, 210, 255, 0.08);
       z-index: 10;
       text-align: center;
+      margin: auto 0;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -543,10 +576,10 @@
 
   <!-- PARTICLES SCRIPT -->
   <script>
-    for (let i = 0; i < 45; i++) {
+    for (let i = 0; i < 40; i++) {
       const p = document.createElement('div');
       p.className = 'particle';
-      p.style.left = Math.random() * 100 + 'vw';
+      p.style.left = (Math.random() * 94 + 3) + '%';
       p.style.animationDuration = (Math.random() * 8 + 5) + 's';
       p.style.animationDelay = (Math.random() * 5) + 's';
       document.body.appendChild(p);
@@ -563,6 +596,19 @@
     <div class="brand-badge">VIP EDITION • BÙI ANH LINH</div>
     <h1 class="title-main">ĐĂNG NHẬP AIMLOCK</h1>
     <p class="subtitle">Vui lòng nhập Key bản quyền để kích hoạt</p>
+
+    <!-- Khung Mã Thiết Bị Của Khách (Khóa 1 Máy) -->
+    <div style="background: rgba(4, 15, 33, 0.9); border: 1.5px solid rgba(0, 210, 255, 0.4); border-radius: 14px; padding: 12px 14px; margin-bottom: 18px; text-align: center; box-shadow: inset 0 0 15px rgba(0, 210, 255, 0.08);">
+      <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 1px;">
+        📱 MÃ THIẾT BỊ CỦA BẠN (CỐ ĐỊNH 1 MÁY):
+      </div>
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: var(--primary); letter-spacing: 2.5px; margin-bottom: 8px; text-shadow: 0 0 10px rgba(0, 210, 255, 0.6);" id="userDeviceId">
+        BL-....
+      </div>
+      <button type="button" onclick="copyDeviceId()" style="background: linear-gradient(135deg, rgba(0, 102, 255, 0.35) 0%, rgba(0, 210, 255, 0.3) 100%); border: 1px solid var(--primary); color: #fff; padding: 8px 18px; border-radius: 8px; font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0, 180, 255, 0.25);">
+        📋 Sao chép mã máy gửi Zalo
+      </button>
+    </div>
 
     <div class="input-wrapper">
       <input type="password" id="keyInput" class="input-box" placeholder="Nhập Key bản quyền..." autofocus />
@@ -759,26 +805,92 @@
       return res.padStart(4, "0").slice(-4);
     }
 
+    // ================= QUẢN LÝ MÃ MÁY (DEVICE ID) =================
+    function getMyDeviceId() {
+      let id = localStorage.getItem('bl_device_id');
+      if (!id || id.length < 5) {
+        // Sinh 4 ký tự ngẫu nhiên rõ ràng
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        let rand = "";
+        for (let i = 0; i < 4; i++) {
+          rand += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        id = "BL-" + rand;
+        localStorage.setItem('bl_device_id', id);
+      }
+      return id;
+    }
+
+    function initDeviceIdDisplay() {
+      const devEl = document.getElementById('userDeviceId');
+      if (devEl) {
+        devEl.innerText = getMyDeviceId();
+      }
+    }
+
+    function copyDeviceId() {
+      const devId = getMyDeviceId();
+      playBeep(650, 'sine', 0.1);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(devId).then(() => {
+          showToast(`📋 Đã sao chép mã máy: ${devId}! Gửi Zalo 0865529017.`);
+        }).catch(() => {
+          prompt('Mã máy của bạn (Hãy sao chép để gửi Zalo):', devId);
+        });
+      } else {
+        prompt('Mã máy của bạn (Hãy sao chép để gửi Zalo):', devId);
+      }
+    }
+
+    // Tự động khởi tạo mã máy khi mở trang
+    initDeviceIdDisplay();
+
     function verifyKey(keyString) {
       keyString = keyString.trim().toUpperCase();
 
-      // Master Key Admin của Bùi Anh Linh luôn luôn dùng được vĩnh viễn
+      // Master Key Admin của Bùi Anh Linh luôn luôn dùng được vĩnh viễn trên mọi máy
       if (keyString === 'BUILINH') {
         return { valid: true, expired: false, type: 'VIP MASTER', remainingText: 'Vĩnh viễn (Master Key)' };
       }
 
       const parts = keyString.split('-');
-      if (parts.length !== 4 || parts[0] !== 'BL') {
+      if (parts[0] !== 'BL') {
         return { valid: false, error: '✕ Sai mã Key bản quyền! Vui lòng kiểm tra lại.' };
       }
 
-      const type = parts[1];
-      const timeHex = parts[2];
-      const checksum = parts[3];
+      let type, timeHex, checksum, keyDeviceId = null;
 
-      const expectedCheck = generateChecksum(timeHex + SECRET_SALT + type);
-      if (checksum !== expectedCheck) {
-        return { valid: false, error: '✕ Key không hợp lệ hoặc đã bị chỉnh sửa!' };
+      if (parts.length === 5) {
+        // Định dạng khóa theo 1 thiết bị: BL-[TYPE]-[DEVICE_ID]-[TIME_HEX]-[CHECKSUM]
+        type = parts[1];
+        keyDeviceId = parts[2];
+        timeHex = parts[3];
+        checksum = parts[4];
+
+        const expectedCheck = generateChecksum(timeHex + SECRET_SALT + type + keyDeviceId);
+        if (checksum !== expectedCheck) {
+          return { valid: false, error: '✕ Key không hợp lệ hoặc đã bị chỉnh sửa!' };
+        }
+
+        const currentDeviceRaw = getMyDeviceId().replace('BL-', '');
+        if (keyDeviceId !== currentDeviceRaw) {
+          return {
+            valid: false,
+            error: `✕ Key này được cấp riêng cho máy [BL-${keyDeviceId}]!\nMáy của bạn là [BL-${currentDeviceRaw}].\nKhông thể sử dụng trên thiết bị này!`
+          };
+        }
+      } else if (parts.length === 4) {
+        // Định dạng 4 phần (key thông thường): BL-[TYPE]-[TIME_HEX]-[CHECKSUM]
+        type = parts[1];
+        timeHex = parts[2];
+        checksum = parts[3];
+
+        const expectedCheck = generateChecksum(timeHex + SECRET_SALT + type);
+        if (checksum !== expectedCheck) {
+          return { valid: false, error: '✕ Key không hợp lệ hoặc đã bị chỉnh sửa!' };
+        }
+      } else {
+        return { valid: false, error: '✕ Định dạng mã Key không đúng!' };
       }
 
       if (type === 'LT') {
