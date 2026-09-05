@@ -586,7 +586,8 @@
 
     <div class="brand-badge">⚡ VIP SYSTEM V10.0 ⚡</div>
     <h1 class="title-main" style="font-size: 22px;">AIMLOCK PRO 10.0</h1>
-    <p class="subtitle" style="margin-bottom: 16px; color: var(--primary);">DEVELOPED BY BÙI ANH LINH</p>
+    <p class="subtitle" style="margin-bottom: 10px; color: var(--primary);">DEVELOPED BY BÙI ANH LINH</p>
+    <div id="keyExpiryBadge" style="display: inline-block; font-size: 12px; font-weight: 700; color: #4ade80; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px;">⏳ Hạn dùng: Vĩnh viễn</div>
 
     <!-- Các nút chức năng -->
     <div class="feature-grid">
@@ -742,22 +743,117 @@
       } catch (e) {}
     }
 
+    const SECRET_SALT = "BUILINH_VIP_AIMLOCK_2026";
+
+    function generateChecksum(str) {
+      let hash = 5381;
+      for (let i = 0; i < str.length; i++) {
+        hash = (((hash << 5) + hash) + str.charCodeAt(i)) & 0x7FFFFFFF;
+      }
+      const digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let res = "";
+      while (hash > 0) {
+        res = digits[hash % 36] + res;
+        hash = Math.floor(hash / 36);
+      }
+      return res.padStart(4, "0").slice(-4);
+    }
+
+    function verifyKey(keyString) {
+      keyString = keyString.trim().toUpperCase();
+
+      // Master Key Admin của Bùi Anh Linh luôn luôn dùng được vĩnh viễn
+      if (keyString === 'BUILINH') {
+        return { valid: true, expired: false, type: 'VIP MASTER', remainingText: 'Vĩnh viễn (Master Key)' };
+      }
+
+      const parts = keyString.split('-');
+      if (parts.length !== 4 || parts[0] !== 'BL') {
+        return { valid: false, error: '✕ Sai mã Key bản quyền! Vui lòng kiểm tra lại.' };
+      }
+
+      const type = parts[1];
+      const timeHex = parts[2];
+      const checksum = parts[3];
+
+      const expectedCheck = generateChecksum(timeHex + SECRET_SALT + type);
+      if (checksum !== expectedCheck) {
+        return { valid: false, error: '✕ Key không hợp lệ hoặc đã bị chỉnh sửa!' };
+      }
+
+      if (type === 'LT') {
+        return { valid: true, expired: false, type: 'Vĩnh Viễn', remainingText: 'Vĩnh viễn không giới hạn' };
+      }
+
+      const digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let expirySeconds = 0;
+      for (let i = 0; i < timeHex.length; i++) {
+        const val = digits.indexOf(timeHex[i]);
+        if (val === -1) return { valid: false, error: '✕ Lỗi định dạng thời gian của Key!' };
+        expirySeconds = expirySeconds * 36 + val;
+      }
+
+      const expiryMs = expirySeconds * 1000;
+      const nowMs = Date.now();
+
+      if (nowMs > expiryMs) {
+        const expiredDate = new Date(expiryMs).toLocaleString('vi-VN');
+        return { 
+          valid: false, 
+          expired: true, 
+          error: `⚠️ Key bản quyền đã HẾT HẠN vào lúc ${expiredDate}!\nVui lòng liên hệ Zalo 0865529017 để gia hạn.` 
+        };
+      }
+
+      const diffSec = Math.floor((expiryMs - nowMs) / 1000);
+      const days = Math.floor(diffSec / 86400);
+      const hours = Math.floor((diffSec % 86400) / 3600);
+      const mins = Math.floor((diffSec % 3600) / 60);
+
+      let remainingText = "";
+      if (days > 0) remainingText += `${days} ngày `;
+      if (hours > 0) remainingText += `${hours} giờ `;
+      remainingText += `${mins} phút`;
+
+      return {
+        valid: true,
+        expired: false,
+        type: type,
+        expiryDate: new Date(expiryMs).toLocaleString('vi-VN'),
+        remainingText: remainingText.trim()
+      };
+    }
+
     // Xử lý đăng nhập
     function handleLogin() {
       const input = document.getElementById('keyInput');
       const key = input.value.trim();
 
-      // Kiểm tra mật khẩu (chấp nhận Builinh hoặc builinh)
-      if (key.toLowerCase() === 'builinh') {
+      if (!key) {
+        showToast('Vui lòng nhập Key bản quyền!');
+        return;
+      }
+
+      const check = verifyKey(key);
+
+      if (check.valid) {
         playBeep(880, 'triangle', 0.15);
-        showToast('✓ Đăng nhập thành công! Chào mừng Bùi Anh Linh');
+        showToast(`✓ Đăng nhập thành công! Hạn dùng: ${check.remainingText}`);
+        
+        // Cập nhật huy hiệu hạn dùng trên menu
+        const badge = document.getElementById('keyExpiryBadge');
+        if (badge) badge.innerText = `⏳ Hạn dùng: ${check.remainingText}`;
+
         setTimeout(() => {
           document.getElementById('loginBox').classList.add('hidden');
           document.getElementById('menuBox').classList.remove('hidden');
         }, 500);
       } else {
         playBeep(250, 'sawtooth', 0.25);
-        showToast('✕ Sai Key bản quyền! Vui lòng nhập đúng: Builinh');
+        if (check.expired) {
+          alert(check.error);
+        }
+        showToast(check.error);
         input.focus();
         input.select();
       }
