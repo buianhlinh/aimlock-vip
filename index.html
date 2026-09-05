@@ -606,17 +606,6 @@
       </select>
     </div>
 
-    <!-- CHỌN PHIÊN BẢN GAME -->
-    <div class="setting-card">
-      <div class="setting-header">
-        <span>🎮</span> CHỌN BẢN GAME ĐỂ VÀO :
-      </div>
-      <select class="custom-select" id="gameVersionSelect" onchange="showToast('Đã chọn game: ' + (this.value === 'max' ? 'FF MAX' : 'FF Thường'))">
-        <option value="normal">🔥 Free Fire Thường</option>
-        <option value="max">⚡ Free Fire MAX</option>
-      </select>
-    </div>
-
     <!-- Thanh kéo Tỉ lệ HeadShot -->
     <div class="slider-card">
       <div class="slider-header">
@@ -628,18 +617,8 @@
 
     <!-- Nút kích hoạt chức năng -->
     <button class="btn-action" onclick="executeActivation()">
-      ⚡ KÍCH HOẠT & MỞ GAME ⚡
+      ⚡ KÍCH HOẠT CHỨC NĂNG ⚡
     </button>
-
-    <!-- Nút mở nhanh game -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;">
-      <button class="btn-action" style="padding: 12px 6px; font-size: 12px; background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%); color: #fff;" onclick="launchGame('normal')">
-        🔥 Vào FF Thường
-      </button>
-      <button class="btn-action" style="padding: 12px 6px; font-size: 12px; background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color: #fff;" onclick="launchGame('max')">
-        ⚡ Vào FF MAX
-      </button>
-    </div>
 
     <a href="aimlock.mobileconfig" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; padding: 13px; background: rgba(0, 210, 255, 0.12); border: 1.5px dashed var(--primary); border-radius: 14px; color: var(--primary); text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">
       📲 TẢI CẤU HÌNH CHO IPHONE
@@ -716,13 +695,13 @@
         <div id="modalResultDetails" style="background: rgba(4, 15, 33, 0.85); border-radius: 12px; padding: 14px; text-align: left; font-size: 14px; line-height: 1.6; color: #e2e8f0; margin-bottom: 14px;">
         </div>
 
-        <!-- Các nút mở game trong popup -->
-        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-          <button class="btn-action" style="padding: 12px; font-size: 13px; background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%); color:#fff;" onclick="launchGame('normal')">
-            🔥 VÀO FREE FIRE THƯỜNG
+        <!-- Các nút mở game trong popup (2 cột gọn gàng) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <button class="btn-action" style="padding: 12px 6px; font-size: 13px; background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%); color:#fff;" onclick="launchGame('normal')">
+            🔥 Vào FF Thường
           </button>
-          <button class="btn-action" style="padding: 12px; font-size: 13px; background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color:#fff;" onclick="launchGame('max')">
-            ⚡ VÀO FREE FIRE MAX
+          <button class="btn-action" style="padding: 12px 6px; font-size: 13px; background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color:#fff;" onclick="launchGame('max')">
+            ⚡ Vào FF MAX
           </button>
         </div>
 
@@ -863,8 +842,6 @@
             success.classList.remove('hidden');
 
             const aimMode = document.getElementById('aimSettingSelect').value;
-            const gameVersion = document.getElementById('gameVersionSelect').value;
-            const gameName = gameVersion === 'max' ? 'Free Fire MAX' : 'Free Fire Thường';
             const featuresList = activeFeatures.size > 0 
               ? Array.from(activeFeatures).join(', ') 
               : 'Aimlock, No Recoil (Mặc định)';
@@ -872,15 +849,9 @@
             document.getElementById('modalResultDetails').innerHTML = `
               <strong>• Chế độ Aim:</strong> <span style="color:var(--primary);">${aimMode}</span><br>
               <strong>• Tỉ lệ Headshot:</strong> <span style="color:var(--primary);">${currentHeadshot}%</span><br>
-              <strong>• Game kích hoạt:</strong> <span style="color:#38bdf8; font-weight:bold;">${gameName}</span><br>
-              <strong>• Trạng thái:</strong> <span style="color:#4ade80;">Đang tự động khởi chạy ${gameName}...</span><br>
-              <strong>• Tính năng:</strong> <span style="color:#a7f3d0;">${featuresList}</span>
+              <strong>• Tính năng:</strong> <span style="color:#a7f3d0;">${featuresList}</span><br>
+              <strong>• Trạng thái:</strong> <span style="color:#38bdf8;">Đã sẵn sàng! Chọn bản game để vào</span>
             `;
-
-            // Tự động mở game sau 1.2 giây
-            setTimeout(() => {
-              launchGame(gameVersion);
-            }, 1200);
           }, 400);
         }
       }, 50);
