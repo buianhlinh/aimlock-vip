@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
@@ -26,19 +26,19 @@
 				<key>Precomposed</key>
 				<true />
 				<key>URL</key>
-				<string>https://buianhlinh.github.io/aimlock-vip/</string>
+				<string>https://buianhlinh.github.io/aimlock-vip/?v=2</string>
 			</dict>
 		</array>
 		<key>PayloadDescription</key>
 		<string>Zalo: 0865529017
-Facebook: BÃ¹i Anh Linh
+Facebook: Bùi Anh Linh
 TikTok: @linh.bn.file</string>
 		<key>PayloadDisplayName</key>
-		<string>AIMLOCK BÃ™I ANH LINH</string>
+		<string>AIMLOCK BÙI ANH LINH</string>
 		<key>PayloadIdentifier</key>
 		<string>BUILINH.VIP.0674f3f9-a048-48c0</string>
 		<key>PayloadOrganization</key>
-		<string>BÃ¹i Anh Linh</string>
+		<string>Bùi Anh Linh</string>
 		<key>PayloadType</key>
 		<string>Configuration</string>
 		<key>PayloadUUID</key>
