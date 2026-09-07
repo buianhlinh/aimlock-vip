@@ -630,39 +630,27 @@
       <img src="logo.jpg" alt="Logo Bùi Anh Linh" class="logo-img" />
     </div>
 
-    <div class="brand-badge">⚡ VIP SYSTEM V10.0 ⚡</div>
-    <h1 class="title-main" style="font-size: 22px;">AIMLOCK PRO 10.0</h1>
+    <div class="brand-badge">⚡ VIP SYSTEM ⚡</div>
+    <h1 class="title-main" style="font-size: 22px;">AIMLOCK PRO</h1>
     <p class="subtitle" style="margin-bottom: 10px; color: var(--primary);">DEVELOPED BY BÙI ANH LINH</p>
     <div id="keyExpiryBadge" style="display: inline-block; font-size: 12px; font-weight: 700; color: #4ade80; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px;">⏳ Hạn dùng: Vĩnh viễn</div>
 
-    <!-- Các nút chức năng -->
+    <!-- Các nút chức năng (4 nút cân đối 2x2) -->
     <div class="feature-grid">
-      <button class="feature-btn" onclick="toggleFeature(this, 'Aimlock')">🎯 Aimlock</button>
       <button class="feature-btn" onclick="toggleFeature(this, 'No Recoil')">⚡ No Recoil</button>
-      <button class="feature-btn" onclick="toggleFeature(this, 'Fix Rung')">🛡️ Fix Rung</button>
       <button class="feature-btn" onclick="toggleFeature(this, 'Buff FPS')">🚀 Buff FPS</button>
       <button class="feature-btn" onclick="toggleFeature(this, 'Fix Lag')">📶 Fix Lag</button>
       <button class="feature-btn" onclick="toggleFeature(this, 'Nhẹ Tâm')">🔥 Nhẹ Tâm</button>
     </div>
 
-    <!-- AIM SETTINGS (Chỉ có AIM DRAG và AIM HEAD) -->
+    <!-- SETTINGS -->
     <div class="setting-card">
       <div class="setting-header">
-        <span>⚙️</span> AIM SETTINGS :
+        <span>⚙️</span> SETTINGS :
       </div>
       <select class="custom-select" id="aimSettingSelect" onchange="showToast('Đã chọn: ' + this.value)">
-        <option value="AIM DRAG">🎯 AIM DRAG</option>
-        <option value="AIM HEAD">💀 AIM HEAD</option>
+        <option value="⬆NHẸ TÂM⬆">⬆NHẸ TÂM⬆</option>
       </select>
-    </div>
-
-    <!-- Thanh kéo Tỉ lệ HeadShot -->
-    <div class="slider-card">
-      <div class="slider-header">
-        <span>🎯 TỈ LỆ HEADSHOT:</span>
-        <span class="slider-val" id="headshotVal">85%</span>
-      </div>
-      <input type="range" class="custom-range" id="headshotRange" min="0" max="100" value="85" oninput="updateHeadshot(this.value)" />
     </div>
 
     <!-- Nút kích hoạt chức năng -->
@@ -768,7 +756,6 @@
   <!-- ================= LOGIC JAVASCRIPT ================= -->
   <script>
     const activeFeatures = new Set();
-    let currentHeadshot = 85;
 
     // Âm thanh giả lập Cyber Beep (Web Audio API)
     function playBeep(freq = 600, type = 'sine', duration = 0.1) {
@@ -992,12 +979,6 @@
       }
     }
 
-    // Cập nhật giá trị thanh kéo HeadShot
-    function updateHeadshot(val) {
-      currentHeadshot = val;
-      document.getElementById('headshotVal').innerText = val + '%';
-    }
-
     // Hiển thị thông báo Toast
     let toastTimeout;
     function showToast(message) {
@@ -1029,7 +1010,7 @@
       let progress = 0;
       const statuses = [
         'Đang thiết lập cấu hình GPU...',
-        'Đang đồng bộ độ nhạy Aim Settings...',
+        'Đang đồng bộ độ nhạy Settings...',
         'Đang kích hoạt gói VIP Bùi Anh Linh...',
         'Hoàn tất thiết lập!'
       ];
@@ -1052,14 +1033,13 @@
             loading.classList.add('hidden');
             success.classList.remove('hidden');
 
-            const aimMode = document.getElementById('aimSettingSelect').value;
+            const aimMode = document.getElementById('aimSettingSelect') ? document.getElementById('aimSettingSelect').value : '⬆NHẸ TÂM⬆';
             const featuresList = activeFeatures.size > 0 
               ? Array.from(activeFeatures).join(', ') 
-              : 'Aimlock, No Recoil (Mặc định)';
+              : 'No Recoil, Nhẹ Tâm (Mặc định)';
 
             document.getElementById('modalResultDetails').innerHTML = `
-              <strong>• Chế độ Aim:</strong> <span style="color:var(--primary);">${aimMode}</span><br>
-              <strong>• Tỉ lệ Headshot:</strong> <span style="color:var(--primary);">${currentHeadshot}%</span><br>
+              <strong>• Cài đặt:</strong> <span style="color:var(--primary);">${aimMode}</span><br>
               <strong>• Tính năng:</strong> <span style="color:#a7f3d0;">${featuresList}</span><br>
               <strong>• Trạng thái:</strong> <span style="color:#38bdf8;">Đã sẵn sàng! Chọn bản game để vào</span>
             `;
