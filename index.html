@@ -780,6 +780,8 @@
     }
 
     const SECRET_SALT = "BUILINH_VIP_AIMLOCK_2026";
+    const FIREBASE_DB_URL = "https://aimlock-linh-default-rtdb.asia-southeast1.firebasedatabase.app";
+    let currentLoggedInKey = "";
 
     function generateChecksum(str) {
       let hash = 5381;
@@ -927,7 +929,7 @@
     }
 
     // Xử lý đăng nhập
-    function handleLogin() {
+    async function handleLogin() {
       const input = document.getElementById('keyInput');
       const key = input.value.trim();
 
@@ -936,21 +938,23 @@
         return;
       }
 
-      const check = verifyKey(key);
-
-      if (check.valid) {
+      // 1. Master Key Admin của Bùi Anh Linh (Luôn cho phép vào)
+      if (key.toUpperCase() === 'BUILINH') {
+        currentLoggedInKey = 'BUILINH';
         playBeep(880, 'triangle', 0.15);
-        showToast(`✓ Đăng nhập thành công! Hạn dùng: ${check.remainingText}`);
-        
-        // Cập nhật huy hiệu hạn dùng trên menu
+        showToast('✓ Chào mừng Master Bùi Anh Linh!');
         const badge = document.getElementById('keyExpiryBadge');
-        if (badge) badge.innerText = `⏳ Hạn dùng: ${check.remainingText}`;
-
+        if (badge) badge.innerText = '👑 Master Key (Vĩnh Viễn)';
         setTimeout(() => {
           document.getElementById('loginBox').classList.add('hidden');
           document.getElementById('menuBox').classList.remove('hidden');
-        }, 500);
-      } else {
+        }, 400);
+        return;
+      }
+
+      // 2. Kiểm tra tính hợp lệ cơ bản của Key (Thuật toán + Hạn dùng + Khóa máy)
+      const check = verifyKey(key);
+      if (!check.valid) {
         playBeep(250, 'sawtooth', 0.25);
         if (check.expired) {
           alert(check.error);
@@ -958,7 +962,57 @@
         showToast(check.error);
         input.focus();
         input.select();
+        return;
       }
+
+      // 3. Kiểm tra trạng thái trên Cloud Database (Vô hiệu hóa / Xóa)
+      const btnLogin = document.querySelector('.btn-login');
+      const originalText = btnLogin ? btnLogin.innerText : 'ĐĂNG NHẬP NGAY';
+      if (btnLogin) {
+        btnLogin.innerText = '⏳ ĐANG XÁC THỰC KEY...';
+        btnLogin.disabled = true;
+      }
+
+      try {
+        const resp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(key.toUpperCase())}.json`, { cache: 'no-store' });
+        if (resp.ok) {
+          const cloudKey = await resp.json();
+
+          // Nếu Admin đã bấm nút XÓA KEY trên Cloud
+          if (cloudKey === null) {
+            playBeep(250, 'sawtooth', 0.25);
+            alert('✕ KEY NÀY KHÔNG TỒN TẠI HOẶC ĐÃ BỊ XÓA!\n\nKey này đã bị xóa khỏi máy chủ hệ thống.\nVui lòng liên hệ Admin qua Zalo: 0865529017 để được cấp key mới.');
+            return;
+          }
+
+          // Nếu Admin đã bấm nút VÔ HIỆU HÓA KEY
+          if (cloudKey.status === 'disabled') {
+            playBeep(250, 'sawtooth', 0.25);
+            alert('⚠️ KEY NÀY TẠM THỜI ĐÃ BỊ VÔ HIỆU HÓA!\n\nLý do: Hệ thống phát hiện hoạt động bất thường hoặc nghi ngờ vi phạm chia sẻ key.\n\nNếu bạn là chủ sở hữu hợp pháp của Key này, vui lòng liên hệ ngay cho Admin qua Zalo: 0865529017 để được hỗ trợ mở khóa lại nhé!');
+            return;
+          }
+        }
+      } catch (netErr) {
+        console.warn('Không kết nối được Cloud, dùng xác thực offline:', netErr);
+      } finally {
+        if (btnLogin) {
+          btnLogin.innerText = originalText;
+          btnLogin.disabled = false;
+        }
+      }
+
+      // 4. Đăng nhập thành công
+      currentLoggedInKey = key.toUpperCase();
+      playBeep(880, 'triangle', 0.15);
+      showToast(`✓ Đăng nhập thành công! Hạn dùng: ${check.remainingText}`);
+      
+      const badge = document.getElementById('keyExpiryBadge');
+      if (badge) badge.innerText = `⏳ Hạn dùng: ${check.remainingText}`;
+
+      setTimeout(() => {
+        document.getElementById('loginBox').classList.add('hidden');
+        document.getElementById('menuBox').classList.remove('hidden');
+      }, 500);
     }
 
     // Nhấn Enter để đăng nhập
@@ -996,6 +1050,18 @@
 
     // Kích hoạt chức năng (Hiệu ứng tiến trình)
     function executeActivation() {
+      // Kiểm tra ngay lập tức nếu Admin vừa Vô hiệu hóa hoặc Xóa key
+      if (currentLoggedInKey && currentLoggedInKey !== 'BUILINH') {
+        fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(currentLoggedInKey)}.json`, { cache: 'no-store' })
+          .then(res => res.json())
+          .then(data => {
+            if (data === null || data.status === 'disabled') {
+              alert('⚠️ KEY CỦA BẠN ĐÃ BỊ VÔ HIỆU HÓA HOẶC XÓA KHỎI HỆ THỐNG!\n\nVui lòng liên hệ Admin qua Zalo: 0865529017.');
+              location.reload();
+            }
+          }).catch(() => {});
+      }
+
       playBeep(520, 'triangle', 0.15);
       const modal = document.getElementById('summaryModal');
       const loading = document.getElementById('modalLoading');

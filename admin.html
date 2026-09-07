@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#020710" />
   <meta name="msapplication-navbutton-color" content="#020710" />
-  <title>TRANG QUẢN TRỊ TẠO KEY - BÙI ANH LINH</title>
+  <title>TRANG QUẢN TRỊ KEY VIP - BÙI ANH LINH</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -17,10 +17,13 @@
       --primary-glow: rgba(0, 210, 255, 0.4);
       --secondary: #0066ff;
       --bg-dark: #020710;
-      --card-bg: rgba(6, 18, 38, 0.85);
+      --card-bg: rgba(6, 18, 38, 0.92);
       --card-border: rgba(0, 210, 255, 0.35);
       --text: #e0f2fe;
       --text-muted: #94a3b8;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --warning: #f59e0b;
     }
 
     * {
@@ -36,7 +39,6 @@
       background: #020710 !important;
       min-height: 100%;
       overscroll-behavior: none;
-      overscroll-behavior-y: none;
     }
 
     body {
@@ -49,11 +51,9 @@
       min-height: 100vh;
       min-height: -webkit-fill-available;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: max(20px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(30px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
-      overscroll-behavior: none;
-      overscroll-behavior-y: none;
+      padding: max(20px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(35px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
     }
 
     .card-box {
@@ -62,30 +62,32 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 35px 25px;
+      padding: 30px 20px;
       width: 100%;
-      max-width: 500px;
+      max-width: 620px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(0, 150, 255, 0.25);
       text-align: center;
+      margin-top: 10px;
+      margin-bottom: 20px;
     }
 
     .title-main {
       font-family: 'Orbitron', sans-serif;
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 800;
       color: #ffffff;
       text-shadow: 0 0 15px rgba(0, 210, 255, 0.7);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .subtitle {
       font-size: 14px;
       color: var(--text-muted);
-      margin-bottom: 25px;
+      margin-bottom: 22px;
     }
 
     .input-wrapper {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       text-align: left;
     }
 
@@ -100,7 +102,7 @@
 
     .input-box, .custom-select {
       width: 100%;
-      padding: 14px 18px;
+      padding: 13px 16px;
       background: rgba(4, 15, 33, 0.85);
       border: 1.5px solid rgba(0, 210, 255, 0.35);
       border-radius: 12px;
@@ -124,7 +126,7 @@
 
     .btn-action {
       width: 100%;
-      padding: 15px 24px;
+      padding: 14px 20px;
       background: linear-gradient(135deg, #0052cc 0%, #00a2ff 50%, #00f0ff 100%);
       border: none;
       border-radius: 12px;
@@ -136,7 +138,7 @@
       box-shadow: 0 8px 25px rgba(0, 162, 255, 0.45);
       transition: all 0.3s ease;
       text-transform: uppercase;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .btn-action:hover {
@@ -144,11 +146,15 @@
       filter: brightness(1.15);
     }
 
+    .btn-action:active {
+      transform: scale(0.98);
+    }
+
     /* Result Box */
     .result-box {
-      margin-top: 25px;
-      padding: 20px;
-      background: rgba(4, 15, 33, 0.9);
+      margin-top: 20px;
+      padding: 18px;
+      background: rgba(4, 15, 33, 0.95);
       border: 1.5px solid var(--primary);
       border-radius: 16px;
       text-align: center;
@@ -157,20 +163,20 @@
 
     .key-display {
       font-family: 'Orbitron', sans-serif;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       color: #4ade80;
       background: #030a16;
-      padding: 14px;
+      padding: 12px;
       border-radius: 10px;
       border: 1px dashed #4ade80;
-      margin: 12px 0;
+      margin: 10px 0;
       word-break: break-all;
     }
 
     .btn-copy {
-      padding: 10px 20px;
+      padding: 9px 18px;
       background: #10b981;
       border: none;
       border-radius: 8px;
@@ -186,6 +192,200 @@
       background: #059669;
     }
 
+    /* Stats bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 20px 0 15px 0;
+    }
+
+    .stat-item {
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px 6px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+    }
+
+    .filter-btn {
+      flex: 1;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active {
+      background: rgba(0, 210, 255, 0.2);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Key Card in List */
+    .key-card {
+      background: rgba(4, 15, 33, 0.85);
+      border: 1px solid rgba(0, 210, 255, 0.25);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      text-align: left;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .key-card.disabled-card {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(25, 6, 12, 0.85);
+    }
+
+    .key-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .key-code {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: 0.5px;
+      word-break: break-all;
+    }
+
+    .key-card.disabled-card .key-code {
+      color: #f87171;
+      text-decoration: line-through;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-active {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid #4ade80;
+    }
+
+    .badge-disabled {
+      background: rgba(239, 68, 68, 0.25);
+      color: #f87171;
+      border: 1px solid #ef4444;
+    }
+
+    .key-info-row {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+
+    .key-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-key-action {
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-disable {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+
+    .btn-disable:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .btn-enable {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid #22c55e;
+      color: #86efac;
+    }
+
+    .btn-enable:hover {
+      background: #22c55e;
+      color: #fff;
+    }
+
+    .btn-delete {
+      background: rgba(148, 163, 184, 0.15);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: #cbd5e1;
+    }
+
+    .btn-delete:hover {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: #fff;
+    }
+
+    .btn-copy-small {
+      background: rgba(0, 210, 255, 0.15);
+      border: 1px solid rgba(0, 210, 255, 0.4);
+      color: var(--primary);
+    }
+
+    .btn-copy-small:hover {
+      background: var(--primary);
+      color: #020710;
+    }
+
     /* Toast */
     .toast {
       position: fixed;
@@ -198,9 +398,14 @@
       padding: 12px 24px;
       border-radius: 30px;
       font-weight: 700;
+      font-size: 14px;
       opacity: 0;
       pointer-events: none;
       transition: all 0.35s ease;
+      z-index: 9999;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      text-align: center;
+      max-width: 90%;
     }
 
     .toast.show {
@@ -216,7 +421,7 @@
   <!-- BƯỚC 1: XÁC THỰC MẬT KHẨU ADMIN -->
   <div class="card-box" id="adminAuthBox">
     <h1 class="title-main">🔒 QUẢN TRỊ VIÊN BÙI ANH LINH</h1>
-    <p class="subtitle">Vui lòng nhập mật khẩu quản trị để tạo Key</p>
+    <p class="subtitle">Vui lòng nhập mật khẩu quản trị để mở bảng điều khiển</p>
 
     <div class="input-wrapper">
       <input type="password" id="adminPassword" class="input-box" placeholder="Nhập mật khẩu Admin..." autofocus />
@@ -227,77 +432,130 @@
     </button>
   </div>
 
-  <!-- BƯỚC 2: BẢNG TẠO KEY -->
+  <!-- BƯỚC 2: BẢNG TẠO VÀ QUẢN LÝ KEY VIP CLOUD -->
   <div class="card-box hidden" id="generatorBox">
-    <h1 class="title-main">⚡ TẠO KEY BẢN QUYỀN VIP ⚡</h1>
-    <p class="subtitle">Hệ thống cấp mã tự động có giới hạn thời gian</p>
+    <h1 class="title-main">⚡ BẢNG QUẢN TRỊ KEY VIP ⚡</h1>
+    <p class="subtitle">Hệ thống cấp phát & điều khiển khóa từ xa (Firebase Cloud)</p>
 
-    <!-- Chọn thời hạn -->
-    <div class="input-wrapper">
-      <label class="label-txt">⏱️ CHỌN THỜI HẠN KEY:</label>
-      <select class="custom-select" id="keyDuration">
-        <option value="1H">⏳ 1 Giờ</option>
-        <option value="2H">⏳ 2 Giờ</option>
-        <option value="1D" selected>📅 1 Ngày (24 Giờ)</option>
-        <option value="7D">📅 7 Ngày (1 Tuần)</option>
-        <option value="30D">👑 30 Ngày (1 Tháng)</option>
-        <option value="LT">♾️ Vĩnh Viễn (Lifetime)</option>
-      </select>
-    </div>
+    <!-- SECTION A: TẠO KEY MỚI -->
+    <div style="background: rgba(0, 210, 255, 0.05); border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 16px; padding: 18px; margin-bottom: 25px;">
+      <h2 style="font-family: 'Orbitron'; font-size: 14px; color: var(--primary); text-align: left; margin-bottom: 14px;">
+        ➕ TẠO KEY BẢN QUYỀN MỚI
+      </h2>
 
-    <!-- Nhập Mã Máy để khóa 1 thiết bị -->
-    <div class="input-wrapper">
-      <label class="label-txt">📱 MÃ THIẾT BỊ KHÁCH GỬI (ĐỂ KHÓA 1 MÁY):</label>
-      <input type="text" id="targetDeviceId" class="input-box" placeholder="Ví dụ: BL-8F3D (Để trống nếu tạo key không khóa máy)" style="text-transform: uppercase;" />
-      <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-        💡 <em>Dán mã máy khách gửi từ Zalo vào đây để Key chỉ chạy đúng trên máy đó.</em>
+      <!-- Chọn thời hạn -->
+      <div class="input-wrapper">
+        <label class="label-txt">⏱️ CHỌN THỜI HẠN KEY:</label>
+        <select class="custom-select" id="keyDuration">
+          <option value="1H">⏳ 1 Giờ</option>
+          <option value="2H">⏳ 2 Giờ</option>
+          <option value="1D" selected>📅 1 Ngày (24 Giờ)</option>
+          <option value="7D">📅 7 Ngày (1 Tuần)</option>
+          <option value="30D">👑 30 Ngày (1 Tháng)</option>
+          <option value="LT">♾️ Vĩnh Viễn (Lifetime)</option>
+        </select>
       </div>
-    </div>
 
-    <!-- Tên khách hàng (ghi chú) -->
-    <div class="input-wrapper">
-      <label class="label-txt">👤 TÊN KHÁCH HÀNG (TÙY CHỌN):</label>
-      <input type="text" id="customerNote" class="input-box" placeholder="Ví dụ: Khách Tuấn Free Fire..." />
-    </div>
-
-    <!-- Nút tạo -->
-    <button class="btn-action" onclick="generateLicenseKey()">
-      ⚡ TẠO KEY NGAY ⚡
-    </button>
-
-    <!-- Hộp hiển thị kết quả -->
-    <div class="result-box" id="resultBox">
-      <div style="font-size: 13px; color: var(--text-muted);" id="keyInfoTitle">KEY BẢN QUYỀN MỚI TẠO:</div>
-      <div class="key-display" id="generatedKeyText">BL-1D-XXXXXX-XXXX</div>
-      <div style="font-size: 13px; color: #38bdf8; margin-bottom: 12px;" id="expiryTimeText">
-        Hạn sử dụng: 24 giờ
+      <!-- Nhập Mã Máy để khóa 1 thiết bị -->
+      <div class="input-wrapper">
+        <label class="label-txt">📱 MÃ THIẾT BỊ KHÁCH (ĐỂ KHÓA ĐÚNG 1 MÁY):</label>
+        <input type="text" id="targetDeviceId" class="input-box" placeholder="Ví dụ: BL-8F3D (Để trống nếu không khóa máy)" style="text-transform: uppercase;" />
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+          💡 <em>Dán mã máy khách gửi từ Zalo vào đây để Key chỉ chạy được trên điện thoại đó.</em>
+        </div>
       </div>
-      <button class="btn-copy" onclick="copyKey()">
-        📋 SAO CHÉP KEY GỬI KHÁCH
+
+      <!-- Tên khách hàng (ghi chú) -->
+      <div class="input-wrapper">
+        <label class="label-txt">👤 TÊN / GHI CHÚ KHÁCH HÀNG:</label>
+        <input type="text" id="customerNote" class="input-box" placeholder="Ví dụ: Khách Tuấn Zalo 0865..." />
+      </div>
+
+      <!-- Nút tạo -->
+      <button class="btn-action" onclick="generateLicenseKey()" id="btnCreateKey">
+        ⚡ TẠO KEY & LƯU LÊN HỆ THỐNG ⚡
       </button>
-    </div>
 
-    <!-- Lịch sử tạo gần đây -->
-    <div style="margin-top: 25px; text-align: left;">
-      <label class="label-txt" style="font-size: 11px;">📋 LỊCH SỬ TẠO KEY GẦN ĐÂY:</label>
-      <div id="historyList" style="max-height: 160px; overflow-y: auto; font-size: 13px; color: #cbd5e1; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px;">
-        Chưa có key nào được tạo.
+      <!-- Hộp hiển thị kết quả -->
+      <div class="result-box" id="resultBox">
+        <div style="font-size: 13px; color: var(--text-muted);" id="keyInfoTitle">KEY BẢN QUYỀN VỪA TẠO:</div>
+        <div class="key-display" id="generatedKeyText">BL-1D-XXXXXX-XXXX</div>
+        <div style="font-size: 13px; color: #38bdf8; margin-bottom: 12px;" id="expiryTimeText">
+          Hạn sử dụng: 24 giờ
+        </div>
+        <button class="btn-copy" onclick="copyKey()">
+          📋 SAO CHÉP KEY GỬI KHÁCH
+        </button>
       </div>
     </div>
+
+    <!-- SECTION B: QUẢN LÝ KEY ĐÃ CẤP (CLOUDSYNC) -->
+    <div style="text-align: left;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <label class="label-txt" style="font-size: 13px; margin-bottom: 0;">🌐 QUẢN LÝ TẤT CẢ KEY (CLOUDSYNC):</label>
+        <button onclick="loadKeysFromCloud()" style="background: rgba(0, 210, 255, 0.15); border: 1px solid var(--primary); border-radius: 6px; color: var(--primary); font-family: 'Orbitron'; font-size: 11px; padding: 4px 8px; cursor: pointer;">
+          🔄 Làm mới
+        </button>
+      </div>
+
+      <!-- Thống kê -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-val" id="statTotal">0</div>
+          <div class="stat-label">Tổng Key</div>
+        </div>
+        <div class="stat-item" style="border-color: rgba(34, 197, 94, 0.4);">
+          <div class="stat-val" style="color: #4ade80;" id="statActive">0</div>
+          <div class="stat-label">Đang Hoạt Động</div>
+        </div>
+        <div class="stat-item" style="border-color: rgba(239, 68, 68, 0.4);">
+          <div class="stat-val" style="color: #f87171;" id="statDisabled">0</div>
+          <div class="stat-label">Đã Vô Hiệu Hóa</div>
+        </div>
+      </div>
+
+      <!-- Thanh tìm kiếm -->
+      <div style="margin-bottom: 10px;">
+        <input type="text" id="searchInput" class="input-box" placeholder="🔍 Tìm kiếm theo Key, Tên khách, Mã máy..." oninput="renderKeyList()" style="padding: 10px 14px; font-size: 14px;" />
+      </div>
+
+      <!-- Bộ lọc Tab -->
+      <div class="filter-tabs">
+        <button class="filter-btn active" onclick="setFilter('all', this)">Tất cả</button>
+        <button class="filter-btn" onclick="setFilter('active', this)">🟢 Hoạt động</button>
+        <button class="filter-btn" onclick="setFilter('disabled', this)">🚫 Vô hiệu hóa</button>
+      </div>
+
+      <!-- Danh sách thẻ Key -->
+      <div id="keyListContainer" style="max-height: 480px; overflow-y: auto; padding-right: 2px;">
+        <div style="text-align: center; color: var(--text-muted); padding: 25px 0;">
+          ⏳ Đang tải dữ liệu từ Cloud...
+        </div>
+      </div>
+    </div>
+
+    <!-- Link quay lại -->
+    <a href="index.html" style="display: block; margin-top: 25px; padding: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 700; transition: all 0.2s;">
+      ⬅️ QUAY LẠI MENU AIMLOCK
+    </a>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
     const SECRET_SALT = "BUILINH_VIP_AIMLOCK_2026";
-    const ADMIN_PASS = "builinh2026"; // Mật khẩu truy cập trang Admin
+    const ADMIN_PASS = "builinh2026";
+    const FIREBASE_DB_URL = "https://aimlock-linh-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+    let allKeysData = {};
+    let currentFilter = 'all';
 
     function verifyAdmin() {
       const pass = document.getElementById('adminPassword').value.trim();
       if (pass === ADMIN_PASS || pass.toLowerCase() === 'builinh') {
         document.getElementById('adminAuthBox').classList.add('hidden');
         document.getElementById('generatorBox').classList.remove('hidden');
-        loadHistory();
+        loadKeysFromCloud();
       } else {
         showToast('✕ Sai mật khẩu quản trị!');
       }
@@ -331,7 +589,8 @@
       return res.padStart(4, "0").slice(-4);
     }
 
-    function generateLicenseKey() {
+    // TẠO KEY MỚI
+    async function generateLicenseKey() {
       const type = document.getElementById('keyDuration').value;
       let rawDev = document.getElementById('targetDeviceId').value.trim().toUpperCase();
       let cleanDev = rawDev ? rawDev.replace(/^BL-/, '').trim() : '';
@@ -353,73 +612,271 @@
 
       let finalKey = "";
       if (cleanDev) {
-        // Tạo key gắn chặt vào 1 thiết bị duy nhất
         const checksum = generateChecksum(timeHex + SECRET_SALT + type + cleanDev);
         finalKey = `BL-${type}-${cleanDev}-${timeHex}-${checksum}`;
       } else {
-        // Tạo key tự do (không khóa máy)
         const checksum = generateChecksum(timeHex + SECRET_SALT + type);
         finalKey = `BL-${type}-${timeHex}-${checksum}`;
       }
 
-      // Hiển thị ra màn hình
+      const expiryDate = new Date(expiryTimestamp * 1000).toLocaleString('vi-VN');
+      const createdDate = new Date().toLocaleString('vi-VN');
+
+      const keyPayload = {
+        key: finalKey,
+        type: type,
+        duration: durationName,
+        deviceId: cleanDev ? `BL-${cleanDev}` : '',
+        note: note,
+        status: 'active',
+        created: createdDate,
+        createdAt: now,
+        expiry: (type === 'LT') ? 'Vĩnh viễn' : expiryDate,
+        expiryTimestamp: expiryTimestamp
+      };
+
+      // Đổi trạng thái nút khi đang lưu
+      const btn = document.getElementById('btnCreateKey');
+      btn.innerText = "⏳ ĐANG LƯU LÊN CLOUD...";
+      btn.disabled = true;
+
+      try {
+        const resp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(finalKey)}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(keyPayload)
+        });
+
+        if (resp.ok) {
+          allKeysData[finalKey] = keyPayload;
+          renderKeyList();
+          showToast('✓ Đã tạo và lưu Key thành công lên Cloud!');
+        } else {
+          showToast('⚠️ Lưu lên Cloud thất bại, đang lưu tạm trên máy!');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('⚠️ Lỗi mạng: Đã tạo key nhưng chưa sync Cloud');
+      } finally {
+        btn.innerText = "⚡ TẠO KEY & LƯU LÊN HỆ THỐNG ⚡";
+        btn.disabled = false;
+      }
+
+      // Hiển thị ra kết quả
       document.getElementById('resultBox').style.display = 'block';
       document.getElementById('generatedKeyText').innerText = finalKey;
 
-      const expiryDate = new Date(expiryTimestamp * 1000).toLocaleString('vi-VN');
       const lockNotice = cleanDev 
-        ? `<br><span style="color:#4ade80;">🔒 Khóa duy nhất vào thiết bị: BL-${cleanDev}</span>` 
-        : `<br><span style="color:#f59e0b;">🌐 Key tự do (không khóa thiết bị)</span>`;
+        ? `<br><span style="color:#4ade80;">🔒 Khóa riêng thiết bị: BL-${cleanDev}</span>` 
+        : `<br><span style="color:#f59e0b;">🌐 Key tự do (chưa khóa máy)</span>`;
 
       document.getElementById('expiryTimeText').innerHTML = (type === 'LT' 
         ? "Thời hạn: Vĩnh viễn không giới hạn" 
         : `Hết hạn lúc: ${expiryDate}`) + lockNotice;
-
-      // Lưu lịch sử
-      const devNote = cleanDev ? `[BL-${cleanDev}] ${note}` : note;
-      saveToHistory(finalKey, durationName, devNote, expiryDate);
-      showToast('✓ Đã tạo Key thành công!');
     }
 
     function copyKey() {
       const key = document.getElementById('generatedKeyText').innerText;
-      navigator.clipboard.writeText(key).then(() => {
-        showToast('📋 Đã sao chép Key vào khay nhớ tạm!');
+      copySpecificKey(key);
+    }
+
+    function copySpecificKey(key) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(key).then(() => {
+          showToast(`📋 Đã sao chép: ${key}`);
+        });
+      } else {
+        prompt('Sao chép Key:', key);
+      }
+    }
+
+    // TẢI DANH SÁCH TỪ CLOUD
+    async function loadKeysFromCloud() {
+      const container = document.getElementById('keyListContainer');
+      container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 25px 0;">⏳ Đang tải dữ liệu từ Cloud...</div>';
+
+      try {
+        const resp = await fetch(`${FIREBASE_DB_URL}/keys.json`, { cache: 'no-store' });
+        if (resp.ok) {
+          const data = await resp.json();
+          allKeysData = data || {};
+          renderKeyList();
+          showToast('✓ Đã đồng bộ dữ liệu Key mới nhất!');
+        } else {
+          container.innerHTML = '<div style="text-align: center; color: #f87171; padding: 20px;">✕ Không thể kết nối tới Cloud Database!</div>';
+        }
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<div style="text-align: center; color: #f87171; padding: 20px;">✕ Lỗi kết nối mạng khi tải Key!</div>';
+      }
+    }
+
+    // LỌC DANH SÁCH
+    function setFilter(filter, el) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+      renderKeyList();
+    }
+
+    // HIỂN THỊ DANH SÁCH KEY
+    function renderKeyList() {
+      const container = document.getElementById('keyListContainer');
+      const search = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+
+      const keysArray = Object.values(allKeysData).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      let total = keysArray.length;
+      let activeCount = 0;
+      let disabledCount = 0;
+
+      keysArray.forEach(k => {
+        if (k.status === 'disabled') disabledCount++;
+        else activeCount++;
       });
-    }
 
-    function saveToHistory(key, duration, note, expiry) {
-      let history = JSON.parse(localStorage.getItem('builinh_keys') || '[]');
-      history.unshift({ key, duration, note, expiry, created: new Date().toLocaleTimeString('vi-VN') });
-      if (history.length > 20) history.pop();
-      localStorage.setItem('builinh_keys', JSON.stringify(history));
-      renderHistory(history);
-    }
+      document.getElementById('statTotal').innerText = total;
+      document.getElementById('statActive').innerText = activeCount;
+      document.getElementById('statDisabled').innerText = disabledCount;
 
-    function loadHistory() {
-      let history = JSON.parse(localStorage.getItem('builinh_keys') || '[]');
-      renderHistory(history);
-    }
+      const filtered = keysArray.filter(item => {
+        // Lọc theo Tab
+        if (currentFilter === 'active' && item.status === 'disabled') return false;
+        if (currentFilter === 'disabled' && item.status !== 'disabled') return false;
 
-    function renderHistory(history) {
-      const container = document.getElementById('historyList');
-      if (history.length === 0) {
-        container.innerHTML = "Chưa có key nào được tạo.";
+        // Lọc theo Tìm kiếm
+        if (search) {
+          const matchKey = (item.key || '').toLowerCase().includes(search);
+          const matchNote = (item.note || '').toLowerCase().includes(search);
+          const matchDev = (item.deviceId || '').toLowerCase().includes(search);
+          return matchKey || matchNote || matchDev;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 25px 0;">Không tìm thấy Key nào phù hợp.</div>';
         return;
       }
-      container.innerHTML = history.map(item => `
-        <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding: 6px 0;">
-          <strong style="color: #4ade80;">${item.key}</strong> (${item.duration}) - <em>${item.note}</em><br>
-          <span style="font-size: 11px; color: #94a3b8;">Hết hạn: ${item.expiry}</span>
-        </div>
-      `).join('');
+
+      container.innerHTML = filtered.map(item => {
+        const isDisabled = (item.status === 'disabled');
+        const badgeHtml = isDisabled 
+          ? '<span class="badge badge-disabled">🚫 ĐÃ VÔ HIỆU HÓA</span>'
+          : '<span class="badge badge-active">🟢 ĐANG HOẠT ĐỘNG</span>';
+
+        const deviceTxt = item.deviceId ? `<span style="color:#38bdf8;">🔒 Máy: ${item.deviceId}</span>` : `<span style="color:#f59e0b;">🌐 Không khóa máy</span>`;
+
+        return `
+          <div class="key-card ${isDisabled ? 'disabled-card' : ''}">
+            <div class="key-card-header">
+              <div class="key-code">${item.key}</div>
+              ${badgeHtml}
+            </div>
+            
+            <div class="key-info-row">
+              👤 <strong>${item.note || 'Khách lẻ'}</strong> | ⏱️ ${item.duration || item.type} | ${deviceTxt}
+            </div>
+            
+            <div class="key-info-row" style="font-size: 11px; color: var(--text-muted);">
+              📅 Tạo lúc: ${item.created || 'Không rõ'} | ⌛ Hết hạn: <span style="color: #e2e8f0;">${item.expiry || 'Vĩnh viễn'}</span>
+            </div>
+
+            <div class="key-actions-row">
+              ${isDisabled ? `
+                <button class="btn-key-action btn-enable" onclick="toggleKeyStatus('${item.key}', 'active')">
+                  🟢 MỞ HOẠT ĐỘNG LẠI
+                </button>
+              ` : `
+                <button class="btn-key-action btn-disable" onclick="toggleKeyStatus('${item.key}', 'disabled')">
+                  🚫 VÔ HIỆU HÓA
+                </button>
+              `}
+              
+              <button class="btn-key-action btn-copy-small" onclick="copySpecificKey('${item.key}')">
+                📋 COPY
+              </button>
+
+              <button class="btn-key-action btn-delete" onclick="deleteKeyFromCloud('${item.key}')">
+                🗑️ XÓA
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // BẬT / TẮT VÔ HIỆU HÓA KEY
+    async function toggleKeyStatus(key, newStatus) {
+      const isDisabling = (newStatus === 'disabled');
+      const actionName = isDisabling ? 'VÔ HIỆU HÓA' : 'MỞ HOẠT ĐỘNG LẠI';
+
+      if (!confirm(`Bạn có chắc chắn muốn ${actionName} cho Key:\n\n${key}?`)) {
+        return;
+      }
+
+      showToast(`⏳ Đang thực hiện ${actionName}...`);
+
+      try {
+        const resp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(key)}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            status: newStatus,
+            updatedAt: new Date().toLocaleString('vi-VN')
+          })
+        });
+
+        if (resp.ok) {
+          if (allKeysData[key]) {
+            allKeysData[key].status = newStatus;
+          }
+          renderKeyList();
+          if (isDisabling) {
+            showToast(`🚫 Đã VÔ HIỆU HÓA key! Khách sẽ bị chặn ngay lập tức.`);
+          } else {
+            showToast(`🟢 Đã MỞ LẠI key! Khách có thể đăng nhập bình thường.`);
+          }
+        } else {
+          showToast('✕ Lỗi khi cập nhật trên Cloud!');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('✕ Lỗi mạng khi cập nhật trạng thái Key!');
+      }
+    }
+
+    // XÓA KEY KHỎI CLOUD
+    async function deleteKeyFromCloud(key) {
+      if (!confirm(`⚠️ CẢNH BÁO XÓA VĨNH VIỄN:\n\nBạn có chắc chắn muốn XÓA Key: [${key}] khỏi hệ thống?\n\nSau khi xóa, khách nhập vào sẽ bị báo Key không tồn tại!`)) {
+        return;
+      }
+
+      showToast('⏳ Đang xóa Key khỏi Cloud...');
+
+      try {
+        const resp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(key)}.json`, {
+          method: 'DELETE'
+        });
+
+        if (resp.ok) {
+          delete allKeysData[key];
+          renderKeyList();
+          showToast('🗑️ Đã xóa Key vĩnh viễn khỏi hệ thống!');
+        } else {
+          showToast('✕ Không thể xóa key trên Cloud!');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('✕ Lỗi kết nối khi xóa key!');
+      }
     }
 
     function showToast(msg) {
       const toast = document.getElementById('toast');
       toast.innerText = msg;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
+      setTimeout(() => toast.classList.remove('show'), 2800);
     }
   </script>
 </body>
