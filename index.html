@@ -618,7 +618,7 @@
       ⚡ Đăng Nhập Ngay ⚡
     </button>
 
-    <a href="AIMLOCKPLUS.mobileconfig?v=3" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; padding: 13px; background: rgba(0, 210, 255, 0.12); border: 1.5px dashed var(--primary); border-radius: 14px; color: var(--primary); text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">
+    <a href="AIMLOCKPLUS.mobileconfig" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; padding: 13px; background: rgba(0, 210, 255, 0.12); border: 1.5px dashed var(--primary); border-radius: 14px; color: var(--primary); text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">
       📲 CÀI CẤU HÌNH CHO IPHONE
     </a>
   </div>
@@ -658,7 +658,7 @@
       ⚡ KÍCH HOẠT CHỨC NĂNG ⚡
     </button>
 
-    <a href="AIMLOCKPLUS.mobileconfig?v=3" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; padding: 13px; background: rgba(0, 210, 255, 0.12); border: 1.5px dashed var(--primary); border-radius: 14px; color: var(--primary); text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">
+    <a href="AIMLOCKPLUS.mobileconfig" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; padding: 13px; background: rgba(0, 210, 255, 0.12); border: 1.5px dashed var(--primary); border-radius: 14px; color: var(--primary); text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">
       📲 TẢI CẤU HÌNH CHO IPHONE
     </a>
 
@@ -1060,6 +1060,32 @@
           window.location.href = 'freefire://';
         }
       }, 300);
+    }
+
+    // Xử lý tải cấu hình iPhone thông minh (Tự tải về trên máy tính, mở cài đặt trên iPhone)
+    function handleProfileDownload(e) {
+      playBeep(850, 'triangle', 0.15);
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+      if (isIOS) {
+        // Trên iPhone/iPad: Xóa thuộc tính download để Safari kích hoạt bảng Cài Đặt Hồ Sơ của Apple
+        e.currentTarget.removeAttribute('download');
+        const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+        if (!isSafari) {
+          e.preventDefault();
+          alert('⚠️ Bạn đang mở web bằng trình duyệt khác hoặc trong ứng dụng (Zalo, TikTok, Chrome).\n\nVui lòng mở trang web này bằng trình duyệt SAFARI trên iPhone để cài đặt cấu hình ra màn hình chính nhé!');
+          return;
+        }
+        showToast('⚡ Đang mở bảng cài đặt cấu hình cho iPhone...');
+      } else {
+        // Trên máy tính (Windows / PC / Android):
+        // Giữ download để trình duyệt tự động lưu file AIMLOCKPLUS.mobileconfig về máy, KHÔNG mở tab mới hiện mã code
+        e.currentTarget.setAttribute('download', 'AIMLOCKPLUS.mobileconfig');
+        showToast('📥 Đang tải file cấu hình về máy tính...');
+        setTimeout(() => {
+          alert('💡 File cấu hình (.mobileconfig) đã được tự động tải về máy tính của bạn!\n\nLưu ý: File này dành riêng cho iPhone. Để cài đặt biểu tượng 👑AIMLOCK👑 ra màn hình chính, bạn hãy mở link web này bằng trình duyệt Safari trên iPhone nhé!');
+        }, 500);
+      }
     }
 
     function closeModal() {
