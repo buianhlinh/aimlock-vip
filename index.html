@@ -753,6 +753,9 @@
   <!-- TOAST NOTIFICATION -->
   <div class="toast" id="toast"></div>
 
+  <!-- Dữ liệu cấu hình mobileconfig nhúng sẵn (Tránh lỗi CORS trên PC/file:///) -->
+  <script src="profile_data.js"></script>
+
   <!-- ================= LOGIC JAVASCRIPT ================= -->
   <script>
     const activeFeatures = new Set();
@@ -1073,19 +1076,53 @@
         const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
         if (!isSafari) {
           e.preventDefault();
-          alert('⚠️ Bạn đang mở web bằng trình duyệt khác hoặc trong ứng dụng (Zalo, TikTok, Chrome).\n\nVui lòng mở trang web này bằng trình duyệt SAFARI trên iPhone để cài đặt cấu hình ra màn hình chính nhé!');
+          alert('⚠️ Bạn đang mở web bằng trình duyệt khác hoặc trong ứng dụng (Zalo, TikTok, Chrome, Facebook).\n\nVui lòng mở trang web này bằng trình duyệt SAFARI trên iPhone để cài đặt cấu hình ra màn hình chính nhé!');
           return;
         }
         showToast('⚡ Đang mở bảng cài đặt cấu hình cho iPhone...');
-      } else {
-        // Trên máy tính (Windows / PC / Android):
-        // Giữ download để trình duyệt tự động lưu file AIMLOCKPLUS.mobileconfig về máy, KHÔNG mở tab mới hiện mã code
-        e.currentTarget.setAttribute('download', 'AIMLOCKPLUS.mobileconfig');
-        showToast('📥 Đang tải file cấu hình về máy tính...');
-        setTimeout(() => {
-          alert('💡 File cấu hình (.mobileconfig) đã được tự động tải về máy tính của bạn!\n\nLưu ý: File này dành riêng cho iPhone. Để cài đặt biểu tượng 👑AIMLOCK👑 ra màn hình chính, bạn hãy mở link web này bằng trình duyệt Safari trên iPhone nhé!');
-        }, 500);
+        // Để trình duyệt Safari trên iPhone tự động kích hoạt tải hồ sơ cấu hình Apple
+        return;
       }
+
+      // TRÊN MÁY TÍNH (Windows / PC / Laptop) & ANDROID:
+      // Chặn hoàn toàn hành vi mặc định (KHÔNG mở tab mới hiện mã XML)
+      e.preventDefault();
+      showToast('📥 Đang tự động tải file cấu hình về máy...');
+
+      try {
+        if (window.MOBILECONFIG_B64) {
+          const binaryString = atob(window.MOBILECONFIG_B64);
+          const len = binaryString.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          const blob = new Blob([bytes], { type: 'application/x-apple-aspen-config' });
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = 'AIMLOCKPLUS.mobileconfig';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+
+          setTimeout(() => {
+            alert('✅ File cấu hình (AIMLOCKPLUS.mobileconfig) đã được tự động tải về máy tính thành công!\n\n💡 LƯU Ý QUAN TRỌNG:\n• File này là Hồ sơ cấu hình Apple dành riêng cho iPhone.\n• Để cài đặt biểu tượng 👑AIMLOCK👑 xuất hiện trên Màn hình chính của iPhone, bạn hãy mở link web này bằng SAFARI trên iPhone và bấm nút này nhé!');
+          }, 300);
+          return;
+        }
+      } catch (err) {
+        console.error('Lỗi khi tải Blob:', err);
+      }
+
+      // Fallback nếu không có biến B64
+      const fallbackLink = document.createElement('a');
+      fallbackLink.href = 'AIMLOCKPLUS.mobileconfig';
+      fallbackLink.setAttribute('download', 'AIMLOCKPLUS.mobileconfig');
+      document.body.appendChild(fallbackLink);
+      fallbackLink.click();
+      document.body.removeChild(fallbackLink);
     }
 
     function closeModal() {
