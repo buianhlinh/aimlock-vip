@@ -115,7 +115,7 @@
                   inset 0 0 20px rgba(0, 210, 255, 0.08);
       z-index: 10;
       text-align: center;
-      margin: auto 0;
+      margin: 0 auto !important;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -162,8 +162,9 @@
       border: 1px solid rgba(0, 210, 255, 0.35);
       padding: 4px 14px;
       border-radius: 20px;
-      margin-bottom: 12px;
+      margin: 0 auto 12px auto;
       text-transform: uppercase;
+      text-align: center;
     }
 
     .title-main {
@@ -173,7 +174,9 @@
       letter-spacing: 1.5px;
       color: #ffffff;
       text-shadow: 0 0 15px rgba(0, 210, 255, 0.7), 0 0 30px rgba(0, 102, 255, 0.5);
-      margin-bottom: 6px;
+      margin: 0 auto 6px auto;
+      text-align: center;
+      width: 100%;
     }
 
     .subtitle {
@@ -181,8 +184,11 @@
       font-weight: 600;
       color: var(--text-muted);
       letter-spacing: 1px;
-      margin-bottom: 24px;
+      margin: 0 auto 20px auto;
+      text-align: center;
+      width: 100%;
     }
+
 
     /* Input Field */
     .input-wrapper {
@@ -610,7 +616,7 @@
     <div class="brand-badge">⚡ VIP SYSTEM ⚡</div>
     <h1 class="title-main" style="font-size: 22px;">NHẸ TÂM PRO</h1>
     <p class="subtitle" style="margin-bottom: 10px; color: var(--primary);">DEVELOPED BY BÙI ANH LINH</p>
-    <div id="keyExpiryBadge" style="display: inline-block; font-size: 12px; font-weight: 700; color: #4ade80; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px;">⏳ Hạn dùng: Vĩnh viễn</div>
+    <div id="keyExpiryBadge" style="display: inline-block; margin: 0 auto 16px auto; text-align: center; font-size: 12px; font-weight: 700; color: #4ade80; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px;">⏳ Hạn dùng: Vĩnh viễn</div>
 
     <!-- Các nút chức năng (4 nút cân đối 2x2) -->
     <div class="feature-grid">
@@ -1209,7 +1215,8 @@
   </script>
 
   
-  <!-- HIỆU ỨNG MƯA LUXURY CHUẨN 100% NHƯ BÊN SHOP-ANH-LINH-ONLINE -->
+  
+  <!-- HIỆU ỨNG MƯA LUXURY NGUYÊN BẢN 100% SHOP BÙI ANH LINH -->
   <script>
   (()=>{
     'use strict';
@@ -1234,31 +1241,30 @@
       height = canvas.height = window.innerHeight;
     });
 
-    // Mật độ hạt mưa vừa vặn, không quá dày làm rối, không quá thưa
-    const particleCount = Math.min(85, Math.floor((width * height) / 12000));
+    const particleCount = Math.min(100, Math.floor((width * height) / 11000));
     const particles = [];
 
-    // Góc nghiêng 125 độ chuẩn như web shop
+    // Góc rơi chuẩn 125 độ của shop
     const angle = 125 * (Math.PI / 180);
     const cosAngle = Math.cos(angle);
     const sinAngle = Math.sin(angle);
 
     function createParticle(randomY = true) {
-      // Tốc độ êm dịu chuẩn xác như shop (không bị lao vùn vụt)
-      const speed = 2.2 + Math.random() * 3.8;
-      // Phủ rộng toàn bộ chiều ngang kể cả góc trên bên phải
-      const spawnX = Math.random() * (width + Math.abs(cosAngle * height) + 200) - 100;
+      // Tốc độ êm dịu nguyên bản của shop (2.5 - 7.0)
+      const speed = 2.5 + Math.random() * 4.5;
+      // Phủ kín góc trên bên phải (bù trừ theo cosAngle * height)
+      const extraX = Math.abs(cosAngle * height) + 250;
       return {
-        x: spawnX,
+        x: Math.random() * (width + extraX) - 100,
         y: randomY ? Math.random() * height : -30,
-        length: 14 + Math.random() * 22,
-        thickness: 0.9 + Math.random() * 1.3,
+        length: 14 + Math.random() * 24,
+        thickness: 0.9 + Math.random() * 1.4,
         speed: speed,
         vx: cosAngle * speed,
         vy: sinAngle * speed,
         alpha: 0.25 + Math.random() * 0.7,
-        // Tone xanh Neon & Pha lê Cyan cực đẹp mắt
-        color: Math.random() > 0.3 ? '0, 225, 255' : '150, 245, 255',
+        // Màu nguyên bản chuẩn xác của shop: Vàng Gold & Champagne lấp lánh sang trọng
+        color: Math.random() > 0.3 ? '255, 215, 0' : '255, 245, 180',
         sparkSize: Math.random() > 0.5 ? 1.5 + Math.random() * 1.5 : 0
       };
     }
@@ -1276,7 +1282,7 @@
         p.x += p.vx;
         p.y += p.vy;
 
-        // Vẽ vệt mưa êm dịu
+        // Vệt mưa rơi ánh vàng mượt mà
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(p.x - cosAngle * p.length, p.y - sinAngle * p.length);
@@ -1285,19 +1291,19 @@
         ctx.lineCap = 'round';
         ctx.stroke();
 
-        // Vẽ đốm đầu lấp lánh như web shop
+        // Đốm sáng đầu hạt mưa vàng neon như shop
         if (p.sparkSize > 0) {
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.sparkSize, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
           ctx.shadowBlur = 8;
-          ctx.shadowColor = '#00e1ff';
+          ctx.shadowColor = '#ffd700';
           ctx.fill();
           ctx.shadowBlur = 0;
         }
 
-        // Reset khi bay ra ngoài màn hình
-        if (p.x < -100 || p.y > height + 50) {
+        // Tái tạo khi rơi khỏi màn hình
+        if (p.x < -120 || p.y > height + 50) {
           particles[i] = createParticle(false);
         }
       }
@@ -1317,6 +1323,7 @@
   })();
   </script>
 </body>
+
 
 
 </html>
