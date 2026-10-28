@@ -1264,7 +1264,7 @@
         vy: sinAngle * speed,
         alpha: 0.25 + Math.random() * 0.7,
         // Màu nguyên bản chuẩn xác của shop: Vàng Gold & Champagne lấp lánh sang trọng
-        color: Math.random() > 0.3 ? '255, 215, 0' : '255, 245, 180',
+        color: Math.random() > 0.3 ? '0, 229, 255' : '100, 240, 255',
         sparkSize: Math.random() > 0.5 ? 1.5 + Math.random() * 1.5 : 0
       };
     }
@@ -1297,7 +1297,7 @@
           ctx.arc(p.x, p.y, p.sparkSize, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
           ctx.shadowBlur = 8;
-          ctx.shadowColor = '#ffd700';
+          ctx.shadowColor = '#00e5ff';
           ctx.fill();
           ctx.shadowBlur = 0;
         }
