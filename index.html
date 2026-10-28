@@ -22,7 +22,7 @@
       --secondary: #0066ff;
       --accent: #3a86ff;
       --bg-dark: #020710;
-      --card-bg: rgba(6, 18, 38, 0.38);
+      --card-bg: rgba(6, 18, 38, 0.28);
       --card-border: rgba(0, 210, 255, 0.35);
       --text: #e0f2fe;
       --text-muted: #94a3b8;
@@ -95,30 +95,14 @@
       100% { opacity: 0.85; transform: translateX(-50%) scale(1.15); }
     }
 
-    /* Floating Particles */
-    .particle {
-      position: fixed;
-      width: 4px;
-      height: 4px;
-      background: var(--primary);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--primary);
-      pointer-events: none;
-      z-index: 1;
-      animation: floatUp linear infinite;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(105vh) scale(0.6); opacity: 0; }
-      20% { opacity: 0.8; }
-      80% { opacity: 0.8; }
-      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    
+      
     }
 
     /* Main Container Glassmorphism */
     .card-box {
       position: relative;
-      background: var(--card-bg);
+      background: rgba(6, 18, 38, 0.28); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--card-border);
@@ -574,17 +558,7 @@
   <!-- Ambient Glow -->
   <div class="bg-glow"></div>
 
-  <!-- PARTICLES SCRIPT -->
-  <script>
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = (Math.random() * 94 + 3) + '%';
-      p.style.animationDuration = (Math.random() * 8 + 5) + 's';
-      p.style.animationDelay = (Math.random() * 5) + 's';
-      document.body.appendChild(p);
-    }
-  </script>
+  
 
   <!-- ================= BOX 1: ĐĂNG NHẬP ================= -->
   <div class="card-box" id="loginBox">
@@ -1244,8 +1218,8 @@
   canvas.style.width = '100vw';
   canvas.style.height = '100vh';
   canvas.style.pointerEvents = 'none';
-  canvas.style.zIndex = '0';
-  canvas.style.opacity = '0.85';
+  canvas.style.zIndex = '9999';
+  canvas.style.opacity = '1';
   document.body.prepend(canvas);
 
   const ctx = canvas.getContext('2d');
@@ -1270,8 +1244,8 @@
     return {
       x: Math.random() * (width + 300) - 100,
       y: randomY ? Math.random() * height : -20,
-      length: 12 + Math.random() * 22,
-      thickness: 0.8 + Math.random() * 1.4,
+      length: 18 + Math.random() * 30,
+      thickness: 1.2 + Math.random() * 1.8,
       speed: speed,
       vx: cosAngle * speed,
       vy: sinAngle * speed,
