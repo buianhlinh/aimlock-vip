@@ -325,7 +325,10 @@
       outline: none;
       cursor: pointer;
       transition: all 0.3s;
-    }
+    
+      text-align: center;
+      text-align-last: center;
+}
 
     .custom-select:focus {
       border-color: var(--primary);
@@ -1205,103 +1208,115 @@
     }
   </script>
 
-  <!-- HIỆU ỨNG MƯA VÀNG GOLD NEON LUXURY (TỪ SHOP BÙI ANH LINH) -->
+  
+  <!-- HIỆU ỨNG MƯA LUXURY CHUẨN 100% NHƯ BÊN SHOP-ANH-LINH-ONLINE -->
   <script>
-﻿// Gold Neon Luxury Rain & Particle Effect (Diagonal top-right to bottom-left)
-(()=>{
-  'use strict';
-  const canvas = document.createElement('canvas');
-  canvas.id = 'gold-rain-canvas';
-  canvas.style.position = 'fixed';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.style.width = '100vw';
-  canvas.style.height = '100vh';
-  canvas.style.pointerEvents = 'none';
-  canvas.style.zIndex = '9999';
-  canvas.style.opacity = '1';
-  document.body.prepend(canvas);
+  (()=>{
+    'use strict';
+    const canvas = document.createElement('canvas');
+    canvas.id = 'gold-rain-canvas';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '9999';
+    canvas.style.opacity = '0.9';
+    document.body.prepend(canvas);
 
-  const ctx = canvas.getContext('2d');
-  let width = canvas.width = window.innerWidth;
-  let height = canvas.height = window.innerHeight;
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
 
-  window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  });
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
 
-  const particleCount = Math.min(140, Math.floor((width * height) / 8000));
-  const particles = [];
+    // Mật độ hạt mưa vừa vặn, không quá dày làm rối, không quá thưa
+    const particleCount = Math.min(85, Math.floor((width * height) / 12000));
+    const particles = [];
 
-  // Angle: falling down and to the left (approx 125 degrees)
-  const angle = 125 * (Math.PI / 180);
-  const cosAngle = Math.cos(angle);
-  const sinAngle = Math.sin(angle);
+    // Góc nghiêng 125 độ chuẩn như web shop
+    const angle = 125 * (Math.PI / 180);
+    const cosAngle = Math.cos(angle);
+    const sinAngle = Math.sin(angle);
 
-  function createParticle(randomY = true) {
-    const speed = 2.5 + Math.random() * 4.5;
-    return {
-      x: Math.random() * (width + 300) - 100,
-      y: randomY ? Math.random() * height : -20,
-      length: 35 + Math.random() * 45,
-      thickness: 1.2 + Math.random() * 0.8,
-      speed: speed,
-      vx: cosAngle * speed,
-      vy: sinAngle * speed,
-      alpha: 0.2 + Math.random() * 0.7,
-      color: Math.random() > 0.3 ? '0, 229, 255' : '120, 245, 255', // Gold or Champagne Spark
-      sparkSize: 0
-    };
-  }
-
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(createParticle(true));
-  }
-
-  let animationFrame;
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Draw light golden streak (rain line)
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y);
-      ctx.lineTo(p.x - cosAngle * p.length, p.y - sinAngle * p.length);
-      ctx.strokeStyle = `rgba(${p.color}, ${p.alpha * 0.6})`;
-      ctx.lineWidth = p.thickness;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-
-      // Da xoa toan bo hat tron dom
-
-      // Reset when particle goes off screen (bottom or left)
-      if (p.x < -100 || p.y > height + 50) {
-        particles[i] = createParticle(false);
-      }
+    function createParticle(randomY = true) {
+      // Tốc độ êm dịu chuẩn xác như shop (không bị lao vùn vụt)
+      const speed = 2.2 + Math.random() * 3.8;
+      // Phủ rộng toàn bộ chiều ngang kể cả góc trên bên phải
+      const spawnX = Math.random() * (width + Math.abs(cosAngle * height) + 200) - 100;
+      return {
+        x: spawnX,
+        y: randomY ? Math.random() * height : -30,
+        length: 14 + Math.random() * 22,
+        thickness: 0.9 + Math.random() * 1.3,
+        speed: speed,
+        vx: cosAngle * speed,
+        vy: sinAngle * speed,
+        alpha: 0.25 + Math.random() * 0.7,
+        // Tone xanh Neon & Pha lê Cyan cực đẹp mắt
+        color: Math.random() > 0.3 ? '0, 225, 255' : '150, 245, 255',
+        sparkSize: Math.random() > 0.5 ? 1.5 + Math.random() * 1.5 : 0
+      };
     }
 
-    animationFrame = requestAnimationFrame(animate);
-  }
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(createParticle(true));
+    }
 
-  // Optimize when tab is not active
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      cancelAnimationFrame(animationFrame);
-    } else {
+    let animationFrame;
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Vẽ vệt mưa êm dịu
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x - cosAngle * p.length, p.y - sinAngle * p.length);
+        ctx.strokeStyle = `rgba(${p.color}, ${p.alpha * 0.65})`;
+        ctx.lineWidth = p.thickness;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // Vẽ đốm đầu lấp lánh như web shop
+        if (p.sparkSize > 0) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.sparkSize, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#00e1ff';
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        // Reset khi bay ra ngoài màn hình
+        if (p.x < -100 || p.y > height + 50) {
+          particles[i] = createParticle(false);
+        }
+      }
+
       animationFrame = requestAnimationFrame(animate);
     }
-  });
 
-  animate();
-})();
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationFrame);
+      } else {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    });
 
-
+    animate();
+  })();
   </script>
 </body>
+
 
 </html>
