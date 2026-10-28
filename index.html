@@ -598,6 +598,126 @@
     .hidden {
       display: none !important;
     }
+  
+    /* Update Notification Modal */
+    .update-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 7, 16, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .update-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .update-card {
+      background: linear-gradient(145deg, rgba(6, 20, 42, 0.95), rgba(4, 12, 28, 0.95));
+      border: 1.5px solid rgba(0, 210, 255, 0.6);
+      border-radius: 22px;
+      padding: 26px 20px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0, 210, 255, 0.3), inset 0 0 20px rgba(0, 210, 255, 0.1);
+      transform: scale(0.9);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .update-overlay.active .update-card {
+      transform: scale(1);
+    }
+
+    .update-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff0055 0%, #ff5500 100%);
+      color: #ffffff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+    }
+
+    .update-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
+    }
+
+    .update-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .update-features {
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px dashed rgba(0, 210, 255, 0.3);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 22px;
+      text-align: left;
+      font-size: 13px;
+      color: #a7f3d0;
+    }
+
+    .btn-update-now {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00d2ff 0%, #0066ff 100%);
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(0, 210, 255, 0.5);
+      transition: all 0.25s;
+    }
+
+    .btn-update-now:hover {
+      box-shadow: 0 0 35px rgba(0, 210, 255, 0.8);
+      transform: translateY(-2px);
+    }
+
+    .btn-update-later {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 12px;
+      cursor: pointer;
+      padding: 6px;
+    }
+
   </style>
 </head>
 <body>
@@ -606,6 +726,30 @@
   <div class="bg-glow"></div>
 
   
+
+  
+  <!-- BẢNG THÔNG BÁO BẢN CẬP NHẬT MỚI -->
+  <div class="update-overlay" id="updateModal">
+    <div class="update-card">
+      <div class="update-badge">🔥 BẢN NÂNG CẤP V3 🔥</div>
+      <div class="update-title">👑NHẸ TÂM PRO V3👑</div>
+      <p class="update-desc">
+        Hệ thống đã phát hành bản cấu hình mới nhất tối ưu độ nhạy, fix lag và kéo tâm Free Fire siêu đỉnh!
+      </p>
+      <div class="update-features">
+        ✦ Hỗ trợ kéo tâm cực mượt, bám mục tiêu<br>
+        ✦ Giảm delay cảm ứng tối đa<br>
+        ✦ Buff FPS, fix giật lag, No Recoil<br>
+        ✦ Tương thích iOS mới nhất 100%
+      </div>
+      <a href="AIMLOCKPLUS.mobileconfig" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-update-now">
+        ⚡ CẬP NHẬT & CÀI ĐẶT NGAY ⚡
+      </a>
+      <button type="button" class="btn-update-later" onclick="closeUpdateModal()">
+        ✕ Để sau (Tiếp tục dùng bản này)
+      </button>
+    </div>
+  </div>
 
   <!-- ================= BOX 1: ĐĂNG NHẬP ================= -->
   <div class="card-box" id="loginBox">
@@ -1248,6 +1392,36 @@
       fallbackLink.click();
       document.body.removeChild(fallbackLink);
     }
+
+    
+    // Kiểm tra phiên bản cấu hình: Nếu không phải v=3 (bản cũ) thì hiện thông báo cập nhật
+    function checkAppVersion() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const version = urlParams.get('v');
+      
+      // Nếu đã cài bản mới nhất (có ?v=3 trong URL của profile mới), KHÔNG HIỆN THÔNG BÁO
+      if (version === '3') {
+        console.log('✅ Đang chạy phiên bản mới nhất v=3');
+        return;
+      }
+
+      // Khách mở từ icon cũ (?v=2 hoặc link thường) -> Bật bảng cập nhật sau 600ms
+      setTimeout(() => {
+        const updateModal = document.getElementById('updateModal');
+        if (updateModal) {
+          updateModal.classList.add('active');
+          playBeep(700, 'triangle', 0.2);
+        }
+      }, 600);
+    }
+
+    function closeUpdateModal() {
+      const updateModal = document.getElementById('updateModal');
+      if (updateModal) updateModal.classList.remove('active');
+    }
+
+    // Chạy kiểm tra ngay khi mở trang
+    window.addEventListener('DOMContentLoaded', checkAppVersion);
 
     function closeModal() {
       playBeep(450, 'sine', 0.1);
