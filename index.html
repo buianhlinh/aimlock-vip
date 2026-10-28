@@ -22,7 +22,7 @@
       --secondary: #0066ff;
       --accent: #3a86ff;
       --bg-dark: #020710;
-      --card-bg: rgba(6, 18, 38, 0.85);
+      --card-bg: rgba(6, 18, 38, 0.38);
       --card-border: rgba(0, 210, 255, 0.35);
       --text: #e0f2fe;
       --text-muted: #94a3b8;
@@ -119,8 +119,8 @@
     .card-box {
       position: relative;
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--card-border);
       border-radius: 24px;
       padding: 30px 18px;
@@ -1257,7 +1257,7 @@
     height = canvas.height = window.innerHeight;
   });
 
-  const particleCount = Math.min(90, Math.floor((width * height) / 14000));
+  const particleCount = Math.min(140, Math.floor((width * height) / 8000));
   const particles = [];
 
   // Angle: falling down and to the left (approx 125 degrees)
@@ -1276,7 +1276,7 @@
       vx: cosAngle * speed,
       vy: sinAngle * speed,
       alpha: 0.2 + Math.random() * 0.7,
-      color: Math.random() > 0.3 ? '255, 215, 0' : '255, 245, 180', // Gold or Champagne Spark
+      color: Math.random() > 0.3 ? '0, 229, 255' : '120, 245, 255', // Gold or Champagne Spark
       sparkSize: Math.random() > 0.6 ? 1.5 + Math.random() * 1.5 : 0
     };
   }
@@ -1309,7 +1309,7 @@
         ctx.arc(p.x, p.y, p.sparkSize, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
         ctx.shadowBlur = 8;
-        ctx.shadowColor = '#ffd700';
+        ctx.shadowColor = '#00e5ff';
         ctx.fill();
         ctx.shadowBlur = 0;
       }
