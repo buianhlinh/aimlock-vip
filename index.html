@@ -911,11 +911,17 @@
       </div>
 
       <div id="modalSuccess" class="hidden">
-        <div style="font-size: 45px; margin-bottom: 10px;">✅</div>
-        <h3 style="font-family: 'Orbitron'; font-size: 19px; color: #4ade80; margin-bottom: 10px;">
+        <div style="font-size: 42px; margin-bottom: 6px;">⚡</div>
+        <h3 style="font-family: 'Orbitron'; font-size: 18px; color: #4ade80; margin-bottom: 10px;">
           KÍCH HOẠT THÀNH CÔNG!
         </h3>
-        <div id="modalResultDetails" style="background: rgba(4, 15, 33, 0.85); border-radius: 12px; padding: 14px; text-align: left; font-size: 14px; line-height: 1.6; color: #e2e8f0; margin-bottom: 14px;">
+        <div id="modalResultDetails" style="background: rgba(4, 15, 33, 0.85); border-radius: 12px; padding: 12px 14px; text-align: left; font-size: 13.5px; line-height: 1.6; color: #e2e8f0; margin-bottom: 12px;">
+        </div>
+
+        <!-- Lưu ý quan trọng khi vào chơi -->
+        <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 10px; padding: 10px 12px; text-align: left; font-size: 12px; line-height: 1.5; color: #fde68a; margin-bottom: 14px;">
+          ⚠️ <strong>LƯU Ý QUAN TRỌNG:</strong><br>
+          Khi chơi game xong, bạn nhớ quay lại ứng dụng bấm nút <strong>🛑 TẮT CHỨC NĂNG</strong> để bảo vệ cấu hình máy, tránh bị loạn thông tin hoặc đường truyền nhé!
         </div>
 
         <!-- Các nút mở game trong popup -->
@@ -933,6 +939,24 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- POPUP THÔNG BÁO TẮT CHỨC NĂNG (GIAO DIỆN VIP NỀN ĐEN NEON) -->
+  <div class="summary-modal" id="stopConfirmModal">
+    <div class="modal-content" style="max-width: 330px; padding: 24px 20px; border: 1.5px solid rgba(0, 210, 255, 0.4); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 210, 255, 0.3);">
+      <div style="font-size: 40px; margin-bottom: 8px;">🛑</div>
+      <h3 style="font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #38bdf8; margin-bottom: 10px; letter-spacing: 0.5px;">
+        ĐÃ DỪNG CHƠI THÀNH CÔNG!
+      </h3>
+      <div style="font-size: 13.5px; color: #cbd5e1; line-height: 1.6; margin-bottom: 18px; text-align: center;">
+        Toàn bộ cấu hình hỗ trợ đã được tắt an toàn.<br>
+        <span style="color: #4ade80; font-weight: 700;">Hệ thống đã lưu lại thời gian dừng chơi của bạn!</span>
+      </div>
+      <button class="btn-action" style="padding: 12px 20px; font-size: 13px;" onclick="closeStopModal()">
+        XÁC NHẬN & ĐÓNG
+      </button>
+    </div>
+  </div>
   </div>
 
   <!-- TOAST NOTIFICATION -->
@@ -1443,11 +1467,22 @@
       updatePlayStatus('stopped');
 
       if (isAuto) {
-        alert('ℹ️ Phiên chơi đã tự động kết thúc sau 3 giờ để bảo vệ tài khoản và thiết bị.');
+        showToast('ℹ️ Phiên chơi đã tự động kết thúc sau 3 giờ.');
       } else {
-        alert('🛑 BẠN ĐÃ DỪNG CHƠI THÀNH CÔNG!\n\nĐã tắt toàn bộ chức năng hỗ trợ.\nHệ thống đã lưu lại thời gian dừng chơi.');
-        showToast('✓ Đã dừng chơi & tắt chức năng thành công!');
+        // Mở popup giao diện VIP thay vì dùng hộp thoại mặc định trắng của trình duyệt
+        const stopModal = document.getElementById('stopConfirmModal');
+        if (stopModal) {
+          stopModal.classList.add('active');
+        } else {
+          showToast('✓ Đã dừng chơi & tắt chức năng thành công!');
+        }
       }
+    }
+
+    function closeStopModal() {
+      playBeep(600, 'sine', 0.1);
+      const stopModal = document.getElementById('stopConfirmModal');
+      if (stopModal) stopModal.classList.remove('active');
     }
 
     // Khôi phục trạng thái chơi nếu khách mở lại app
