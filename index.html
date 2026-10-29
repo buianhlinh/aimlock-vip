@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
@@ -970,7 +970,27 @@
     }
 
     // ================= QUẢN LÝ MÃ MÁY (DEVICE ID) =================
+    // Tự động đồng bộ mã máy theo Key đã lưu (Giải pháp 1)
+    function syncDeviceWithSavedKey() {
+      try {
+        const saved = (localStorage.getItem('builinh_saved_key') || '').trim().toUpperCase();
+        if (saved && saved.startsWith('BL-')) {
+          const p = saved.split('-');
+          // Định dạng 5 phần: BL-[TYPE]-[DEVICE_ID]-[TIME_HEX]-[CHECKSUM]
+          if (p.length === 5 && p[2] && p[2].length === 4) {
+            const savedDevId = 'BL-' + p[2];
+            const currentDevId = localStorage.getItem('bl_device_id');
+            if (currentDevId !== savedDevId) {
+              console.log('Tự động khôi phục mã máy theo Key cũ:', savedDevId);
+              localStorage.setItem('bl_device_id', savedDevId);
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
     function getMyDeviceId() {
+      syncDeviceWithSavedKey();
       let id = localStorage.getItem('bl_device_id');
       if (!id || id.length < 5) {
         // Sinh 4 ký tự ngẫu nhiên rõ ràng
@@ -1020,8 +1040,9 @@
     }
 
     // Tự động khởi tạo mã máy và tự điền Key đã lưu khi mở trang
-    initDeviceIdDisplay();
     loadSavedKey();
+    syncDeviceWithSavedKey();
+    initDeviceIdDisplay();
 
     function verifyKey(keyString) {
       keyString = keyString.trim().toUpperCase();

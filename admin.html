@@ -375,6 +375,17 @@
       color: #fff;
     }
 
+    .btn-transfer {
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid #a855f7;
+      color: #d8b4fe;
+    }
+
+    .btn-transfer:hover {
+      background: #a855f7;
+      color: #fff;
+    }
+
     .btn-copy-small {
       background: rgba(0, 210, 255, 0.15);
       border: 1px solid rgba(0, 210, 255, 0.4);
@@ -793,6 +804,10 @@
                 </button>
               `}
               
+              <button class="btn-key-action btn-transfer" onclick="changeKeyDevice('${item.key}')">
+                📱 ĐỔI MÁY
+              </button>
+
               <button class="btn-key-action btn-copy-small" onclick="copySpecificKey('${item.key}')">
                 📋 COPY
               </button>
@@ -843,6 +858,92 @@
       } catch (err) {
         console.error(err);
         showToast('✕ Lỗi mạng khi cập nhật trạng thái Key!');
+      }
+    }
+
+    // ĐỔI MÃ MÁY / CHUYỂN THIẾT BỊ CHO KEY (GIẢI PHÁP 2)
+    async function changeKeyDevice(oldKey) {
+      const item = allKeysData[oldKey];
+      const currentDev = item && item.deviceId ? item.deviceId : 'Chưa khóa máy';
+      
+      const newDevInput = prompt(
+        `📱 ĐỔI MÃ MÁY CHO KEY:\n\nKey hiện tại: ${oldKey}\nMã máy cũ: [${currentDev}]\n\n👉 Nhập Mã Máy MỚI của khách (ví dụ: BL-E7QT hoặc E7QT):`
+      );
+
+      if (newDevInput === null) return; // Người dùng bấm Hủy
+      const cleanDev = newDevInput.trim().toUpperCase().replace(/^BL-/, '');
+      if (!cleanDev || cleanDev.length < 3) {
+        alert('✕ Mã máy không hợp lệ! Vui lòng nhập đúng định dạng ví dụ: BL-E7QT hoặc E7QT.');
+        return;
+      }
+
+      const parts = oldKey.split('-');
+      let type, timeHex;
+
+      if (parts.length === 5) {
+        // BL-[TYPE]-[DEVICE_ID]-[TIME_HEX]-[CHECKSUM]
+        type = parts[1];
+        timeHex = parts[3];
+      } else if (parts.length === 4) {
+        // BL-[TYPE]-[TIME_HEX]-[CHECKSUM]
+        type = parts[1];
+        timeHex = parts[2];
+      } else {
+        alert('✕ Không thể nhận diện định dạng của Key này!');
+        return;
+      }
+
+      // Tính lại Checksum mới khớp với máy mới
+      const newChecksum = generateChecksum(timeHex + SECRET_SALT + type + cleanDev);
+      const newKey = `BL-${type}-${cleanDev}-${timeHex}-${newChecksum}`;
+
+      showToast('⏳ Đang cập nhật chuyển đổi sang Key máy mới...');
+
+      try {
+        // 1. Tạo bản ghi Key mới trên Cloud
+        const newRecord = {
+          key: newKey,
+          type: type,
+          duration: item ? item.duration : 'Chuyển máy',
+          created: item ? item.created : new Date().toLocaleString('vi-VN'),
+          expiry: item ? item.expiry : 'Theo Key gốc',
+          note: item ? item.note : `Chuyển sang máy BL-${cleanDev}`,
+          deviceId: `BL-${cleanDev}`,
+          status: 'active',
+          updatedAt: new Date().toLocaleString('vi-VN')
+        };
+
+        const putResp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(newKey)}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newRecord)
+        });
+
+        // 2. Xóa Key cũ đi để không ai dùng lại key cũ
+        await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(oldKey)}.json`, {
+          method: 'DELETE'
+        });
+
+        // Cập nhật bộ nhớ cục bộ
+        delete allKeysData[oldKey];
+        allKeysData[newKey] = newRecord;
+        renderKeyList();
+
+        // Tự động copy Key mới vào clipboard và thông báo
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(newKey);
+        }
+
+        alert(
+          `✅ ĐÃ ĐỔI MÃ MÁY THÀNH CÔNG!\n\n` +
+          `• Máy mới: BL-${cleanDev}\n` +
+          `• Key mới: ${newKey}\n\n` +
+          `📋 Mã Key mới đã được TỰ ĐỘNG SAO CHÉP. Bạn hãy dán gửi cho khách qua Zalo nhé!`
+        );
+
+      } catch (err) {
+        console.error(err);
+        showToast('✕ Lỗi kết nối khi cập nhật mã máy!');
       }
     }
 
