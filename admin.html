@@ -306,6 +306,20 @@
       border: 1px solid #4ade80;
     }
 
+    .badge-playing {
+      background: rgba(16, 185, 129, 0.25);
+      color: #34d399;
+      border: 1px solid #10b981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+      animation: pulse 1.2s infinite alternate;
+    }
+
+    .badge-stopped {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
     .badge-disabled {
       background: rgba(239, 68, 68, 0.25);
       color: #f87171;
@@ -731,6 +745,33 @@
     }
 
     // HIỂN THỊ DANH SÁCH KEY
+    // Tính toán thời gian đã dừng chơi dạng văn bản (15s trước, 2 giờ trước, 1 tháng trước...)
+    function formatTimeAgo(timestamp) {
+      if (!timestamp) return 'Chưa từng sử dụng';
+      const diffSec = Math.floor((Date.now() - timestamp) / 1000);
+      if (diffSec < 0) return 'Vừa xong';
+      if (diffSec < 60) return `${diffSec} giây trước`;
+      const mins = Math.floor(diffSec / 60);
+      if (mins < 60) return `${mins} phút trước`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours} giờ trước`;
+      const days = Math.floor(hours / 24);
+      if (days < 30) return `${days} ngày trước`;
+      const months = Math.floor(days / 30);
+      if (months < 12) return `${months} tháng trước`;
+      const years = Math.floor(months / 12);
+      return `${years} năm trước`;
+    }
+
+    function formatDuration(startTime) {
+      if (!startTime) return '';
+      const diffSec = Math.floor((Date.now() - startTime) / 1000);
+      const hrs = Math.floor(diffSec / 3600);
+      const mins = Math.floor((diffSec % 3600) / 60);
+      if (hrs > 0) return `${hrs}h ${mins}m`;
+      return `${mins} phút`;
+    }
+
     function renderKeyList() {
       const container = document.getElementById('keyListContainer');
       const search = (document.getElementById('searchInput').value || '').trim().toLowerCase();
@@ -778,11 +819,31 @@
 
         const deviceTxt = item.deviceId ? `<span style="color:#38bdf8;">🔒 Máy: ${item.deviceId}</span>` : `<span style="color:#f59e0b;">🌐 Không khóa máy</span>`;
 
+        // Tính trạng thái chơi game thực tế của khách
+        let playStatusHtml = '';
+        const now = Date.now();
+        const lastActive = item.lastActiveTime || 0;
+        const diffSeconds = Math.floor((now - lastActive) / 1000);
+        const isPlaying = (item.playStatus === 'playing') && (diffSeconds < 90); // Còn heartbeat trong 90s
+
+        if (isPlaying) {
+          const gameName = item.activeGame === 'max' ? 'FF MAX' : 'FF';
+          const durTxt = item.sessionStartTime ? ` (${formatDuration(item.sessionStartTime)})` : '';
+          playStatusHtml = `<span class="badge badge-playing">⚡ ĐANG CHƠI [${gameName}]${durTxt}</span>`;
+        } else if (lastActive > 0) {
+          playStatusHtml = `<span class="badge badge-stopped">⏹️ Đã dừng: ${formatTimeAgo(lastActive)}</span>`;
+        } else {
+          playStatusHtml = `<span class="badge badge-stopped">⚪ Chưa từng sử dụng</span>`;
+        }
+
         return `
           <div class="key-card ${isDisabled ? 'disabled-card' : ''}">
             <div class="key-card-header">
               <div class="key-code">${item.key}</div>
-              ${badgeHtml}
+              <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                ${playStatusHtml}
+                ${badgeHtml}
+              </div>
             </div>
             
             <div class="key-info-row">
@@ -979,6 +1040,20 @@
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2800);
     }
+
+    // Tự động làm mới danh sách sau mỗi 15 giây để cập nhật trạng thái chơi của khách
+    setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetch(`${FIREBASE_DB_URL}/keys.json`, { cache: 'no-store' })
+          .then(res => res.json())
+          .then(data => {
+            if (data) {
+              allKeysData = data;
+              renderKeyList();
+            }
+          }).catch(() => {});
+      }
+    }, 15000);
   </script>
 </body>
 </html>

@@ -821,10 +821,23 @@
       <input type="hidden" id="aimSettingSelect" value="⬆NHẸ TÂM⬆" />
     </div>
 
-    <!-- Nút kích hoạt chức năng -->
-    <button class="btn-action" onclick="executeActivation()">
-      ⚡ KÍCH HOẠT CHỨC NĂNG ⚡
-    </button>
+    <!-- Nút kích hoạt chức năng / Nút tắt -->
+    <div id="activationControlWrap">
+      <button class="btn-action" id="btnMainActivate" onclick="executeActivation()">
+        ⚡ KÍCH HOẠT CHỨC NĂNG ⚡
+      </button>
+
+      <div id="activeRunningBanner" class="hidden" style="margin-top: 10px; padding: 12px; background: rgba(34, 197, 94, 0.15); border: 1.5px solid #22c55e; border-radius: 12px; text-align: center;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 800; color: #4ade80;">
+          <span style="display: inline-block; width: 10px; height: 10px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; animation: pulse 1s infinite alternate;"></span>
+          <span id="activeRunningGameText">🎮 ĐANG HOẠT ĐỘNG TRONG GAME</span>
+        </div>
+        <div id="activeRunningDuration" style="font-size: 12px; color: #a7f3d0; margin-top: 4px;">Thời gian chơi: 00:01</div>
+        <button class="btn-action" onclick="stopActivation()" style="margin-top: 10px; padding: 11px; background: linear-gradient(135deg, #b91c1c 0%, #ef4444 100%); color: #fff; font-size: 12px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);">
+          🛑 TẮT CHỨC NĂNG / DỪNG CHƠI
+        </button>
+      </div>
+    </div>
 
     <a href="AIMLOCKPLUS.mobileconfig" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; padding: 13px; background: rgba(0, 210, 255, 0.12); border: 1.5px dashed var(--primary); border-radius: 14px; color: var(--primary); text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">
       📲 TẢI CẤU HÌNH CHO IPHONE
@@ -1222,6 +1235,7 @@
       setTimeout(() => {
         document.getElementById('loginBox').classList.add('hidden');
         document.getElementById('menuBox').classList.remove('hidden');
+        restorePlayStatus();
       }, 500);
     }
 
@@ -1340,9 +1354,124 @@
       }, 50);
     }
 
+    // ================= QUẢN LÝ PHIÊN CHƠI & BÁO CÁO ADMIN =================
+    let sessionTimer = null;
+    let heartbeatTimer = null;
+    const MAX_SESSION_HOURS = 3; // Tự động chốt phiên sau 3 tiếng nếu khách quên tắt
+
+    // Cập nhật trạng thái chơi lên Firebase
+    async function updatePlayStatus(status, gameVersion = '') {
+      if (!currentLoggedInKey || currentLoggedInKey === 'BUILINH') return;
+      try {
+        const payload = {
+          playStatus: status, // 'playing' hoặc 'stopped'
+          lastActiveTime: Date.now(),
+          lastUpdated: new Date().toLocaleString('vi-VN')
+        };
+        if (gameVersion) payload.activeGame = gameVersion;
+        if (status === 'playing') {
+          payload.sessionStartTime = parseInt(localStorage.getItem('bl_session_start') || Date.now());
+        }
+
+        await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(currentLoggedInKey)}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {
+        console.warn('Lỗi gửi tín hiệu chơi:', e);
+      }
+    }
+
+    // Khởi động giao diện đang chơi
+    function setPlayingUI(startTime, gameVersion) {
+      document.getElementById('btnMainActivate').classList.add('hidden');
+      const banner = document.getElementById('activeRunningBanner');
+      banner.classList.remove('hidden');
+      const gameLabel = gameVersion === 'max' ? 'Free Fire MAX' : (gameVersion === 'normal' ? 'Free Fire Thường' : 'Free Fire');
+      document.getElementById('activeRunningGameText').innerText = `🎮 ĐANG HOẠT ĐỘNG: ${gameLabel.toUpperCase()}`;
+
+      if (sessionTimer) clearInterval(sessionTimer);
+      sessionTimer = setInterval(() => {
+        const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+        // Kiểm tra nếu quá 3 tiếng thì tự động tắt
+        if (elapsedSec > MAX_SESSION_HOURS * 3600) {
+          stopActivation(true);
+          return;
+        }
+        const hrs = Math.floor(elapsedSec / 3600);
+        const mins = Math.floor((elapsedSec % 3600) / 60);
+        const secs = elapsedSec % 60;
+        let timeStr = "";
+        if (hrs > 0) timeStr += (hrs < 10 ? "0" + hrs : hrs) + ":";
+        timeStr += (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
+        document.getElementById('activeRunningDuration').innerText = `Thời gian chơi: ${timeStr}`;
+      }, 1000);
+    }
+
+    // Khởi động phiên chơi khi khách bấm chọn bản game
+    function startPlaySession(gameVersion) {
+      const startTime = Date.now();
+      localStorage.setItem('bl_play_status', 'playing');
+      localStorage.setItem('bl_session_start', startTime.toString());
+      localStorage.setItem('bl_game_version', gameVersion);
+
+      setPlayingUI(startTime, gameVersion);
+      updatePlayStatus('playing', gameVersion);
+
+      // Gửi heartbeat duy trì mỗi 25 giây
+      if (heartbeatTimer) clearInterval(heartbeatTimer);
+      heartbeatTimer = setInterval(() => {
+        if (localStorage.getItem('bl_play_status') === 'playing') {
+          updatePlayStatus('playing', gameVersion);
+        }
+      }, 25000);
+    }
+
+    // Tắt chức năng / Dừng chơi
+    function stopActivation(isAuto = false) {
+      playBeep(450, 'sawtooth', 0.2);
+      if (sessionTimer) clearInterval(sessionTimer);
+      if (heartbeatTimer) clearInterval(heartbeatTimer);
+
+      localStorage.setItem('bl_play_status', 'stopped');
+      localStorage.setItem('bl_last_stopped', Date.now().toString());
+
+      document.getElementById('activeRunningBanner').classList.add('hidden');
+      document.getElementById('btnMainActivate').classList.remove('hidden');
+
+      updatePlayStatus('stopped');
+
+      if (isAuto) {
+        alert('ℹ️ Phiên chơi đã tự động kết thúc sau 3 giờ để bảo vệ tài khoản và thiết bị.');
+      } else {
+        alert('🛑 BẠN ĐÃ DỪNG CHƠI THÀNH CÔNG!\n\nĐã tắt toàn bộ chức năng hỗ trợ.\nHệ thống đã lưu lại thời gian dừng chơi.');
+        showToast('✓ Đã dừng chơi & tắt chức năng thành công!');
+      }
+    }
+
+    // Khôi phục trạng thái chơi nếu khách mở lại app
+    function restorePlayStatus() {
+      const status = localStorage.getItem('bl_play_status');
+      const startTime = parseInt(localStorage.getItem('bl_session_start') || '0');
+      const gameVersion = localStorage.getItem('bl_game_version') || 'normal';
+
+      if (status === 'playing' && startTime > 0) {
+        const elapsedSec = (Date.now() - startTime) / 1000;
+        // Nếu đã quá 3 tiếng mà quên tắt -> Tự kết thúc
+        if (elapsedSec > MAX_SESSION_HOURS * 3600) {
+          stopActivation(true);
+        } else {
+          setPlayingUI(startTime, gameVersion);
+        }
+      }
+    }
+
     // Hàm khởi động mở ứng dụng game
     function launchGame(version) {
       playBeep(850, 'triangle', 0.2);
+      closeModal();
+      startPlaySession(version);
       const name = version === 'max' ? 'Free Fire MAX' : 'Free Fire';
       showToast(`⚡ Đang khởi chạy ${name}...`);
       setTimeout(() => {
