@@ -1024,22 +1024,34 @@
     }
 
     // ================= QUẢN LÝ MÃ MÁY (DEVICE ID) =================
-    // Tự động đồng bộ mã máy theo Key đã lưu (Giải pháp 1)
-    function syncDeviceWithSavedKey() {
+    // Tự động đồng bộ mã máy theo Key (Giải pháp 1 nâng cao)
+    function syncDeviceWithKey(keyStr) {
       try {
-        const saved = (localStorage.getItem('builinh_saved_key') || '').trim().toUpperCase();
-        if (saved && saved.startsWith('BL-')) {
-          const p = saved.split('-');
+        if (!keyStr) return;
+        keyStr = keyStr.trim().toUpperCase();
+        if (keyStr.startsWith('BL-')) {
+          const p = keyStr.split('-');
           // Định dạng 5 phần: BL-[TYPE]-[DEVICE_ID]-[TIME_HEX]-[CHECKSUM]
           if (p.length === 5 && p[2] && p[2].length === 4) {
-            const savedDevId = 'BL-' + p[2];
-            const currentDevId = localStorage.getItem('bl_device_id');
-            if (currentDevId !== savedDevId) {
-              console.log('Tự động khôi phục mã máy theo Key cũ:', savedDevId);
+            const expectedCheck = generateChecksum(p[3] + SECRET_SALT + p[1] + p[2]);
+            // Nếu Key này là Key thật, chuẩn checksum của Bùi Anh Linh
+            if (p[4] === expectedCheck) {
+              const savedDevId = 'BL-' + p[2];
               localStorage.setItem('bl_device_id', savedDevId);
+              localStorage.setItem('builinh_saved_key', keyStr);
+              const devEl = document.getElementById('userDeviceId');
+              if (devEl) devEl.innerText = savedDevId;
+              console.log('✅ Đã tự động khớp mã máy theo Key hợp lệ:', savedDevId);
             }
           }
         }
+      } catch (e) {}
+    }
+
+    function syncDeviceWithSavedKey() {
+      try {
+        const saved = (localStorage.getItem('builinh_saved_key') || '').trim().toUpperCase();
+        syncDeviceWithKey(saved);
       } catch (e) {}
     }
 
@@ -1125,13 +1137,8 @@
           return { valid: false, error: '✕ Key không hợp lệ hoặc đã bị chỉnh sửa!' };
         }
 
-        const currentDeviceRaw = getMyDeviceId().replace('BL-', '');
-        if (keyDeviceId !== currentDeviceRaw) {
-          return {
-            valid: false,
-            error: `✕ Key này được cấp riêng cho máy [BL-${keyDeviceId}]!\nMáy của bạn là [BL-${currentDeviceRaw}].\nKhông thể sử dụng trên thiết bị này!`
-          };
-        }
+        // Tự động đồng bộ mã máy theo Key hợp lệ này nếu vừa cập nhật phiên bản
+        syncDeviceWithKey(keyString);
       } else if (parts.length === 4) {
         // Định dạng 4 phần (key thông thường): BL-[TYPE]-[TIME_HEX]-[CHECKSUM]
         type = parts[1];
