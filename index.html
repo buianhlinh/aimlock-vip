@@ -895,6 +895,24 @@
     </div>
   </div>
 
+  <!-- POPUP BẮT BUỘC ĐỒNG Ý LƯU Ý TRƯỚC KHI KÍCH HOẠT TIẾN TRÌNH 100% -->
+  <div class="summary-modal" id="preActivationModal">
+    <div class="modal-content" style="max-width: 340px; padding: 24px 18px; border: 1.5px solid #f59e0b; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95), 0 0 25px rgba(245, 158, 11, 0.35);">
+      <div style="font-size: 42px; margin-bottom: 8px;">⚠️</div>
+      <h3 style="font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #f59e0b; margin-bottom: 12px; letter-spacing: 0.5px;">
+        LƯU Ý BẮT BUỘC TRƯỚC KHI CHƠI
+      </h3>
+      <div style="background: rgba(245, 158, 11, 0.1); border-radius: 12px; padding: 12px 14px; text-align: left; font-size: 13.5px; line-height: 1.6; color: #fde68a; margin-bottom: 18px;">
+        📌 <strong>YÊU CẦU QUAN TRỌNG:</strong><br>
+        Khi chơi game xong, bạn <strong>BẮT BUỘC PHẢI QUAY LẠI ỨNG DỤNG ĐỂ BẤM TẮT CHỨC NĂNG</strong>.<br><br>
+        Tránh trường hợp bị loạn thông tin hoặc lỗi đường truyền mạng/cấu hình máy của bạn!
+      </div>
+      <button class="btn-action" style="padding: 13px 20px; font-size: 13px; background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); color: #020710; font-weight: 900; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);" onclick="confirmAndStartActivation()">
+        ✓ TÔI ĐỒNG Ý & TIẾP TỤC
+      </button>
+    </div>
+  </div>
+
   <!-- ================= POPUP MODAL TIẾN TRÌNH ================= -->
   <div class="summary-modal" id="summaryModal">
     <div class="modal-content">
@@ -1309,7 +1327,7 @@
       }, 2200);
     }
 
-    // Kích hoạt chức năng (Hiệu ứng tiến trình)
+    // Bắt đầu quy trình kích hoạt: Hiện popup bắt buộc bấm Đồng Ý trước
     function executeActivation() {
       // Kiểm tra ngay lập tức nếu Admin vừa Vô hiệu hóa hoặc Xóa key
       if (currentLoggedInKey && currentLoggedInKey !== 'BUILINH') {
@@ -1323,6 +1341,28 @@
           }).catch(() => {});
       }
 
+      playBeep(650, 'triangle', 0.15);
+      // Mở Popup bắt buộc đồng ý (Không có nút tắt/bỏ qua, bắt buộc bấm Đồng Ý)
+      const preModal = document.getElementById('preActivationModal');
+      if (preModal) {
+        preModal.classList.add('active');
+      } else {
+        startProgressAnimation();
+      }
+    }
+
+    // Khi khách bấm "TÔI ĐỒNG Ý & TIẾP TỤC" thì mới bắt đầu chạy tiến trình 100%
+    function confirmAndStartActivation() {
+      playBeep(750, 'sine', 0.15);
+      const preModal = document.getElementById('preActivationModal');
+      if (preModal) {
+        preModal.classList.remove('active');
+      }
+      startProgressAnimation();
+    }
+
+    // Hiệu ứng tiến trình chạy từ 0% đến 100%
+    function startProgressAnimation() {
       playBeep(520, 'triangle', 0.15);
       const modal = document.getElementById('summaryModal');
       const loading = document.getElementById('modalLoading');
