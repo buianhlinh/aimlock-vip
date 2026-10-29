@@ -731,16 +731,16 @@
   <!-- BẢNG THÔNG BÁO BẢN CẬP NHẬT MỚI -->
   <div class="update-overlay" id="updateModal">
     <div class="update-card">
-      <div class="update-badge">🔥 BẢN NÂNG CẤP V3 🔥</div>
-      <div class="update-title">👑NHẸ TÂM PRO V3👑</div>
+      <div class="update-badge">🔥 BẢN NÂNG CẤP V4 MỚI NHẤT 🔥</div>
+      <div class="update-title">👑NHẸ TÂM PRO V4👑</div>
       <p class="update-desc">
-        Hệ thống đã phát hành bản cấu hình mới nhất tối ưu độ nhạy, fix lag và kéo tâm Free Fire siêu đỉnh!
+        Đã cập nhật hệ thống quản lý chơi thông minh, lưu trữ mã máy tự động và tối ưu đường truyền Free Fire!
       </p>
       <div class="update-features">
-        ✦ Hỗ trợ kéo tâm cực mượt, bám mục tiêu<br>
-        ✦ Giảm delay cảm ứng tối đa<br>
-        ✦ Buff FPS, fix giật lag, No Recoil<br>
-        ✦ Tương thích iOS mới nhất 100%
+        ✦ Bổ sung chế độ Bật/Tắt chức năng chống lỗi mạng<br>
+        ✦ Tự động đồng bộ mã thiết bị không lo lệch Key<br>
+        ✦ Kéo tâm siêu mượt, buff FPS và tối ưu delay<br>
+        ✦ Cập nhật đè trực tiếp không cần xóa bản cũ
       </div>
       <a href="AIMLOCKPLUS.mobileconfig" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-update-now">
         ⚡ CẬP NHẬT & CÀI ĐẶT NGAY ⚡
@@ -1618,18 +1618,18 @@
     }
 
     
-    // Kiểm tra phiên bản cấu hình: Nếu không phải v=3 (bản cũ) thì hiện thông báo cập nhật
+    // Kiểm tra phiên bản cấu hình: Nếu không phải v=4 (bản cũ v1, v2, v3) thì hiện thông báo cập nhật
     function checkAppVersion() {
       const urlParams = new URLSearchParams(window.location.search);
       const version = urlParams.get('v');
       
-      // Nếu đã cài bản mới nhất (có ?v=3 trong URL của profile mới), KHÔNG HIỆN THÔNG BÁO
-      if (version === '3') {
-        console.log('✅ Đang chạy phiên bản mới nhất v=3');
+      // Nếu đã cài bản mới nhất (có ?v=4 trong URL của profile mới), KHÔNG HIỆN THÔNG BÁO
+      if (version === '4') {
+        console.log('✅ Đang chạy phiên bản mới nhất v=4');
         return;
       }
 
-      // Khách mở từ icon cũ (?v=2 hoặc link thường) -> Bật bảng cập nhật sau 600ms
+      // Khách mở từ icon cũ (?v=3, ?v=2 hoặc link gốc) -> Bật bảng cập nhật sau 600ms
       setTimeout(() => {
         const updateModal = document.getElementById('updateModal');
         if (updateModal) {
