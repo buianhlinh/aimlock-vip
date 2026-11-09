@@ -1188,26 +1188,78 @@
     let currentLoggedInKey = "";
     let currentCustomerName = "Quý khách";
 
-    // Giọng nói AI Tiếng Việt chào mừng đúng tên khách lưu trên hệ thống Key
-    function speakVietnamese(text) {
+    // Nhạc hiệu Luxury Chime mở đầu trước khi giọng nói vang lên
+    function playLuxuryChime() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // Hợp âm Đô Trưởng (C5 - E5 - G5 - C6) sang trọng
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+          gain.gain.setValueAtTime(0.06, ctx.currentTime + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0008, ctx.currentTime + idx * 0.08 + 0.55);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.08);
+          osc.stop(ctx.currentTime + idx * 0.08 + 0.55);
+        });
+      } catch (e) {}
+    }
+
+    // Giọng nói AI Nữ Tiếng Việt truyền cảm (Cloud Neural TTS + Ngắt nhịp uyển chuyển)
+    let currentAudio = null;
+    function speakVietnamese(customerName) {
+      playLuxuryChime();
+      // Ngắt nhịp bằng dấu phẩy và dấu chấm lửng giúp giọng đọc có hồn, nhấn nhá tự nhiên
+      const naturalScript = `Dạ, xin chào mừng quý khách ${customerName}, đã đến với hệ thống, Nhẹ Tâm Pro!`;
+
+      setTimeout(() => {
+        try {
+          if (currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
+          }
+          // Ưu tiên 1: Luồng âm thanh Google Neural TTS chuẩn giọng nữ truyền cảm (không gửi Referer để tránh bị chặn)
+          const url = 'https://translate.googleapis.com/translate_tts?ie=UTF-8&q=' + encodeURIComponent(naturalScript) + '&tl=vi&client=tw-ob';
+          const audio = document.createElement('audio');
+          audio.setAttribute('referrerpolicy', 'no-referrer');
+          audio.src = url;
+          audio.playbackRate = 1.0;
+          currentAudio = audio;
+          audio.play().catch(() => {
+            fallbackSmoothSpeech(naturalScript);
+          });
+        } catch (e) {
+          fallbackSmoothSpeech(naturalScript);
+        }
+      }, 320);
+    }
+
+    function fallbackSmoothSpeech(text) {
       try {
         if (!('speechSynthesis' in window)) return;
         window.speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang = 'vi-VN';
-        utter.rate = 1.02;
-        utter.pitch = 1.05;
+        utter.rate = 0.92; // Đọc chậm rãi, mềm mại hơn
+        utter.pitch = 1.12; // Giọng nữ thanh thoát
         const voices = window.speechSynthesis.getVoices();
-        const viVoice = voices.find(v => v.lang && v.lang.toLowerCase().includes('vi'));
-        if (viVoice) utter.voice = viVoice;
+        // Ưu tiên giọng Google Tiếng Việt hoặc Linh (Enhanced) trên iOS
+        const bestVoice = voices.find(v => v.lang && v.lang.toLowerCase().includes('vi') && (v.name.includes('Google') || v.name.includes('Premium') || v.name.includes('Enhanced')))
+                       || voices.find(v => v.lang && v.lang.toLowerCase().includes('vi'));
+        if (bestVoice) utter.voice = bestVoice;
         window.speechSynthesis.speak(utter);
       } catch (e) {}
     }
 
     function speakWelcomeCurrentCustomer() {
-      const msg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
-      showToast('🔊 ' + msg);
-      speakVietnamese(msg);
+      const displayMsg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
+      showToast('🔊 ' + displayMsg);
+      speakVietnamese(currentCustomerName);
     }
 
     function playBeep(freq = 600, type = 'sine', duration = 0.1) {
@@ -1395,7 +1447,7 @@
         document.getElementById('keyExpiryBadge').innerText = '👑 Master Key (Vĩnh Viễn)';
         const welcomeMsg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
         showToast('👑 ' + welcomeMsg);
-        speakVietnamese(welcomeMsg);
+        speakVietnamese(currentCustomerName);
         document.getElementById('loginBox').classList.add('hidden');
         document.getElementById('menuBox').classList.remove('hidden');
         return;
