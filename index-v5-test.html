@@ -1257,37 +1257,37 @@
       return null;
     }
 
-    async function speakVietnamese(customerName) {
-      playLuxuryChime();
-      const cleanName = (customerName || 'VIP').trim();
-      // Câu thoại có trợ từ "Dạ" và dấu phẩy ngắt nhịp giúp AI đọc lên xuống giọng tự nhiên, uyển chuyển
-      const naturalScript = `Dạ, chào mừng quý khách ${cleanName}, đến với hệ thống Nhẹ Tâm Pro!`;
-
-      const mp3Url = await getCloudVietnameseMp3(naturalScript);
+    // Hàm phát bất kỳ câu thoại Tiếng Việt nào bằng Giọng Nữ AI Cloud MP3
+    async function speakCustomText(scriptText) {
+      const mp3Url = await getCloudVietnameseMp3(scriptText);
       if (mp3Url) {
         try {
           vipAudioPlayer.pause();
           vipAudioPlayer.src = mp3Url;
           vipAudioPlayer.volume = 1.0;
-          // Tốc độ 1.08 giúp giọng nữ AI nghe thanh thoát, lanh lảnh và tự nhiên như người thật
           vipAudioPlayer.playbackRate = 1.08;
           await vipAudioPlayer.play();
           return;
         } catch (err) {
-          console.warn('Fallback speech:', err);
+          console.warn('Fallback custom speech:', err);
         }
       }
-
-      // Dự phòng nếu mất mạng mới dùng giọng máy
       try {
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(naturalScript);
+          const utter = new SpeechSynthesisUtterance(scriptText);
           utter.lang = 'vi-VN';
           utter.rate = 1.02;
           window.speechSynthesis.speak(utter);
         }
       } catch (e) {}
+    }
+
+    async function speakVietnamese(customerName) {
+      playLuxuryChime();
+      const cleanName = (customerName || 'VIP').trim();
+      const naturalScript = `Dạ, chào mừng quý khách ${cleanName}, đến với hệ thống Nhẹ Tâm Pro!`;
+      await speakCustomText(naturalScript);
     }
 
     function speakWelcomeCurrentCustomer() {
@@ -1602,8 +1602,16 @@
     }
 
     function confirmAndStartActivation() {
+      unlockAudioOnTouch();
       playBeep(750, 'sine', 0.15);
       document.getElementById('preActivationModal').classList.remove('active');
+
+      // Tải ngầm trước các câu thoại MP3 trong lúc chạy 0% -> 100% để phát tức thì không bị trễ
+      const cleanName = (currentCustomerName || 'VIP').trim();
+      getCloudVietnameseMp3(`Dạ, đã kích hoạt cấu hình thành công! Mời quý khách ${cleanName}, chọn phiên bản Free Fire để vào game.`);
+      getCloudVietnameseMp3('Đang mở Free Fire thường, chúc quý khách chơi game vui vẻ!');
+      getCloudVietnameseMp3('Đang mở Free Fire Max, chúc quý khách chơi game vui vẻ!');
+
       startProgressAnimation();
     }
 
@@ -1640,7 +1648,7 @@
 
         if (progress >= 100) {
           clearInterval(iv);
-          playBeep(950, 'sine', 0.3);
+          playLuxuryChime();
           setTimeout(() => {
             loading.classList.add('hidden');
             success.classList.remove('hidden');
@@ -1651,6 +1659,10 @@
               '<strong>• Chế độ:</strong> <span style="color:var(--cyan);">' + aimMode + '</span><br>' +
               '<strong>• Chức năng:</strong> <span style="color:#34d399;">' + list + '</span><br>' +
               '<strong>• Trạng thái:</strong> <span style="color:#38bdf8;">Đã sẵn sàng! Chọn bản game để vào</span>';
+
+            // Phát giọng nói mời chọn Free Fire Thường hoặc Free Fire MAX
+            const cleanName = (currentCustomerName || 'VIP').trim();
+            speakCustomText(`Dạ, đã kích hoạt cấu hình thành công! Mời quý khách ${cleanName}, chọn phiên bản Free Fire để vào game.`);
           }, 350);
         }
       }, 45);
@@ -1718,12 +1730,21 @@
     }
 
     function launchGame(version) {
+      unlockAudioOnTouch();
       playBeep(850, 'triangle', 0.2);
       closeModal();
       startPlaySession(version);
+
+      const gameSpeech = version === 'max'
+        ? 'Đang mở Free Fire Max, chúc quý khách chơi game vui vẻ!'
+        : 'Đang mở Free Fire thường, chúc quý khách chơi game vui vẻ!';
+      showToast('🔊 ' + gameSpeech);
+      speakCustomText(gameSpeech);
+
+      // Đợi 1.8 giây cho giọng đọc phát rõ câu chúc rồi chuyển sang ứng dụng Free Fire
       setTimeout(() => {
         window.location.href = version === 'max' ? 'freefiremax://' : 'freefire://';
-      }, 300);
+      }, 1800);
     }
 
     function closeModal() {
