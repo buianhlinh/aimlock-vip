@@ -1846,7 +1846,7 @@
     }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="alok-3d-data.js"></script>
+  <script src="alok-3d-data.js?v=2"></script>
   <script>
     (function initAlok3DSimulator() {
       const container = document.getElementById('alok3dViewport');
@@ -1883,7 +1883,6 @@
         const characterGroup = new THREE.Group();
         scene.add(characterGroup);
 
-        const texLoader = new THREE.TextureLoader();
         const texCache = new Map();
 
         function loadPartTexture(texKey) {
@@ -1891,11 +1890,17 @@
           const p = new Promise((resolve) => {
             const url = data.images[texKey];
             if (!url) { resolve(null); return; }
-            texLoader.load(url, (tex) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+              const tex = new THREE.Texture(img);
               if ('encoding' in tex) tex.encoding = THREE.sRGBEncoding;
               tex.flipY = !(data.nativeTextureOrigins && data.nativeTextureOrigins.includes(texKey));
+              tex.needsUpdate = true;
               resolve(tex);
-            }, undefined, () => resolve(null));
+            };
+            img.onerror = () => resolve(null);
+            img.src = url;
           });
           texCache.set(texKey, p);
           return p;
