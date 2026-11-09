@@ -1276,10 +1276,13 @@
       <h3 style="font-family: 'Orbitron'; font-size: 15px; color: var(--cyan); margin-bottom: 10px;">
         CÀI ĐẶT NHẸ TÂM V5 CHO ANDROID
       </h3>
-      <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 14px; padding: 13px; text-align: left; font-size: 13.5px; line-height: 1.55; color: #e2e8f0; margin-bottom: 14px;">
-        <div>✅ <strong>Bước 1:</strong> Hệ thống đã tự động nạp tệp cấu hình nhạy cảm ứng <strong>Android V5</strong> về máy của bạn.</div>
-        <div style="margin-top: 8px;">📲 <strong>Bước 2 (Đưa App ra màn hình chính):</strong> Bấm vào biểu tượng <strong>Dấu 3 chấm (⋮)</strong> ở góc trên trình duyệt Chrome ➔ Chọn <strong>"Thêm vào màn hình chính"</strong> (hoặc <strong>"Cài đặt ứng dụng"</strong>).</div>
+      <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 14px; padding: 13px; text-align: left; font-size: 13.5px; line-height: 1.55; color: #e2e8f0; margin-bottom: 12px;">
+        <div>✅ <strong>Bước 1:</strong> Đã nạp tự động tệp cấu hình nhạy cảm ứng <strong>Android V5</strong> về máy của bạn.</div>
+        <div style="margin-top: 8px;">📲 <strong>Bước 2 (Đưa App ra màn hình chính):</strong> Bấm vào biểu tượng <strong>Dấu 3 chấm (⋮)</strong> ở góc trên trình duyệt Chrome ➔ Chọn <strong>"Cài đặt ứng dụng"</strong> (hoặc <strong>"Thêm vào màn hình chính"</strong>).</div>
       </div>
+      <a href="intent://buianhlinh.github.io/aimlock-vip/index-v5-test.html?v=5#Intent;scheme=https;package=com.android.chrome;end" class="btn-cyber-outline" style="margin-top: 0; margin-bottom: 10px; padding: 11px;">
+        🌐 MỞ TRONG CHROME ĐỂ CÀI APP 1 CHẠM
+      </a>
       <button class="btn-cyber-primary" onclick="document.getElementById('androidInstallModal').classList.remove('active')">
         ĐÃ HIỂU & ĐÓNG
       </button>
@@ -1524,6 +1527,11 @@
       e.preventDefault();
       deferredAndroidPrompt = e;
     });
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw-v5.js').catch(() => {});
+      });
+    }
 
     (function init() {
       const saved = localStorage.getItem('builinh_saved_key');
