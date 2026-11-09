@@ -1259,7 +1259,7 @@
 
     async function speakVietnamese(customerName) {
       playLuxuryChime();
-      const cleanName = (customerName || 'VIP').replace(/Admin/gi, 'Bùi Anh Linh');
+      const cleanName = (customerName || 'VIP').trim();
       // Câu thoại có trợ từ "Dạ" và dấu phẩy ngắt nhịp giúp AI đọc lên xuống giọng tự nhiên, uyển chuyển
       const naturalScript = `Dạ, chào mừng quý khách ${cleanName}, đến với hệ thống Nhẹ Tâm Pro!`;
 
@@ -1478,7 +1478,7 @@
       // 1. Master Key Admin
       if (key.toUpperCase() === 'BUILINH') {
         currentLoggedInKey = 'BUILINH';
-        currentCustomerName = 'Admin Bùi Anh Linh';
+        currentCustomerName = 'Bùi Anh Linh';
         try { localStorage.setItem('builinh_saved_key', 'BUILINH'); } catch (e) {}
         playBeep(880, 'triangle', 0.15);
         document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
@@ -1541,7 +1541,7 @@
 
       const welcomeMsg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
       showToast('👑 ' + welcomeMsg);
-      speakVietnamese(welcomeMsg);
+      speakVietnamese(currentCustomerName);
 
       document.getElementById('loginBox').classList.add('hidden');
       document.getElementById('menuBox').classList.remove('hidden');
