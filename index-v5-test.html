@@ -1608,7 +1608,7 @@
 
       // Tải ngầm trước các câu thoại MP3 trong lúc chạy 0% -> 100% để phát tức thì không bị trễ
       const cleanName = (currentCustomerName || 'VIP').trim();
-      getCloudVietnameseMp3(`Dạ, đã kích hoạt cấu hình thành công! Mời quý khách ${cleanName}, chọn phiên bản Free Fire để vào game.`);
+      getCloudVietnameseMp3(`Đã kích hoạt thành công! Xin mời quý khách ${cleanName} chọn phiên bản game để bắt đầu`);
       getCloudVietnameseMp3('Đang mở Free Fire thường, chúc quý khách chơi game vui vẻ!');
       getCloudVietnameseMp3('Đang mở Free Fire Max, chúc quý khách chơi game vui vẻ!');
 
@@ -1662,7 +1662,7 @@
 
             // Phát giọng nói mời chọn Free Fire Thường hoặc Free Fire MAX
             const cleanName = (currentCustomerName || 'VIP').trim();
-            speakCustomText(`Dạ, đã kích hoạt cấu hình thành công! Mời quý khách ${cleanName}, chọn phiên bản Free Fire để vào game.`);
+            speakCustomText(`Đã kích hoạt thành công! Xin mời quý khách ${cleanName} chọn phiên bản game để bắt đầu`);
           }, 350);
         }
       }, 45);
