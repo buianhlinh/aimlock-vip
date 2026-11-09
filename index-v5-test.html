@@ -940,13 +940,10 @@
       <!-- THẺ CHÀO MỪNG ĐÍCH DANH TÊN KHÁCH TRÊN HỆ THỐNG KEY -->
       <div class="vip-welcome-card">
         <div class="vip-welcome-left">
-          <div class="vip-welcome-tag">👑 CHÀO MỪNG QUÝ KHÁCH VIP</div>
+          <div class="vip-welcome-tag">👑 KHÁCH HÀNG VIP BẢN QUYỀN</div>
           <div class="vip-customer-name" id="vipCustomerNameDisplay">QUÝ KHÁCH VIP</div>
           <div class="vip-expiry-sub" id="keyExpiryBadge">⏳ Hạn dùng: Vĩnh viễn</div>
         </div>
-        <button type="button" class="btn-speak-again" onclick="speakWelcomeCurrentCustomer()">
-          🔊 Nghe chào
-        </button>
       </div>
 
       <!-- TAB 1: BẢNG ĐIỀU KHIỂN CHỨC NĂNG -->
@@ -1483,9 +1480,7 @@
         playBeep(880, 'triangle', 0.15);
         document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
         document.getElementById('keyExpiryBadge').innerText = '👑 Master Key (Vĩnh Viễn)';
-        const welcomeMsg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
-        showToast('👑 ' + welcomeMsg);
-        speakVietnamese(currentCustomerName);
+        showToast('👑 Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro');
         document.getElementById('loginBox').classList.add('hidden');
         document.getElementById('menuBox').classList.remove('hidden');
         return;
@@ -1539,9 +1534,7 @@
       document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
       document.getElementById('keyExpiryBadge').innerText = '⏳ Hạn dùng: ' + check.remainingText;
 
-      const welcomeMsg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
-      showToast('👑 ' + welcomeMsg);
-      speakVietnamese(currentCustomerName);
+      showToast('👑 Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro');
 
       document.getElementById('loginBox').classList.add('hidden');
       document.getElementById('menuBox').classList.remove('hidden');
@@ -1606,11 +1599,9 @@
       playBeep(750, 'sine', 0.15);
       document.getElementById('preActivationModal').classList.remove('active');
 
-      // Tải ngầm trước các câu thoại MP3 trong lúc chạy 0% -> 100% để phát tức thì không bị trễ
+      // Tải ngầm trước câu thoại MP3 trong lúc chạy 0% -> 100% để khi hiện bảng chọn game là phát tức thì
       const cleanName = (currentCustomerName || 'VIP').trim();
       getCloudVietnameseMp3(`Đã kích hoạt thành công! Xin mời quý khách ${cleanName} chọn phiên bản game để bắt đầu`);
-      getCloudVietnameseMp3('Đang mở Free Fire thường, chúc quý khách chơi game vui vẻ!');
-      getCloudVietnameseMp3('Đang mở Free Fire Max, chúc quý khách chơi game vui vẻ!');
 
       startProgressAnimation();
     }
@@ -1730,21 +1721,12 @@
     }
 
     function launchGame(version) {
-      unlockAudioOnTouch();
       playBeep(850, 'triangle', 0.2);
       closeModal();
       startPlaySession(version);
-
-      const gameSpeech = version === 'max'
-        ? 'Đang mở Free Fire Max, chúc quý khách chơi game vui vẻ!'
-        : 'Đang mở Free Fire thường, chúc quý khách chơi game vui vẻ!';
-      showToast('🔊 ' + gameSpeech);
-      speakCustomText(gameSpeech);
-
-      // Đợi 1.8 giây cho giọng đọc phát rõ câu chúc rồi chuyển sang ứng dụng Free Fire
       setTimeout(() => {
         window.location.href = version === 'max' ? 'freefiremax://' : 'freefire://';
-      }, 1800);
+      }, 300);
     }
 
     function closeModal() {
