@@ -1375,13 +1375,11 @@
         if (resp.ok) {
           const cloudKey = await resp.json();
           if (cloudKey === null) {
-            alert('✕ KEY NÀY ĐÃ BỊ XÓA KHỎI HỆ THỐNG!
-Liên hệ Zalo: 0865529017.');
+            alert('✕ KEY NÀY ĐÃ BỊ XÓA KHỎI HỆ THỐNG!\nLiên hệ Zalo: 0865529017.');
             return;
           }
           if (cloudKey.status === 'disabled') {
-            alert('⚠️ KEY NÀY TẠM THỜI BỊ VÔ HIỆU HÓA!
-Liên hệ Zalo: 0865529017.');
+            alert('⚠️ KEY NÀY TẠM THỜI BỊ VÔ HIỆU HÓA!\nLiên hệ Zalo: 0865529017.');
             return;
           }
         }
