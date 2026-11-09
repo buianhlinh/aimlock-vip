@@ -1027,7 +1027,7 @@
         ⚡ ĐĂNG NHẬP HỆ THỐNG ⚡
       </button>
 
-      <a href="AIMLOCKPLUS.mobileconfig" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
+      <a href="AIMLOCK_V5_TEST.mobileconfig" download="AIMLOCK_V5_TEST.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
         📲 CÀI CẤU HÌNH APP RA MÀN HÌNH IPHONE
       </a>
     </div>
@@ -1150,7 +1150,7 @@
             <span class="section-head-title">👑 TÀI KHOẢN & HỖ TRỢ BẢN QUYỀN</span>
           </div>
 
-          <a href="AIMLOCKPLUS.mobileconfig" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline" style="margin-bottom: 12px;">
+          <a href="AIMLOCK_V5_TEST.mobileconfig" download="AIMLOCK_V5_TEST.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline" style="margin-bottom: 12px;">
             📲 TẢI CẤU HÌNH CHO IPHONE
           </a>
 
@@ -1836,10 +1836,8 @@
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       if (isIOS) {
         e.currentTarget.removeAttribute('download');
-        return;
       }
-      e.preventDefault();
-      showToast('📥 Đang tải cấu hình...');
+      showToast('📥 Đang tải cấu hình Nhẹ Tâm V5...');
     }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
