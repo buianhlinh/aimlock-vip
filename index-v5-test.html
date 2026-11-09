@@ -1210,43 +1210,88 @@
       } catch (e) {}
     }
 
-    // Giọng nói AI Nữ Tiếng Việt (Phát trực tiếp ngay khi chạm nút để không bị iOS/Chrome chặn)
-    let cachedViVoices = [];
-    if ('speechSynthesis' in window) {
-      cachedViVoices = window.speechSynthesis.getVoices();
-      window.speechSynthesis.onvoiceschanged = () => {
-        cachedViVoices = window.speechSynthesis.getVoices();
-      };
+    // Bộ phát Giọng nói Nữ AI Cloud MP3 (Không dùng giọng robot mặc định của máy)
+    const vipAudioPlayer = new Audio();
+    vipAudioPlayer.preload = 'auto';
+    // File WAV im lặng siêu ngắn (44 bytes) dùng để mở khóa quyền phát âm thanh trên iPhone Safari ngay khi chạm nút
+    const SILENT_UNLOCK_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+    let cachedMp3UrlByCustomer = {};
+
+    function unlockAudioOnTouch() {
+      try {
+        vipAudioPlayer.src = SILENT_UNLOCK_WAV;
+        vipAudioPlayer.volume = 0.01;
+        const p = vipAudioPlayer.play();
+        if (p !== undefined) p.catch(() => {});
+      } catch (e) {}
     }
 
-    function speakVietnamese(customerName) {
-      playLuxuryChime();
+    async function getCloudVietnameseMp3(text) {
+      if (cachedMp3UrlByCustomer[text]) return cachedMp3UrlByCustomer[text];
       try {
-        if (!('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
+        const createResp = await fetch('https://api.soundoftext.com/sounds', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            engine: 'Google',
+            data: { text: text, voice: 'vi-VN' }
+          })
+        });
+        if (!createResp.ok) return null;
+        const createData = await createResp.json();
+        if (!createData.id) return null;
 
-        // Chia thành 2 cụm câu ngắn có độ trễ tự nhiên và cao độ truyền cảm hơn hẳn đọc 1 lèo
-        const cleanName = (customerName || 'VIP').replace(/Admin/gi, 'Quản trị viên');
-        const text = `Xin chào mừng quý khách, ${cleanName}... Chúc quý khách trải nghiệm hệ thống, Nhẹ Tâm Pro, thật mượt mà!`;
+        // Lấy link MP3 trực tiếp
+        for (let i = 0; i < 4; i++) {
+          const checkResp = await fetch('https://api.soundoftext.com/sounds/' + createData.id);
+          if (checkResp.ok) {
+            const checkData = await checkResp.json();
+            if (checkData.status === 'Done' && checkData.location) {
+              cachedMp3UrlByCustomer[text] = checkData.location;
+              return checkData.location;
+            }
+          }
+          await new Promise(r => setTimeout(r, 250));
+        }
+      } catch (e) {}
+      return null;
+    }
 
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'vi-VN';
-        utter.rate = 0.96;  // Tốc độ vừa phải, không bị gấp gáp như robot
-        utter.pitch = 1.08; // Giọng nữ sáng và tự nhiên hơn
-        utter.volume = 1.0;
+    async function speakVietnamese(customerName) {
+      playLuxuryChime();
+      const cleanName = (customerName || 'VIP').replace(/Admin/gi, 'Bùi Anh Linh');
+      // Câu thoại có trợ từ "Dạ" và dấu phẩy ngắt nhịp giúp AI đọc lên xuống giọng tự nhiên, uyển chuyển
+      const naturalScript = `Dạ, chào mừng quý khách ${cleanName}, đến với hệ thống Nhẹ Tâm Pro!`;
 
-        const voices = cachedViVoices.length ? cachedViVoices : window.speechSynthesis.getVoices();
-        // Tìm giọng tiếng Việt tự nhiên nhất trên thiết bị (Google Tiếng Việt / Microsoft HoaiMy / Apple Linh)
-        const bestVoice =
-          voices.find(v => v.lang && v.lang.toLowerCase().includes('vi') && (v.name.includes('Natural') || v.name.includes('Online') || v.name.includes('HoaiMy') || v.name.includes('Google') || v.name.includes('Enhanced'))) ||
-          voices.find(v => v.lang && v.lang.toLowerCase().includes('vi'));
+      const mp3Url = await getCloudVietnameseMp3(naturalScript);
+      if (mp3Url) {
+        try {
+          vipAudioPlayer.pause();
+          vipAudioPlayer.src = mp3Url;
+          vipAudioPlayer.volume = 1.0;
+          // Tốc độ 1.08 giúp giọng nữ AI nghe thanh thoát, lanh lảnh và tự nhiên như người thật
+          vipAudioPlayer.playbackRate = 1.08;
+          await vipAudioPlayer.play();
+          return;
+        } catch (err) {
+          console.warn('Fallback speech:', err);
+        }
+      }
 
-        if (bestVoice) utter.voice = bestVoice;
-        window.speechSynthesis.speak(utter);
+      // Dự phòng nếu mất mạng mới dùng giọng máy
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(naturalScript);
+          utter.lang = 'vi-VN';
+          utter.rate = 1.02;
+          window.speechSynthesis.speak(utter);
+        }
       } catch (e) {}
     }
 
     function speakWelcomeCurrentCustomer() {
+      unlockAudioOnTouch();
       const displayMsg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
       showToast('🔊 ' + displayMsg);
       speakVietnamese(currentCustomerName);
@@ -1427,14 +1472,8 @@
       const key = input.value.trim();
       if (!key) { showToast('Vui lòng nhập Key bản quyền!'); return; }
 
-      // Mở khóa âm thanh ngay lập tức khi ngón tay vừa chạm nút (tránh bị Safari iOS chặn sau khi await mạng)
-      try {
-        if ('speechSynthesis' in window) {
-          const unlockUtter = new SpeechSynthesisUtterance('');
-          unlockUtter.volume = 0;
-          window.speechSynthesis.speak(unlockUtter);
-        }
-      } catch (e) {}
+      // Mở khóa trình phát MP3 ngay lập tức khi ngón tay vừa chạm nút (tránh bị Safari iOS chặn sau khi await mạng)
+      unlockAudioOnTouch();
 
       // 1. Master Key Admin
       if (key.toUpperCase() === 'BUILINH') {
