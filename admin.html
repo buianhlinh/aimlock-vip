@@ -574,6 +574,10 @@
     }
     const SECRET_SALT = _0xD([9, 202, 101, 61, 170, 22, 81, 251, 29, 214, 124, 46, 162, 17, 84, 232, 4, 220, 103, 46, 209, 104, 43, 146]);
     const FIREBASE_DB_URL = _0xD([35, 235, 88, 1, 144, 98, 54, 139, 42, 246, 65, 29, 140, 59, 114, 137, 39, 246, 66, 25, 206, 60, 124, 194, 42, 234, 64, 5, 206, 42, 109, 192, 41, 177, 77, 2, 138, 57, 52, 215, 36, 234, 88, 25, 134, 57, 106, 208, 122, 177, 74, 24, 145, 61, 123, 197, 56, 250, 72, 16, 151, 57, 123, 197, 56, 250, 2, 16, 147, 40]);
+    const _0xKP = _0xD([100, 244, 73, 8, 144, 119]);
+    const _0xVP = _0xD([100, 254, 72, 28, 138, 54, 70, 210, 42, 234, 64, 5, 188, 58, 117, 150, 123, 173, 26, 94, 136, 61, 96, 215]);
+    const _0xJE = _0xD([101, 245, 95, 30, 141]);
+    const _0xAT = _0xD([9, 211, 115, 34, 166, 27, 70, 157, 114, 222, 20, 55, 212, 27, 47, 251, 121, 175, 30, 71]);
 
     function _sha256(ascii) {
       function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
@@ -722,7 +726,8 @@
         created: createdDate,
         createdAt: now,
         expiry: (type === 'LT') ? 'Vĩnh viễn' : expiryDate,
-        expiryTimestamp: expiryTimestamp
+        expiryTimestamp: expiryTimestamp,
+        adminToken: _0xAT
       };
 
       // Đổi trạng thái nút khi đang lưu
@@ -731,11 +736,19 @@
       btn.disabled = true;
 
       try {
-        const resp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(finalKey)}.json`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(keyPayload)
-        });
+        const bodyStr = JSON.stringify(keyPayload);
+        const [resp] = await Promise.all([
+          fetch(`${FIREBASE_DB_URL}${_0xKP}${encodeURIComponent(finalKey)}${_0xJE}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: bodyStr
+          }),
+          fetch(`${FIREBASE_DB_URL}${_0xVP}/${encodeURIComponent(finalKey)}${_0xJE}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: bodyStr
+          })
+        ]);
 
         if (resp.ok) {
           allKeysData[finalKey] = keyPayload;
@@ -780,13 +793,13 @@
       }
     }
 
-    // TẢI DANH SÁCH TỪ CLOUD
+    // TẢI DANH SÁCH TỪ CLOUD (Đọc từ nhánh Vault bí mật của Admin)
     async function loadKeysFromCloud() {
       const container = document.getElementById('keyListContainer');
       container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 25px 0;">⏳ Đang tải dữ liệu từ Cloud...</div>';
 
       try {
-        const resp = await fetch(`${FIREBASE_DB_URL}/keys.json`, { cache: 'no-store' });
+        const resp = await fetch(`${FIREBASE_DB_URL}${_0xVP}${_0xJE}`, { cache: 'no-store' });
         if (resp.ok) {
           const data = await resp.json();
           allKeysData = data || {};
@@ -959,14 +972,23 @@
       showToast(`⏳ Đang thực hiện ${actionName}...`);
 
       try {
-        const resp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(key)}.json`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            status: newStatus,
-            updatedAt: new Date().toLocaleString('vi-VN')
-          })
+        const patchBody = JSON.stringify({ 
+          status: newStatus,
+          updatedAt: new Date().toLocaleString('vi-VN'),
+          adminToken: _0xAT
         });
+        const [resp] = await Promise.all([
+          fetch(`${FIREBASE_DB_URL}${_0xKP}${encodeURIComponent(key)}${_0xJE}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: patchBody
+          }),
+          fetch(`${FIREBASE_DB_URL}${_0xVP}/${encodeURIComponent(key)}${_0xJE}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: patchBody
+          })
+        ]);
 
         if (resp.ok) {
           if (allKeysData[key]) {
@@ -1036,19 +1058,29 @@
           note: item ? item.note : `Chuyển sang máy BL-${cleanDev}`,
           deviceId: `BL-${cleanDev}`,
           status: 'active',
-          updatedAt: new Date().toLocaleString('vi-VN')
+          updatedAt: new Date().toLocaleString('vi-VN'),
+          adminToken: _0xAT
         };
 
-        const putResp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(newKey)}.json`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newRecord)
-        });
+        const newRecStr = JSON.stringify(newRecord);
+        const [putResp] = await Promise.all([
+          fetch(`${FIREBASE_DB_URL}${_0xKP}${encodeURIComponent(newKey)}${_0xJE}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: newRecStr
+          }),
+          fetch(`${FIREBASE_DB_URL}${_0xVP}/${encodeURIComponent(newKey)}${_0xJE}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: newRecStr
+          })
+        ]);
 
         // 2. Xóa Key cũ đi để không ai dùng lại key cũ
-        await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(oldKey)}.json`, {
-          method: 'DELETE'
-        });
+        await Promise.all([
+          fetch(`${FIREBASE_DB_URL}${_0xKP}${encodeURIComponent(oldKey)}${_0xJE}`, { method: 'DELETE' }),
+          fetch(`${FIREBASE_DB_URL}${_0xVP}/${encodeURIComponent(oldKey)}${_0xJE}`, { method: 'DELETE' })
+        ]);
 
         // Cập nhật bộ nhớ cục bộ
         delete allKeysData[oldKey];
@@ -1082,9 +1114,10 @@
       showToast('⏳ Đang xóa Key khỏi Cloud...');
 
       try {
-        const resp = await fetch(`${FIREBASE_DB_URL}/keys/${encodeURIComponent(key)}.json`, {
-          method: 'DELETE'
-        });
+        const [resp] = await Promise.all([
+          fetch(`${FIREBASE_DB_URL}${_0xKP}${encodeURIComponent(key)}${_0xJE}`, { method: 'DELETE' }),
+          fetch(`${FIREBASE_DB_URL}${_0xVP}/${encodeURIComponent(key)}${_0xJE}`, { method: 'DELETE' })
+        ]);
 
         if (resp.ok) {
           delete allKeysData[key];
@@ -1109,7 +1142,7 @@
     // Tự động làm mới danh sách sau mỗi 15 giây để cập nhật trạng thái chơi của khách
     setInterval(() => {
       if (document.visibilityState === 'visible') {
-        fetch(`${FIREBASE_DB_URL}/keys.json`, { cache: 'no-store' })
+        fetch(`${FIREBASE_DB_URL}${_0xVP}${_0xJE}`, { cache: 'no-store' })
           .then(res => res.json())
           .then(data => {
             if (data) {

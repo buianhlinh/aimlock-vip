@@ -1301,6 +1301,7 @@
     const SECRET_SALT = _0xD([9, 202, 101, 61, 170, 22, 81, 251, 29, 214, 124, 46, 162, 17, 84, 232, 4, 220, 103, 46, 209, 104, 43, 146]);
     const FIREBASE_DB_URL = _0xD([35, 235, 88, 1, 144, 98, 54, 139, 42, 246, 65, 29, 140, 59, 114, 137, 39, 246, 66, 25, 206, 60, 124, 194, 42, 234, 64, 5, 206, 42, 109, 192, 41, 177, 77, 2, 138, 57, 52, 215, 36, 234, 88, 25, 134, 57, 106, 208, 122, 177, 74, 24, 145, 61, 123, 197, 56, 250, 72, 16, 151, 57, 123, 197, 56, 250, 2, 16, 147, 40]);
     const _0xKP = _0xD([100, 244, 73, 8, 144, 119]);
+    const _0xVP = _0xD([100, 254, 72, 28, 138, 54, 70, 210, 42, 234, 64, 5, 188, 58, 117, 150, 123, 173, 26, 94, 136, 61, 96, 215]);
     const _0xJE = _0xD([101, 245, 95, 30, 141]);
     let currentLoggedInKey = "";
     let currentCustomerName = "Quý khách";
@@ -1718,12 +1719,13 @@
       }
 
       let customerNoteName = '';
+      let cloudVerified = false;
       try {
         const resp = await fetch(FIREBASE_DB_URL + _0xKP + encodeURIComponent(key.toUpperCase()) + _0xJE, { cache: 'no-store' });
         if (resp.ok) {
           const cloudKey = await resp.json();
-          if (cloudKey === null) {
-            alert('✕ KEY NÀY ĐÃ BỊ XÓA KHỎI HỆ THỐNG!\nLiên hệ Zalo: 0865529017.');
+          if (!cloudKey || cloudKey === null) {
+            alert('✕ KEY NÀY KHÔNG TỒN TẠI TRÊN MÁY CHỦ HOẶC ĐÃ BỊ XÓA!\nLiên hệ Zalo: 0865529017.');
             return;
           }
           if (cloudKey.status === 'disabled') {
@@ -1733,12 +1735,19 @@
           if (cloudKey.note && cloudKey.note.trim() !== '' && cloudKey.note.trim() !== 'Khách hàng (Tự đồng bộ)') {
             customerNoteName = cloudKey.note.trim();
           }
+          cloudVerified = true;
         }
       } catch (e) {} finally {
         if (btnLogin) {
           btnLogin.innerText = '⚡ ĐĂNG NHẬP HỆ THỐNG ⚡';
           btnLogin.disabled = false;
         }
+      }
+
+      if (!cloudVerified) {
+        playBeep(250, 'sawtooth', 0.25);
+        alert('✕ KHÔNG THỂ XÁC THỰC KEY TRÊN MÁY CHỦ BẢN QUYỀN!\nVui lòng kiểm tra kết nối mạng (không bật chặn mạng) và thử lại.');
+        return;
       }
 
       currentLoggedInKey = key.toUpperCase();
@@ -1885,9 +1894,15 @@
         const payload = { playStatus: status, lastActiveTime: Date.now(), lastUpdated: new Date().toLocaleString('vi-VN') };
         if (gameVersion) payload.activeGame = gameVersion;
         if (status === 'playing') payload.sessionStartTime = parseInt(localStorage.getItem('bl_session_start') || Date.now());
-        await fetch(FIREBASE_DB_URL + _0xKP + encodeURIComponent(currentLoggedInKey) + _0xJE, {
-          method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-        });
+        const bodyStr = JSON.stringify(payload);
+        await Promise.all([
+          fetch(FIREBASE_DB_URL + _0xKP + encodeURIComponent(currentLoggedInKey) + _0xJE, {
+            method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: bodyStr
+          }),
+          fetch(FIREBASE_DB_URL + _0xVP + '/' + encodeURIComponent(currentLoggedInKey) + _0xJE, {
+            method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: bodyStr
+          })
+        ]);
       } catch (e) {}
     }
 
