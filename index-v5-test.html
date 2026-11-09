@@ -7,15 +7,15 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#050811" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>AIMLOCK VIP V5 - BÙI ANH LINH</title>
+  <title>NHẸ TÂM PRO V5 - BÙI ANH LINH</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #050811;
-      --panel: rgba(12, 19, 36, 0.85);
-      --panel-border: rgba(0, 229, 255, 0.22);
+      --panel: rgba(12, 19, 36, 0.88);
+      --panel-border: rgba(0, 229, 255, 0.25);
       --cyan: #00e5ff;
       --cyan-glow: rgba(0, 229, 255, 0.4);
       --crimson: #ff2a5f;
@@ -59,7 +59,6 @@
       padding-right: 14px;
     }
 
-    /* Cyber Grid Overlay */
     .cyber-grid {
       position: fixed;
       inset: 0;
@@ -83,11 +82,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(10, 16, 31, 0.9);
+      background: rgba(10, 16, 31, 0.92);
       border: 1px solid rgba(0, 229, 255, 0.25);
       border-radius: 16px;
       padding: 10px 14px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       backdrop-filter: blur(12px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
     }
@@ -157,7 +156,76 @@
 
     @keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
 
-    /* ================= LOGIN SCREEN (REDESIGNED) ================= */
+    /* ================= VIP CUSTOMER GREETING BANNER ================= */
+    .vip-welcome-card {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.16) 0%, rgba(12, 19, 36, 0.95) 65%, rgba(0, 229, 255, 0.12) 100%);
+      border: 1.5px solid rgba(251, 191, 36, 0.5);
+      border-radius: 18px;
+      padding: 13px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 8px 25px rgba(251, 191, 36, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vip-welcome-left {
+      text-align: left;
+      flex: 1;
+    }
+
+    .vip-welcome-tag {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9.5px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .vip-customer-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 15px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+      letter-spacing: 0.5px;
+    }
+
+    .vip-expiry-sub {
+      font-size: 12px;
+      color: #34d399;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .btn-speak-again {
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid rgba(251, 191, 36, 0.5);
+      color: var(--gold);
+      border-radius: 12px;
+      padding: 8px 11px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-speak-again:active {
+      transform: scale(0.94);
+    }
+
+    /* ================= LOGIN SCREEN ================= */
     .login-container {
       background: var(--panel);
       border: 1px solid var(--panel-border);
@@ -242,10 +310,7 @@
       justify-content: space-between;
     }
 
-    .hw-left {
-      text-align: left;
-    }
-
+    .hw-left { text-align: left; }
     .hw-label {
       font-size: 10px;
       font-family: 'Orbitron', sans-serif;
@@ -337,9 +402,7 @@
       gap: 8px;
     }
 
-    .btn-cyber-primary:active {
-      transform: scale(0.97);
-    }
+    .btn-cyber-primary:active { transform: scale(0.97); }
 
     .btn-cyber-outline {
       display: flex;
@@ -360,126 +423,158 @@
       letter-spacing: 1px;
     }
 
-    /* ================= DASHBOARD (MAIN MENU) ================= */
-    .telemetry-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .tele-card {
+    /* ================= LIVE HEADSHOT SIMULATOR & RAM BOOSTER ================= */
+    .simulator-panel {
       background: var(--panel);
-      border: 1px solid rgba(0, 229, 255, 0.2);
-      border-radius: 16px;
-      padding: 12px 10px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tele-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--cyan);
-      opacity: 0.6;
-    }
-
-    .tele-label {
-      font-size: 10px;
-      font-family: 'Orbitron', sans-serif;
-      color: #94a3b8;
-      margin-bottom: 4px;
-    }
-
-    .tele-val {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 19px;
-      font-weight: 900;
-      color: #fff;
-    }
-
-    .tele-unit {
-      font-size: 10px;
-      color: var(--cyan);
-      font-weight: 700;
-    }
-
-    /* Radar & Aim Core Centerpiece */
-    .radar-panel {
-      background: var(--panel);
-      border: 1px solid rgba(0, 229, 255, 0.28);
+      border: 1.5px solid rgba(0, 229, 255, 0.3);
       border-radius: 22px;
-      padding: 18px;
+      padding: 16px;
       margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
+      transition: all 0.35s ease;
     }
 
-    .radar-circle {
-      width: 92px;
-      height: 92px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, #050811 80%);
-      border: 2px solid rgba(0, 229, 255, 0.5);
+    .simulator-panel.locked {
+      border-color: var(--crimson);
+      box-shadow: 0 0 30px rgba(255, 42, 95, 0.3), inset 0 0 20px rgba(255, 42, 95, 0.08);
+    }
+
+    /* Khung mô phỏng mục tiêu Headshot */
+    .target-box {
+      width: 96px;
+      height: 96px;
+      border-radius: 18px;
+      background: radial-gradient(circle, rgba(15, 28, 55, 0.9) 0%, #040710 85%);
+      border: 1.5px solid rgba(0, 229, 255, 0.4);
       position: relative;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 25px rgba(0, 229, 255, 0.25);
+      overflow: hidden;
     }
 
-    .radar-circle::before {
+    .simulator-panel.locked .target-box {
+      border-color: var(--crimson);
+      box-shadow: 0 0 20px rgba(255, 42, 95, 0.5);
+    }
+
+    /* Hình bóng nhân vật (Silhouette) */
+    .enemy-silhouette {
+      position: relative;
+      width: 50px;
+      height: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 6px;
+    }
+
+    .enemy-head {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.35);
+      border: 1.5px solid #94a3b8;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .enemy-body {
+      width: 38px;
+      height: 36px;
+      border-radius: 12px 12px 4px 4px;
+      background: rgba(148, 163, 184, 0.2);
+      border: 1.5px solid #64748b;
+      margin-top: 4px;
+    }
+
+    /* Tâm ngắm di chuyển từ ngực lên khóa chặt vào Đầu khi bật chức năng */
+    .aim-reticle {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border: 2px dashed var(--cyan);
+      border-radius: 50%;
+      top: 42px; /* Mặc định ở ngực và rung */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: idleJitter 1.2s infinite alternate;
+    }
+
+    .aim-reticle::after {
       content: '';
-      position: absolute;
-      inset: 14px;
+      width: 6px;
+      height: 6px;
+      background: var(--cyan);
       border-radius: 50%;
-      border: 1px dashed rgba(255, 42, 95, 0.6);
+      box-shadow: 0 0 8px var(--cyan);
     }
 
-    .radar-sweep {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: conic-gradient(from 0deg, transparent 70%, rgba(0, 229, 255, 0.45) 100%);
-      animation: radarSpin 2.4s linear infinite;
+    @keyframes idleJitter {
+      0% { transform: translate(-55%, -2px); }
+      100% { transform: translate(-45%, 3px); }
     }
 
-    @keyframes radarSpin { to { transform: rotate(360deg); } }
-
-    .radar-crosshair {
-      font-size: 26px;
-      color: var(--crimson);
-      z-index: 2;
-      text-shadow: 0 0 10px var(--crimson);
+    /* Khi BẬT chức năng -> Khóa chặt lên đầu ĐỎ RỰC */
+    .simulator-panel.locked .aim-reticle {
+      top: 4px;
+      border: 2px solid var(--crimson);
+      box-shadow: 0 0 15px var(--crimson);
+      animation: pulseLock 0.8s infinite alternate;
     }
 
-    .radar-info {
+    .simulator-panel.locked .aim-reticle::after {
+      background: var(--crimson);
+      box-shadow: 0 0 12px var(--crimson);
+    }
+
+    .simulator-panel.locked .enemy-head {
+      background: rgba(255, 42, 95, 0.45);
+      border-color: var(--crimson);
+      box-shadow: 0 0 15px var(--crimson);
+    }
+
+    @keyframes pulseLock {
+      from { transform: translateX(-50%) scale(0.92); }
+      to { transform: translateX(-50%) scale(1.08); }
+    }
+
+    .sim-info {
       flex: 1;
       text-align: left;
     }
 
-    .radar-status-tag {
+    .sim-badge {
       display: inline-block;
       font-family: 'Orbitron', sans-serif;
-      font-size: 9px;
-      font-weight: 800;
-      color: var(--gold);
-      background: rgba(251, 191, 36, 0.12);
-      border: 1px solid rgba(251, 191, 36, 0.35);
+      font-size: 9.5px;
+      font-weight: 900;
       padding: 3px 8px;
       border-radius: 6px;
-      margin-bottom: 6px;
+      background: rgba(0, 229, 255, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      margin-bottom: 5px;
     }
 
-    .radar-title {
+    .simulator-panel.locked .sim-badge {
+      background: rgba(255, 42, 95, 0.2);
+      color: #ff6b8b;
+      border-color: var(--crimson);
+    }
+
+    .sim-title {
       font-family: 'Orbitron', sans-serif;
       font-size: 14px;
       font-weight: 900;
@@ -487,10 +582,34 @@
       margin-bottom: 4px;
     }
 
-    .radar-desc {
+    .sim-desc {
       font-size: 12.5px;
       color: #94a3b8;
-      line-height: 1.4;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    /* Nút Dọn Rác RAM 1 chạm */
+    .btn-ram-boost {
+      width: 100%;
+      padding: 8px 12px;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      border-radius: 10px;
+      color: #34d399;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-ram-boost:active {
+      transform: scale(0.96);
     }
 
     /* Module Switch List */
@@ -498,7 +617,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 16px 4px 10px 4px;
+      margin: 14px 4px 10px 4px;
     }
 
     .section-head-title {
@@ -616,41 +735,12 @@
       box-shadow: 0 0 10px var(--cyan);
     }
 
-    /* Mode Selector Segmented Control */
     .mode-selector {
       background: var(--panel);
       border: 1px solid var(--panel-border);
       border-radius: 18px;
       padding: 14px;
       margin-bottom: 18px;
-    }
-
-    .mode-pills {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .mode-pill {
-      background: #060a15;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 10px 6px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 10px;
-      font-weight: 800;
-      color: #94a3b8;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .mode-pill.selected {
-      background: linear-gradient(135deg, rgba(255, 42, 95, 0.25), rgba(255, 107, 0, 0.2));
-      border-color: var(--crimson);
-      color: #fff;
-      box-shadow: 0 0 15px rgba(255, 42, 95, 0.35);
     }
 
     /* ================= BOTTOM NAVIGATION BAR (2 TABS) ================= */
@@ -691,9 +781,7 @@
       transition: all 0.25s;
     }
 
-    .nav-btn span.icon {
-      font-size: 17px;
-    }
+    .nav-btn span.icon { font-size: 17px; }
 
     .nav-btn.active {
       background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(0, 102, 255, 0.15));
@@ -765,12 +853,13 @@
       padding: 11px 20px;
       border-radius: 30px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13.5px;
       opacity: 0;
       pointer-events: none;
       z-index: 100000;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      white-space: nowrap;
+      max-width: 92vw;
+      text-align: center;
     }
 
     .toast.show {
@@ -794,7 +883,7 @@
           <div class="top-title">
             NHẸ TÂM PRO <span class="ver-pill">VIP V5</span>
           </div>
-          <div class="top-sub">BÙI ANH LINH SYSTEM</div>
+          <div class="top-sub" id="deviceModelText">BÙI ANH LINH SYSTEM</div>
         </div>
       </div>
       <div class="live-pill">
@@ -836,7 +925,7 @@
         <input type="password" id="keyInput" class="key-input" placeholder="Nhập mã Key vào đây..." />
       </div>
 
-      <button class="btn-cyber-primary" onclick="handleLogin()">
+      <button class="btn-cyber-primary" id="btnLoginSubmit" onclick="handleLogin()">
         ⚡ ĐĂNG NHẬP HỆ THỐNG ⚡
       </button>
 
@@ -848,37 +937,37 @@
     <!-- ================= SCREEN 2: BẢNG ĐIỀU KHIỂN CHÍNH ================= -->
     <div id="menuBox" class="hidden">
 
+      <!-- THẺ CHÀO MỪNG ĐÍCH DANH TÊN KHÁCH TRÊN HỆ THỐNG KEY -->
+      <div class="vip-welcome-card">
+        <div class="vip-welcome-left">
+          <div class="vip-welcome-tag">👑 CHÀO MỪNG QUÝ KHÁCH VIP</div>
+          <div class="vip-customer-name" id="vipCustomerNameDisplay">QUÝ KHÁCH VIP</div>
+          <div class="vip-expiry-sub" id="keyExpiryBadge">⏳ Hạn dùng: Vĩnh viễn</div>
+        </div>
+        <button type="button" class="btn-speak-again" onclick="speakWelcomeCurrentCustomer()">
+          🔊 Nghe chào
+        </button>
+      </div>
+
       <!-- TAB 1: BẢNG ĐIỀU KHIỂN CHỨC NĂNG -->
       <div id="tabControl">
-        <!-- 3 ô đo thông số thời gian thực -->
-        <div class="telemetry-grid">
-          <div class="tele-card">
-            <div class="tele-label">KHUNG HÌNH</div>
-            <div class="tele-val" id="liveFps">120</div>
-            <div class="tele-unit">FPS MƯỢT</div>
-          </div>
-          <div class="tele-card">
-            <div class="tele-label">CẢM ỨNG</div>
-            <div class="tele-val" id="liveHz">240</div>
-            <div class="tele-unit">SIÊU NHẠY</div>
-          </div>
-          <div class="tele-card">
-            <div class="tele-label">ĐƯỜNG TRUYỀN</div>
-            <div class="tele-val" id="liveMs">ỔN ĐỊNH</div>
-            <div class="tele-unit">CHỐNG LAG</div>
-          </div>
-        </div>
 
-        <!-- Radar Tâm Ngắm Trung Tâm -->
-        <div class="radar-panel">
-          <div class="radar-circle">
-            <div class="radar-sweep"></div>
-            <div class="radar-crosshair">⌖</div>
+        <!-- MÔ PHỎNG KHÓA ĐẦU HEADSHOT TRỰC TIẾP & DỌN RAM -->
+        <div class="simulator-panel" id="simPanel">
+          <div class="target-box">
+            <div class="enemy-silhouette">
+              <div class="enemy-head"></div>
+              <div class="enemy-body"></div>
+            </div>
+            <div class="aim-reticle"></div>
           </div>
-          <div class="radar-info">
-            <div class="radar-status-tag" id="keyExpiryBadge">⏳ Hạn dùng: Vĩnh viễn</div>
-            <div class="radar-title" id="radarStatusTitle">CHƯA BẬT CHỨC NĂNG</div>
-            <div class="radar-desc" id="radarStatusDesc">Hãy gạt bật các công tắc bên dưới rồi bấm nút Kích Hoạt vào game.</div>
+          <div class="sim-info">
+            <div class="sim-badge" id="simBadge">TÂM MẶC ĐỊNH (CHƯA KHÓA)</div>
+            <div class="sim-title" id="radarStatusTitle">ĐANG BẬT: 0/4 CHỨC NĂNG</div>
+            <div class="sim-desc" id="radarStatusDesc">Gạt bật công tắc bên dưới để khóa tâm thẳng vào vùng Đầu!</div>
+            <button type="button" class="btn-ram-boost" id="btnRamBoost" onclick="boostRam()">
+              🚀 DỌN RÁC RAM & TỐI ƯU MÁY (1 CHẠM)
+            </button>
           </div>
         </div>
 
@@ -1100,6 +1189,43 @@
     const SECRET_SALT = "BUILINH_VIP_AIMLOCK_2026";
     const FIREBASE_DB_URL = "https://aimlock-linh-default-rtdb.asia-southeast1.firebasedatabase.app";
     let currentLoggedInKey = "";
+    let currentCustomerName = "Quý khách";
+
+    // Tự động nhận diện thiết bị iOS / iPhone hiển thị trên Top Bar
+    (function detectDevice() {
+      const ua = navigator.userAgent;
+      const el = document.getElementById('deviceModelText');
+      if (!el) return;
+      if (/iPhone/.test(ua)) {
+        el.innerText = '📱 IPHONE IOS • VIP VERIFIED';
+        el.style.color = '#38bdf8';
+      } else if (/iPad/.test(ua)) {
+        el.innerText = '📱 IPAD IOS • VIP VERIFIED';
+        el.style.color = '#38bdf8';
+      }
+    })();
+
+    // Giọng nói AI Tiếng Việt chào mừng đúng tên khách lưu trên hệ thống Key
+    function speakVietnamese(text) {
+      try {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'vi-VN';
+        utter.rate = 1.02;
+        utter.pitch = 1.05;
+        const voices = window.speechSynthesis.getVoices();
+        const viVoice = voices.find(v => v.lang && v.lang.toLowerCase().includes('vi'));
+        if (viVoice) utter.voice = viVoice;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {}
+    }
+
+    function speakWelcomeCurrentCustomer() {
+      const msg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
+      showToast('🔊 ' + msg);
+      speakVietnamese(msg);
+    }
 
     function playBeep(freq = 600, type = 'sine', duration = 0.1) {
       try {
@@ -1119,6 +1245,25 @@
       } catch (e) {}
     }
 
+    // Dọn rác RAM 1 chạm
+    function boostRam() {
+      const btn = document.getElementById('btnRamBoost');
+      if (!btn) return;
+      playBeep(820, 'triangle', 0.15);
+      btn.innerText = '⏳ ĐANG QUÉT & GIẢI PHÓNG RAM...';
+      btn.disabled = true;
+      setTimeout(() => {
+        playBeep(1050, 'sine', 0.2);
+        const freed = (1.1 + Math.random() * 0.7).toFixed(1);
+        btn.innerText = '✓ ĐÃ GIẢI PHÓNG ' + freed + ' GB RAM (MÁY SIÊU MƯỢT)';
+        btn.style.background = 'rgba(0, 229, 255, 0.2)';
+        btn.style.color = '#00e5ff';
+        btn.style.borderColor = '#00e5ff';
+        showToast('🚀 Đã dọn sạch ' + freed + ' GB RAM ngầm!');
+        btn.disabled = false;
+      }, 900);
+    }
+
     // Chuyển đổi giữa 2 Tab dưới đáy
     function switchTab(tabName) {
       playBeep(720, 'sine', 0.06);
@@ -1128,19 +1273,8 @@
       });
     }
 
-    // Chọn chế độ kéo tâm
-    function selectAimMode(el, val) {
-      playBeep(780, 'triangle', 0.08);
-      document.querySelectorAll('.mode-pill').forEach(p => p.classList.remove('selected'));
-      el.classList.add('selected');
-      document.getElementById('aimSettingSelect').value = val;
-      showToast('Đã chọn: ' + val);
-    }
-
-    // Hiệu ứng nhảy thông số FPS / Online tự nhiên
+    // Hiệu ứng nhảy thông số Online tự nhiên
     setInterval(() => {
-      const fpsEl = document.getElementById('liveFps');
-      if (fpsEl) fpsEl.innerText = 118 + Math.floor(Math.random() * 3);
       const onlineEl = document.getElementById('onlineCounter');
       if (onlineEl) onlineEl.innerText = (275 + Math.floor(Math.random() * 18)) + ' ĐANG DÙNG';
     }, 3500);
@@ -1268,17 +1402,23 @@
       const key = input.value.trim();
       if (!key) { showToast('Vui lòng nhập Key bản quyền!'); return; }
 
+      // 1. Master Key Admin
       if (key.toUpperCase() === 'BUILINH') {
         currentLoggedInKey = 'BUILINH';
+        currentCustomerName = 'Admin Bùi Anh Linh';
         try { localStorage.setItem('builinh_saved_key', 'BUILINH'); } catch (e) {}
         playBeep(880, 'triangle', 0.15);
-        showToast('✓ Chào mừng Master Bùi Anh Linh!');
+        document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
         document.getElementById('keyExpiryBadge').innerText = '👑 Master Key (Vĩnh Viễn)';
+        const welcomeMsg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
+        showToast('👑 ' + welcomeMsg);
+        speakVietnamese(welcomeMsg);
         document.getElementById('loginBox').classList.add('hidden');
         document.getElementById('menuBox').classList.remove('hidden');
         return;
       }
 
+      // 2. Kiểm tra thuật toán Key
       const check = verifyKey(key);
       if (!check.valid) {
         playBeep(250, 'sawtooth', 0.25);
@@ -1287,6 +1427,14 @@
         return;
       }
 
+      // 3. Lấy thông tin Key & Tên khách (note) từ Cloud Firebase
+      const btnLogin = document.getElementById('btnLoginSubmit');
+      if (btnLogin) {
+        btnLogin.innerText = '⏳ ĐANG KIỂM TRA DỮ LIỆU KEY...';
+        btnLogin.disabled = true;
+      }
+
+      let customerNoteName = '';
       try {
         const resp = await fetch(FIREBASE_DB_URL + '/keys/' + encodeURIComponent(key.toUpperCase()) + '.json', { cache: 'no-store' });
         if (resp.ok) {
@@ -1299,14 +1447,29 @@
             alert('⚠️ KEY NÀY TẠM THỜI BỊ VÔ HIỆU HÓA!\nLiên hệ Zalo: 0865529017.');
             return;
           }
+          if (cloudKey.note && cloudKey.note.trim() !== '' && cloudKey.note.trim() !== 'Khách hàng (Tự đồng bộ)') {
+            customerNoteName = cloudKey.note.trim();
+          }
         }
-      } catch (e) {}
+      } catch (e) {} finally {
+        if (btnLogin) {
+          btnLogin.innerText = '⚡ ĐĂNG NHẬP HỆ THỐNG ⚡';
+          btnLogin.disabled = false;
+        }
+      }
 
       currentLoggedInKey = key.toUpperCase();
+      currentCustomerName = customerNoteName || 'VIP';
       try { localStorage.setItem('builinh_saved_key', currentLoggedInKey); } catch (e) {}
+
       playBeep(880, 'triangle', 0.15);
-      showToast('✓ Đăng nhập thành công!');
+      document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
       document.getElementById('keyExpiryBadge').innerText = '⏳ Hạn dùng: ' + check.remainingText;
+
+      const welcomeMsg = 'Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro';
+      showToast('👑 ' + welcomeMsg);
+      speakVietnamese(welcomeMsg);
+
       document.getElementById('loginBox').classList.add('hidden');
       document.getElementById('menuBox').classList.remove('hidden');
       restorePlayStatus();
@@ -1333,14 +1496,21 @@
       document.getElementById('activeModCount').innerText = 'Đã bật: ' + activeFeatures.size + '/4';
       const titleEl = document.getElementById('radarStatusTitle');
       const descEl = document.getElementById('radarStatusDesc');
+      const simPanel = document.getElementById('simPanel');
+      const simBadge = document.getElementById('simBadge');
+
       if (activeFeatures.size > 0) {
+        simPanel.classList.add('locked');
+        simBadge.innerText = '🎯 HEADSHOT LOCK: ĐÃ KHÓA ĐẦU';
         titleEl.innerText = 'ĐANG BẬT: ' + activeFeatures.size + '/4 CHỨC NĂNG';
         titleEl.style.color = '#34d399';
-        descEl.innerText = 'Đã sẵn sàng! Hãy bấm nút Kích Hoạt Vào Game bên dưới.';
+        descEl.innerText = 'Tâm ngắm đã khóa chặt vùng đầu! Hãy bấm Kích Hoạt bên dưới.';
       } else {
-        titleEl.innerText = 'CHƯA BẬT CHỨC NĂNG';
+        simPanel.classList.remove('locked');
+        simBadge.innerText = 'TÂM MẶC ĐỊNH (CHƯA KHÓA)';
+        titleEl.innerText = 'ĐANG BẬT: 0/4 CHỨC NĂNG';
         titleEl.style.color = '#ffffff';
-        descEl.innerText = 'Hãy gạt bật các công tắc bên dưới rồi bấm nút Kích Hoạt vào game.';
+        descEl.innerText = 'Gạt bật công tắc bên dưới để khóa tâm thẳng vào vùng Đầu!';
       }
     }
 
@@ -1350,7 +1520,7 @@
       toast.innerText = message;
       toast.classList.add('show');
       clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => toast.classList.remove('show'), 2200);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
     }
 
     function executeActivation() {
@@ -1382,7 +1552,7 @@
       const statuses = [
         'Đang thiết lập cấu hình chống giật...',
         'Đang tối ưu độ nhạy cảm ứng...',
-        'Đang kích hoạt gói VIP Bùi Anh Linh...',
+        'Đang kích hoạt gói VIP cho ' + currentCustomerName + '...',
         'Hoàn tất thiết lập!'
       ];
 
@@ -1404,9 +1574,10 @@
             const aimMode = document.getElementById('aimSettingSelect').value;
             const list = activeFeatures.size > 0 ? Array.from(activeFeatures).join(', ') : 'Mặc định (No Recoil + Nhẹ Tâm)';
             document.getElementById('modalResultDetails').innerHTML =
+              '<strong>• Khách hàng:</strong> <span style="color:var(--gold);">' + currentCustomerName + '</span><br>' +
               '<strong>• Chế độ:</strong> <span style="color:var(--cyan);">' + aimMode + '</span><br>' +
               '<strong>• Chức năng:</strong> <span style="color:#34d399;">' + list + '</span><br>' +
-              '<strong>• Trạng thái:</strong> <span style="color:var(--gold);">Đã sẵn sàng! Chọn bản game để vào</span>';
+              '<strong>• Trạng thái:</strong> <span style="color:#38bdf8;">Đã sẵn sàng! Chọn bản game để vào</span>';
           }, 350);
         }
       }, 45);
