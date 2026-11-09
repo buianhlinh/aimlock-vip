@@ -964,10 +964,7 @@
           <div class="sim-info">
             <div class="sim-badge" id="simBadge">TÂM MẶC ĐỊNH (CHƯA KHÓA)</div>
             <div class="sim-title" id="radarStatusTitle">ĐANG BẬT: 0/4 CHỨC NĂNG</div>
-            <div class="sim-desc" id="radarStatusDesc">Gạt bật công tắc bên dưới để khóa tâm thẳng vào vùng Đầu!</div>
-            <button type="button" class="btn-ram-boost" id="btnRamBoost" onclick="boostRam()">
-              🚀 DỌN RÁC RAM & TỐI ƯU MÁY (1 CHẠM)
-            </button>
+            <div class="sim-desc" id="radarStatusDesc" style="margin-bottom: 0;">Gạt bật công tắc bên dưới để khóa tâm thẳng vào vùng Đầu!</div>
           </div>
         </div>
 
@@ -1190,20 +1187,6 @@
     const FIREBASE_DB_URL = "https://aimlock-linh-default-rtdb.asia-southeast1.firebasedatabase.app";
     let currentLoggedInKey = "";
     let currentCustomerName = "Quý khách";
-
-    // Tự động nhận diện thiết bị iOS / iPhone hiển thị trên Top Bar
-    (function detectDevice() {
-      const ua = navigator.userAgent;
-      const el = document.getElementById('deviceModelText');
-      if (!el) return;
-      if (/iPhone/.test(ua)) {
-        el.innerText = '📱 IPHONE IOS • VIP VERIFIED';
-        el.style.color = '#38bdf8';
-      } else if (/iPad/.test(ua)) {
-        el.innerText = '📱 IPAD IOS • VIP VERIFIED';
-        el.style.color = '#38bdf8';
-      }
-    })();
 
     // Giọng nói AI Tiếng Việt chào mừng đúng tên khách lưu trên hệ thống Key
     function speakVietnamese(text) {
