@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#050811" />
+  <link rel="manifest" href="manifest-v5.json" />
+  <link rel="apple-touch-icon" href="logo.jpg" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>NHẸ TÂM PRO V5 - BÙI ANH LINH</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -996,7 +999,7 @@
         </div>
         <div class="hero-text">
           <h1>NHẸ TÂM PRO V5</h1>
-          <p>Hệ thống tối ưu cảm ứng, chống rung tâm & khóa mục tiêu thế hệ mới cho iOS.</p>
+          <p>Hệ thống tối ưu cảm ứng, chống rung tâm & khóa mục tiêu thế hệ mới cho iOS & Android.</p>
         </div>
       </div>
 
@@ -1024,8 +1027,8 @@
         ⚡ ĐĂNG NHẬP HỆ THỐNG ⚡
       </button>
 
-      <a href="AIMLOCK_V5_TEST.mobileconfig" download="AIMLOCK_V5_TEST.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
-        📲 CÀI CẤU HÌNH APP RA MÀN HÌNH IPHONE
+      <a href="AIMLOCK_V5_TEST.mobileconfig" id="btnInstallAppLogin" download="AIMLOCK_V5_TEST.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
+        📲 CÀI CẤU HÌNH APP (IOS & ANDROID)
       </a>
     </div>
 
@@ -1147,8 +1150,8 @@
             <span class="section-head-title">👑 TÀI KHOẢN & HỖ TRỢ BẢN QUYỀN</span>
           </div>
 
-          <a href="AIMLOCK_V5_TEST.mobileconfig" download="AIMLOCK_V5_TEST.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline" style="margin-bottom: 12px;">
-            📲 TẢI CẤU HÌNH CHO IPHONE
+          <a href="AIMLOCK_V5_TEST.mobileconfig" id="btnInstallAppVip" download="AIMLOCK_V5_TEST.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline" style="margin-bottom: 12px;">
+            📲 TẢI CẤU HÌNH (IOS & ANDROID)
           </a>
 
           <button onclick="handleLogout()" style="width:100%; padding:13px; background:rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.25); border-radius:14px; color:#cbd5e1; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:18px;">
@@ -1262,6 +1265,23 @@
       </p>
       <button class="btn-cyber-primary" onclick="closeStopModal()">
         XÁC NHẬN & ĐÓNG
+      </button>
+    </div>
+  </div>
+
+  <!-- POPUP CÀI APP & CẤU HÌNH CHO ANDROID -->
+  <div class="summary-modal" id="androidInstallModal">
+    <div class="modal-content" style="border-color: var(--cyan);">
+      <div style="font-size: 38px; margin-bottom: 6px;">🤖</div>
+      <h3 style="font-family: 'Orbitron'; font-size: 15px; color: var(--cyan); margin-bottom: 10px;">
+        CÀI ĐẶT NHẸ TÂM V5 CHO ANDROID
+      </h3>
+      <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 14px; padding: 13px; text-align: left; font-size: 13.5px; line-height: 1.55; color: #e2e8f0; margin-bottom: 14px;">
+        <div>✅ <strong>Bước 1:</strong> Hệ thống đã tự động nạp tệp cấu hình nhạy cảm ứng <strong>Android V5</strong> về máy của bạn.</div>
+        <div style="margin-top: 8px;">📲 <strong>Bước 2 (Đưa App ra màn hình chính):</strong> Bấm vào biểu tượng <strong>Dấu 3 chấm (⋮)</strong> ở góc trên trình duyệt Chrome ➔ Chọn <strong>"Thêm vào màn hình chính"</strong> (hoặc <strong>"Cài đặt ứng dụng"</strong>).</div>
+      </div>
+      <button class="btn-cyber-primary" onclick="document.getElementById('androidInstallModal').classList.remove('active')">
+        ĐÃ HIỂU & ĐÓNG
       </button>
     </div>
   </div>
@@ -1499,12 +1519,37 @@
       }
     }
 
+    let deferredAndroidPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredAndroidPrompt = e;
+    });
+
     (function init() {
       const saved = localStorage.getItem('builinh_saved_key');
       if (saved && document.getElementById('keyInput')) {
         document.getElementById('keyInput').value = saved;
       }
       document.getElementById('userDeviceId').innerText = getMyDeviceId();
+
+      const ua = navigator.userAgent || '';
+      const isAndroid = /Android/i.test(ua);
+      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const modelEl = document.getElementById('deviceModelText');
+      const btnLoginInstall = document.getElementById('btnInstallAppLogin');
+      const btnVipInstall = document.getElementById('btnInstallAppVip');
+
+      if (isAndroid) {
+        if (modelEl) modelEl.innerText = 'HỆ THỐNG ANDROID VIP V5';
+        if (btnLoginInstall) btnLoginInstall.innerText = '📲 CÀI CẤU HÌNH APP CHO ANDROID';
+        if (btnVipInstall) btnVipInstall.innerText = '📲 TẢI CẤU HÌNH CHO ANDROID';
+      } else if (isIOS) {
+        if (modelEl) modelEl.innerText = 'HỆ THỐNG IOS VIP V5';
+        if (btnLoginInstall) btnLoginInstall.innerText = '📲 CÀI CẤU HÌNH APP RA MÀN HÌNH IPHONE';
+        if (btnVipInstall) btnVipInstall.innerText = '📲 TẢI CẤU HÌNH CHO IPHONE';
+      } else {
+        if (modelEl) modelEl.innerText = 'HỆ THỐNG IOS & ANDROID V5';
+      }
     })();
 
     function verifyKey(keyString) {
@@ -1819,8 +1864,17 @@
       playBeep(850, 'triangle', 0.2);
       closeModal();
       startPlaySession(version);
+      const isAndroid = /Android/i.test(navigator.userAgent || '');
       setTimeout(() => {
-        window.location.href = version === 'max' ? 'freefiremax://' : 'freefire://';
+        if (isAndroid) {
+          if (version === 'max') {
+            window.location.href = 'intent://#Intent;scheme=freefiremax;package=com.dts.freefiremax;end';
+          } else {
+            window.location.href = 'intent://#Intent;scheme=freefire;package=com.dts.freefireth;end';
+          }
+        } else {
+          window.location.href = version === 'max' ? 'freefiremax://' : 'freefire://';
+        }
       }, 300);
     }
 
@@ -1828,9 +1882,55 @@
       document.getElementById('summaryModal').classList.remove('active');
     }
 
-    function handleProfileDownload(e) {
+    function downloadAndroidConfigFile() {
+      try {
+        const cfgContent = [
+          '# NHẸ TÂM PRO V5 - ANDROID VIP CONFIG (BÙI ANH LINH)',
+          'TOUCH_SAMPLING_RATE=240HZ',
+          'SWIPE_HEADSHOT_SENSITIVITY=1.45',
+          'NO_RECOIL_STABILIZER=ACTIVE',
+          'FPS_UNLOCK_BOOSTER=MAX',
+          'NETWORK_PING_OPTIMIZER=ACTIVE',
+          'PACKAGE_NORMAL=com.dts.freefireth',
+          'PACKAGE_MAX=com.dts.freefiremax'
+        ].join('\n');
+        const blob = new Blob([cfgContent], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'NHE_TAM_V5_ANDROID_VIP.cfg';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 500);
+      } catch (err) {}
+    }
+
+    async function handleProfileDownload(e) {
       playBeep(850, 'triangle', 0.15);
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const ua = navigator.userAgent || '';
+      const isAndroid = /Android/i.test(ua);
+      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+      if (isAndroid) {
+        e.preventDefault();
+        downloadAndroidConfigFile();
+        if (deferredAndroidPrompt) {
+          try {
+            deferredAndroidPrompt.prompt();
+            await deferredAndroidPrompt.userChoice;
+            deferredAndroidPrompt = null;
+            return;
+          } catch (err) {}
+        }
+        showToast('📥 Đã tải cấu hình Nhẹ Tâm V5 cho Android!');
+        const modal = document.getElementById('androidInstallModal');
+        if (modal) modal.classList.add('active');
+        return;
+      }
+
       if (isIOS) {
         e.currentTarget.removeAttribute('download');
       }

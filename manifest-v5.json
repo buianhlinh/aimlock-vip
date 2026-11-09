@@ -1,0 +1,22 @@
+{
+  "name": "👑NHẸ TÂM V5👑 - BÙI ANH LINH",
+  "short_name": "👑NHẸ TÂM V5👑",
+  "description": "Hệ thống tối ưu cảm ứng, chống rung tâm & khóa mục tiêu thế hệ mới cho iOS & Android.",
+  "start_url": "./index-v5-test.html?v=5",
+  "display": "standalone",
+  "background_color": "#050811",
+  "theme_color": "#050811",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
