@@ -450,71 +450,93 @@
       box-shadow: 0 0 30px rgba(255, 42, 95, 0.3), inset 0 0 20px rgba(255, 42, 95, 0.08);
     }
 
-    /* Khung mô phỏng mục tiêu Headshot */
+    /* Khung mô phỏng mục tiêu 3D ALOK Nhẹ Tâm */
     .target-box {
-      width: 96px;
-      height: 96px;
+      width: 108px;
+      height: 132px;
       border-radius: 18px;
-      background: radial-gradient(circle, rgba(15, 28, 55, 0.9) 0%, #040710 85%);
-      border: 1.5px solid rgba(0, 229, 255, 0.4);
+      background: radial-gradient(circle at 50% 35%, rgba(0, 229, 255, 0.22) 0%, rgba(15, 28, 55, 0.95) 55%, #040710 95%);
+      border: 1.5px solid rgba(0, 229, 255, 0.45);
       position: relative;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      box-shadow: inset 0 0 18px rgba(0, 229, 255, 0.15);
     }
 
     .simulator-panel.locked .target-box {
       border-color: var(--crimson);
-      box-shadow: 0 0 20px rgba(255, 42, 95, 0.5);
+      background: radial-gradient(circle at 50% 30%, rgba(255, 42, 95, 0.26) 0%, rgba(15, 23, 42, 0.95) 60%, #040710 95%);
+      box-shadow: 0 0 22px rgba(255, 42, 95, 0.5), inset 0 0 18px rgba(255, 42, 95, 0.2);
     }
 
-    /* Hình bóng nhân vật (Silhouette) */
-    .enemy-silhouette {
-      position: relative;
-      width: 50px;
-      height: 70px;
+    /* Khung Canvas 3D nhân vật ALOK */
+    .alok-3d-stage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding-top: 6px;
+      justify-content: center;
     }
 
-    .enemy-head {
-      width: 22px;
-      height: 22px;
+    .alok-3d-stage canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    .alok-3d-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--cyan);
+      text-align: center;
+      padding: 6px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Vòng sáng vùng đầu nhân vật 3D khi tâm kéo lên tới đầu */
+    .enemy-head-glow {
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      background: rgba(148, 163, 184, 0.35);
-      border: 1.5px solid #94a3b8;
-      position: relative;
-      transition: all 0.3s ease;
+      background: transparent;
+      border: 1.5px solid transparent;
+      pointer-events: none;
+      z-index: 2;
     }
 
-    .enemy-body {
-      width: 38px;
-      height: 36px;
-      border-radius: 12px 12px 4px 4px;
-      background: rgba(148, 163, 184, 0.2);
-      border: 1.5px solid #64748b;
-      margin-top: 4px;
-    }
-
-    /* Tâm ngắm mặc định đứng yên ở phần thân khi chưa bật chức năng */
+    /* Tâm ngắm mặc định đứng yên ở phần thân ngực nhân vật 3D khi chưa bật chức năng */
     .aim-reticle {
       position: absolute;
       width: 32px;
       height: 32px;
       border: 2px dashed var(--cyan);
       border-radius: 50%;
-      top: 46px; /* Đứng yên ở dưới phần thân */
+      top: 52px; /* Đứng yên ở giữa thân ngực ALOK 3D */
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 3;
+      z-index: 4;
+      pointer-events: none;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
     }
 
     .aim-reticle::after {
@@ -526,21 +548,22 @@
       box-shadow: 0 0 8px var(--cyan);
     }
 
-    /* Vệt tia kéo vuốt tâm từ thân lên đầu (ẩn khi chưa bật) */
+    /* Vệt tia kéo vuốt tâm từ thân lên đầu 3D ALOK (ẩn khi chưa bật) */
     .drag-trail {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 24px;
-      width: 3px;
+      bottom: 64px;
+      width: 3.5px;
       height: 0px;
       background: linear-gradient(to top, transparent, var(--cyan), var(--crimson));
       border-radius: 4px;
       opacity: 0;
-      z-index: 2;
+      z-index: 3;
+      pointer-events: none;
     }
 
-    /* CHỈ KHI BẬT CÔNG TẮC -> Chạy hoạt ảnh lặp lại kéo vuốt tâm từ thân lên đầu */
+    /* CHỈ KHI BẬT CÔNG TẮC -> Chạy hoạt ảnh lặp lại kéo vuốt tâm từ thân lên đầu 3D ALOK */
     .simulator-panel.locked .aim-reticle {
       animation: swipeUpHeadshot 1.75s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
@@ -553,27 +576,27 @@
       animation: swipeTrailAnim 1.75s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
 
-    .simulator-panel.locked .enemy-head {
+    .simulator-panel.locked .enemy-head-glow {
       animation: headHitGlow 1.75s infinite;
     }
 
     @keyframes swipeUpHeadshot {
       0%, 12% {
-        top: 46px;
+        top: 52px;
         border: 2px dashed var(--cyan);
-        box-shadow: none;
+        box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
         transform: translateX(-50%) scale(1);
         opacity: 1;
       }
       55%, 80% {
-        top: 6px;
+        top: 5px;
         border: 2px solid var(--crimson);
-        box-shadow: 0 0 16px var(--crimson);
+        box-shadow: 0 0 18px var(--crimson);
         transform: translateX(-50%) scale(1.08);
         opacity: 1;
       }
       92%, 100% {
-        top: 6px;
+        top: 5px;
         border: 2px solid var(--crimson);
         transform: translateX(-50%) scale(0.9);
         opacity: 0;
@@ -597,29 +620,29 @@
         opacity: 0;
       }
       45%, 70% {
-        height: 44px;
-        opacity: 0.9;
+        height: 47px;
+        opacity: 0.95;
       }
       85%, 100% {
-        height: 44px;
+        height: 47px;
         opacity: 0;
       }
     }
 
     @keyframes headHitGlow {
       0%, 48% {
-        background: rgba(148, 163, 184, 0.35);
-        border-color: #94a3b8;
+        background: transparent;
+        border-color: transparent;
         box-shadow: none;
       }
       55%, 82% {
-        background: rgba(255, 42, 95, 0.55);
+        background: rgba(255, 42, 95, 0.42);
         border-color: var(--crimson);
-        box-shadow: 0 0 16px var(--crimson);
+        box-shadow: 0 0 18px var(--crimson);
       }
       92%, 100% {
-        background: rgba(148, 163, 184, 0.35);
-        border-color: #94a3b8;
+        background: transparent;
+        border-color: transparent;
         box-shadow: none;
       }
     }
@@ -1023,13 +1046,12 @@
       <!-- TAB 1: BẢNG ĐIỀU KHIỂN CHỨC NĂNG -->
       <div id="tabControl">
 
-        <!-- MÔ PHỎNG VUỐT NHẸ TÂM TỪ THÂN LÊN ĐẦU -->
+        <!-- MÔ PHỎNG VUỐT NHẸ TÂM TỪ THÂN LÊN ĐẦU TRÊN NHÂN VẬT 3D ALOK -->
         <div class="simulator-panel" id="simPanel">
-          <div class="target-box">
-            <div class="enemy-silhouette">
-              <div class="enemy-head"></div>
-              <div class="enemy-body"></div>
-            </div>
+          <div class="target-box" id="alokTargetBox" title="Nhân vật 3D ALOK">
+            <div class="alok-3d-stage" id="alok3dViewport"></div>
+            <div class="alok-3d-loading" id="alok3dLoading">ĐANG TẢI 3D...</div>
+            <div class="enemy-head-glow"></div>
             <div class="drag-trail"></div>
             <div class="aim-reticle"></div>
           </div>
@@ -1559,6 +1581,7 @@
         speakVietnamese(currentCustomerName);
         document.getElementById('loginBox').classList.add('hidden');
         document.getElementById('menuBox').classList.remove('hidden');
+        if (window.refreshAlok3DSize) setTimeout(window.refreshAlok3DSize, 40);
         return;
       }
 
@@ -1615,6 +1638,7 @@
 
       document.getElementById('loginBox').classList.add('hidden');
       document.getElementById('menuBox').classList.remove('hidden');
+      if (window.refreshAlok3DSize) setTimeout(window.refreshAlok3DSize, 40);
       restorePlayStatus();
     }
 
@@ -1820,6 +1844,144 @@
       e.preventDefault();
       showToast('📥 Đang tải cấu hình...');
     }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="alok-3d-data.js"></script>
+  <script>
+    (function initAlok3DSimulator() {
+      const container = document.getElementById('alok3dViewport');
+      const loadingEl = document.getElementById('alok3dLoading');
+      const targetBox = document.getElementById('alokTargetBox');
+      if (!container || typeof THREE === 'undefined' || !window.ALOK_3D_MODEL) {
+        if (loadingEl) loadingEl.innerText = 'ALOK 3D';
+        return;
+      }
+
+      try {
+        const data = window.ALOK_3D_MODEL;
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        if ('outputEncoding' in renderer) renderer.outputEncoding = THREE.sRGBEncoding;
+        container.appendChild(renderer.domElement);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(30, 108 / 132, 0.05, 50);
+        camera.position.set(0, 1.25, 3.25);
+        camera.lookAt(0, 1.20, 0);
+
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x555555, 2.6);
+        scene.add(hemiLight);
+
+        const dirLight1 = new THREE.DirectionalLight(0xffffff, 2.5);
+        dirLight1.position.set(-3, 5, 5);
+        scene.add(dirLight1);
+
+        const dirLight2 = new THREE.DirectionalLight(0xffffff, 2.0);
+        dirLight2.position.set(3, 2, -3);
+        scene.add(dirLight2);
+
+        const characterGroup = new THREE.Group();
+        scene.add(characterGroup);
+
+        const texLoader = new THREE.TextureLoader();
+        const texCache = new Map();
+
+        function loadPartTexture(texKey) {
+          if (texCache.has(texKey)) return texCache.get(texKey);
+          const p = new Promise((resolve) => {
+            const url = data.images[texKey];
+            if (!url) { resolve(null); return; }
+            texLoader.load(url, (tex) => {
+              if ('encoding' in tex) tex.encoding = THREE.sRGBEncoding;
+              tex.flipY = !(data.nativeTextureOrigins && data.nativeTextureOrigins.includes(texKey));
+              resolve(tex);
+            }, undefined, () => resolve(null));
+          });
+          texCache.set(texKey, p);
+          return p;
+        }
+
+        async function buildAlokModel() {
+          for (const partKey of data.partKeys) {
+            const m = data.meshes[partKey];
+            if (!m) continue;
+            const partGroup = new THREE.Group();
+            const isFace = partKey.includes('face');
+
+            for (const sub of m.submeshes) {
+              const geom = new THREE.BufferGeometry();
+              geom.setAttribute('position', new THREE.Float32BufferAttribute(m.positions, 3));
+              geom.setAttribute('uv', new THREE.Float32BufferAttribute(m.uv, 2));
+              geom.setIndex(sub.indices);
+              geom.computeVertexNormals();
+
+              const tex = await loadPartTexture(sub.texture);
+              const mat = new THREE.MeshStandardMaterial({
+                map: tex,
+                color: sub.tint || '#ffffff',
+                roughness: 0.88,
+                metalness: 0.08,
+                side: THREE.DoubleSide,
+                alphaTest: 0.2,
+                transparent: isFace,
+                depthWrite: !isFace,
+                polygonOffset: isFace,
+                polygonOffsetFactor: -1,
+                polygonOffsetUnits: -1
+              });
+              partGroup.add(new THREE.Mesh(geom, mat));
+            }
+            characterGroup.add(partGroup);
+          }
+          if (loadingEl) loadingEl.style.display = 'none';
+          resizeRenderer();
+        }
+
+        function resizeRenderer() {
+          const w = container.clientWidth || 108;
+          const h = container.clientHeight || 132;
+          renderer.setSize(w, h, false);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+        }
+
+        window.refreshAlok3DSize = resizeRenderer;
+        if (typeof ResizeObserver !== 'undefined') {
+          new ResizeObserver(resizeRenderer).observe(container);
+        }
+        window.addEventListener('resize', resizeRenderer);
+
+        // Cho phép người dùng vuốt ngang trên ô 3D để xoay nhân vật ALOK
+        let isDragging = false;
+        let startX = 0;
+        let userYaw = 0;
+        if (targetBox) {
+          targetBox.addEventListener('pointerdown', (ev) => {
+            isDragging = true;
+            startX = ev.clientX;
+          });
+          window.addEventListener('pointermove', (ev) => {
+            if (!isDragging) return;
+            const dx = ev.clientX - startX;
+            startX = ev.clientX;
+            userYaw += dx * 0.025;
+          });
+          window.addEventListener('pointerup', () => { isDragging = false; });
+        }
+
+        buildAlokModel();
+
+        function animate(t) {
+          requestAnimationFrame(animate);
+          // Nhân vật 3D ALOK xoay nhẹ tự nhiên tại chỗ (giữ nguyên trục đầu & thân ở chính giữa)
+          characterGroup.rotation.y = userYaw + Math.sin(t * 0.0018) * 0.22;
+          renderer.render(scene, camera);
+        }
+        requestAnimationFrame(animate);
+      } catch (err) {
+        if (loadingEl) loadingEl.innerText = '3D ERROR';
+      }
+    })();
   </script>
 </body>
 </html>
