@@ -1481,6 +1481,7 @@
         document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
         document.getElementById('keyExpiryBadge').innerText = '👑 Master Key (Vĩnh Viễn)';
         showToast('👑 Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro');
+        speakVietnamese(currentCustomerName);
         document.getElementById('loginBox').classList.add('hidden');
         document.getElementById('menuBox').classList.remove('hidden');
         return;
@@ -1535,6 +1536,7 @@
       document.getElementById('keyExpiryBadge').innerText = '⏳ Hạn dùng: ' + check.remainingText;
 
       showToast('👑 Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro');
+      speakVietnamese(currentCustomerName);
 
       document.getElementById('loginBox').classList.add('hidden');
       document.getElementById('menuBox').classList.remove('hidden');
