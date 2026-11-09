@@ -1294,10 +1294,79 @@
   <script src="profile_data.js"></script>
   <script>
     const activeFeatures = new Set();
-    const SECRET_SALT = "BUILINH_VIP_AIMLOCK_2026";
-    const FIREBASE_DB_URL = "https://aimlock-linh-default-rtdb.asia-southeast1.firebasedatabase.app";
+    const _0xK = [0x4B, 0x9F, 0x2C, 0x71, 0xE3, 0x58, 0x19, 0xA4];
+    function _0xD(arr) {
+      return new TextDecoder().decode(new Uint8Array(arr.map((b, i) => b ^ _0xK[i % _0xK.length])));
+    }
+    const SECRET_SALT = _0xD([9, 202, 101, 61, 170, 22, 81, 251, 29, 214, 124, 46, 162, 17, 84, 232, 4, 220, 103, 46, 209, 104, 43, 146]);
+    const FIREBASE_DB_URL = _0xD([35, 235, 88, 1, 144, 98, 54, 139, 42, 246, 65, 29, 140, 59, 114, 137, 39, 246, 66, 25, 206, 60, 124, 194, 42, 234, 64, 5, 206, 42, 109, 192, 41, 177, 77, 2, 138, 57, 52, 215, 36, 234, 88, 25, 134, 57, 106, 208, 122, 177, 74, 24, 145, 61, 123, 197, 56, 250, 72, 16, 151, 57, 123, 197, 56, 250, 2, 16, 147, 40]);
+    const _0xKP = _0xD([100, 244, 73, 8, 144, 119]);
+    const _0xJE = _0xD([101, 245, 95, 30, 141]);
     let currentLoggedInKey = "";
     let currentCustomerName = "Quý khách";
+
+    // Hàm băm bảo mật 1 chiều SHA-256 (Không thể dịch ngược ra mật khẩu gốc)
+    function _sha256(ascii) {
+      function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+      const mathPow = Math.pow, maxWord = mathPow(2, 32);
+      let result = '';
+      const words = [], asciiBitLength = ascii.length * 8;
+      let hash = [], k = [], primeCounter = 0;
+      const isComposite = {};
+      for (let candidate = 2; primeCounter < 64; candidate++) {
+        if (!isComposite[candidate]) {
+          for (let i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+          hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+          k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+        }
+      }
+      ascii += '\x80';
+      while (ascii.length % 64 - 56) ascii += '\x00';
+      for (let i = 0; i < ascii.length; i++) {
+        const j = ascii.charCodeAt(i);
+        words[i >> 2] |= j << ((3 - i) % 4) * 8;
+      }
+      words[words.length] = ((asciiBitLength / maxWord) | 0);
+      words[words.length] = (asciiBitLength);
+      for (let j = 0; j < words.length;) {
+        const w = words.slice(j, j += 16), oldHash = hash.slice(0);
+        for (let i = 0; i < 64; i++) {
+          const w15 = w[i - 15], w2 = w[i - 2];
+          const a = hash[0], e = hash[4];
+          const temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + k[i] + (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+          const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+          hash = [(temp1 + temp2) | 0].concat(hash);
+          hash[4] = (hash[4] + temp1) | 0;
+          hash.pop();
+        }
+        for (let i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+      }
+      for (let i = 0; i < 8; i++) {
+        for (let j = 3; j + 1; j--) {
+          const b = (hash[i] >> (j * 8)) & 255;
+          result += ((b < 16) ? 0 : '') + b.toString(16);
+        }
+      }
+      return result;
+    }
+
+    function _isMasterKey(str) {
+      return _sha256((str || '').trim().toUpperCase()) === '555fb3481dd0148350253f9ff0756c11f7ab0d09d688eb998f9083a077f2897a';
+    }
+
+    // Lá chắn chống F12 / Xem mã nguồn / Chuột phải
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('keydown', (e) => {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'i', 'j', 'c'].includes(e.key)) ||
+        (e.ctrlKey && ['U', 'S', 'u', 's'].includes(e.key)) ||
+        (e.metaKey && e.altKey && ['I', 'J', 'U', 'i', 'j', 'u'].includes(e.key))
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
 
     // Nhạc hiệu Luxury Chime mở đầu trước khi giọng nói vang lên
     function playLuxuryChime() {
@@ -1562,7 +1631,7 @@
 
     function verifyKey(keyString) {
       keyString = keyString.trim().toUpperCase();
-      if (keyString === 'BUILINH') {
+      if (_isMasterKey(keyString)) {
         return { valid: true, expired: false, type: 'VIP MASTER', remainingText: 'Vĩnh viễn (Master Key)' };
       }
       const parts = keyString.split('-');
@@ -1616,11 +1685,11 @@
       // Mở khóa trình phát MP3 ngay lập tức khi ngón tay vừa chạm nút (tránh bị Safari iOS chặn sau khi await mạng)
       unlockAudioOnTouch();
 
-      // 1. Master Key Admin
-      if (key.toUpperCase() === 'BUILINH') {
-        currentLoggedInKey = 'BUILINH';
+      // 1. Master Key Admin (Kiểm tra bằng mã băm SHA-256 1 chiều)
+      if (_isMasterKey(key)) {
+        currentLoggedInKey = key.toUpperCase();
         currentCustomerName = 'Bùi Anh Linh';
-        try { localStorage.setItem('builinh_saved_key', 'BUILINH'); } catch (e) {}
+        try { localStorage.setItem('builinh_saved_key', currentLoggedInKey); } catch (e) {}
         playBeep(880, 'triangle', 0.15);
         document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
         document.getElementById('keyExpiryBadge').innerText = '👑 Master Key (Vĩnh Viễn)';
@@ -1650,7 +1719,7 @@
 
       let customerNoteName = '';
       try {
-        const resp = await fetch(FIREBASE_DB_URL + '/keys/' + encodeURIComponent(key.toUpperCase()) + '.json', { cache: 'no-store' });
+        const resp = await fetch(FIREBASE_DB_URL + _0xKP + encodeURIComponent(key.toUpperCase()) + _0xJE, { cache: 'no-store' });
         if (resp.ok) {
           const cloudKey = await resp.json();
           if (cloudKey === null) {
@@ -1811,12 +1880,12 @@
     const MAX_SESSION_HOURS = 3;
 
     async function updatePlayStatus(status, gameVersion = '') {
-      if (!currentLoggedInKey || currentLoggedInKey === 'BUILINH') return;
+      if (!currentLoggedInKey || _isMasterKey(currentLoggedInKey)) return;
       try {
         const payload = { playStatus: status, lastActiveTime: Date.now(), lastUpdated: new Date().toLocaleString('vi-VN') };
         if (gameVersion) payload.activeGame = gameVersion;
         if (status === 'playing') payload.sessionStartTime = parseInt(localStorage.getItem('bl_session_start') || Date.now());
-        await fetch(FIREBASE_DB_URL + '/keys/' + encodeURIComponent(currentLoggedInKey) + '.json', {
+        await fetch(FIREBASE_DB_URL + _0xKP + encodeURIComponent(currentLoggedInKey) + _0xJE, {
           method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
       } catch (e) {}
