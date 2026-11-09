@@ -450,26 +450,27 @@
       box-shadow: 0 0 30px rgba(255, 42, 95, 0.3), inset 0 0 20px rgba(255, 42, 95, 0.08);
     }
 
-    /* Khung mô phỏng mục tiêu 3D ALOK Nhẹ Tâm */
+    /* Khung mô phỏng mục tiêu 3D ALOK Nhẹ Tâm (Full-body Ultra HD) */
     .target-box {
-      width: 108px;
-      height: 132px;
+      width: 136px;
+      height: 190px;
       border-radius: 18px;
-      background: radial-gradient(circle at 50% 35%, rgba(0, 229, 255, 0.22) 0%, rgba(15, 28, 55, 0.95) 55%, #040710 95%);
-      border: 1.5px solid rgba(0, 229, 255, 0.45);
+      background: radial-gradient(circle at 50% 35%, rgba(251, 191, 36, 0.16) 0%, rgba(15, 28, 55, 0.95) 55%, #040710 95%);
+      border: 1.5px solid rgba(0, 229, 255, 0.5);
       position: relative;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      box-shadow: inset 0 0 18px rgba(0, 229, 255, 0.15);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), inset 0 0 18px rgba(0, 229, 255, 0.15);
+      touch-action: pan-y;
     }
 
     .simulator-panel.locked .target-box {
       border-color: var(--crimson);
-      background: radial-gradient(circle at 50% 30%, rgba(255, 42, 95, 0.26) 0%, rgba(15, 23, 42, 0.95) 60%, #040710 95%);
-      box-shadow: 0 0 22px rgba(255, 42, 95, 0.5), inset 0 0 18px rgba(255, 42, 95, 0.2);
+      background: radial-gradient(circle at 50% 30%, rgba(255, 42, 95, 0.25) 0%, rgba(15, 23, 42, 0.95) 60%, #040710 95%);
+      box-shadow: 0 0 24px rgba(255, 42, 95, 0.5), inset 0 0 18px rgba(255, 42, 95, 0.2);
     }
 
     /* Khung Canvas 3D nhân vật ALOK */
@@ -509,7 +510,7 @@
     /* Vòng sáng vùng đầu nhân vật 3D khi tâm kéo lên tới đầu */
     .enemy-head-glow {
       position: absolute;
-      top: 7px;
+      top: 12px;
       left: 50%;
       transform: translateX(-50%);
       width: 28px;
@@ -524,11 +525,11 @@
     /* Tâm ngắm mặc định đứng yên ở phần thân ngực nhân vật 3D khi chưa bật chức năng */
     .aim-reticle {
       position: absolute;
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border: 2px dashed var(--cyan);
       border-radius: 50%;
-      top: 52px; /* Đứng yên ở giữa thân ngực ALOK 3D */
+      top: 58px; /* Đứng yên ở giữa ngực Áo Bushido Cao Cấp */
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -553,7 +554,7 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 64px;
+      bottom: 117px;
       width: 3.5px;
       height: 0px;
       background: linear-gradient(to top, transparent, var(--cyan), var(--crimson));
@@ -582,21 +583,21 @@
 
     @keyframes swipeUpHeadshot {
       0%, 12% {
-        top: 52px;
+        top: 58px;
         border: 2px dashed var(--cyan);
         box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
         transform: translateX(-50%) scale(1);
         opacity: 1;
       }
       55%, 80% {
-        top: 5px;
+        top: 11px;
         border: 2px solid var(--crimson);
         box-shadow: 0 0 18px var(--crimson);
         transform: translateX(-50%) scale(1.08);
         opacity: 1;
       }
       92%, 100% {
-        top: 5px;
+        top: 11px;
         border: 2px solid var(--crimson);
         transform: translateX(-50%) scale(0.9);
         opacity: 0;
@@ -1846,7 +1847,7 @@
     }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="alok-3d-data.js?v=2"></script>
+  <script src="alok-3d-data.js?v=3"></script>
   <script>
     (function initAlok3DSimulator() {
       const container = document.getElementById('alok3dViewport');
@@ -1859,15 +1860,15 @@
 
       try {
         const data = window.ALOK_3D_MODEL;
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 2, 3));
         if ('outputEncoding' in renderer) renderer.outputEncoding = THREE.sRGBEncoding;
         container.appendChild(renderer.domElement);
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(30, 108 / 132, 0.05, 50);
-        camera.position.set(0, 1.25, 3.25);
-        camera.lookAt(0, 1.20, 0);
+        const camera = new THREE.PerspectiveCamera(28, 136 / 190, 0.05, 50);
+        camera.position.set(0, 1.04, 4.35);
+        camera.lookAt(0, 1.00, 0);
 
         const hemiLight = new THREE.HemisphereLight(0xffffff, 0x555555, 2.6);
         scene.add(hemiLight);
@@ -1884,6 +1885,7 @@
         scene.add(characterGroup);
 
         const texCache = new Map();
+        const maxAniso = renderer.capabilities.getMaxAnisotropy ? renderer.capabilities.getMaxAnisotropy() : 8;
 
         function loadPartTexture(texKey) {
           if (texCache.has(texKey)) return texCache.get(texKey);
@@ -1896,6 +1898,10 @@
               const tex = new THREE.Texture(img);
               if ('encoding' in tex) tex.encoding = THREE.sRGBEncoding;
               tex.flipY = !(data.nativeTextureOrigins && data.nativeTextureOrigins.includes(texKey));
+              tex.anisotropy = maxAniso;
+              tex.minFilter = THREE.LinearMipmapLinearFilter;
+              tex.magFilter = THREE.LinearFilter;
+              tex.generateMipmaps = true;
               tex.needsUpdate = true;
               resolve(tex);
             };
@@ -1943,8 +1949,8 @@
         }
 
         function resizeRenderer() {
-          const w = container.clientWidth || 108;
-          const h = container.clientHeight || 132;
+          const w = container.clientWidth || 136;
+          const h = container.clientHeight || 190;
           renderer.setSize(w, h, false);
           camera.aspect = w / h;
           camera.updateProjectionMatrix();
