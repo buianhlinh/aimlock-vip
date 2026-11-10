@@ -1,0 +1,63 @@
+name: Build Nhe Tam Pro iOS IPA
+
+on:
+  push:
+    paths:
+      - 'ios/**'
+      - '.github/workflows/build-ipa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-ipa:
+    runs-on: macos-14
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Compile Native iOS ARM64 Binary & Package IPA
+        run: |
+          set -e
+          echo "Compiling native iOS Mach-O ARM64 executable..."
+          
+          # Create Payload directory structure
+          mkdir -p build/Payload/NheTamPro.app
+          
+          # Compile main.m targeting iOS 14.0+ ARM64 with Apple Clang and SDK
+          xcrun -sdk iphoneos clang -target arm64-apple-ios14.0 \
+            -fobjc-arc -O3 \
+            -framework UIKit \
+            -framework WebKit \
+            -framework Foundation \
+            ios/main.m -o build/Payload/NheTamPro.app/NheTamPro
+          
+          # Copy Info.plist and icons
+          cp ios/Info.plist build/Payload/NheTamPro.app/Info.plist
+          cp ios/*.png build/Payload/NheTamPro.app/ 2>/dev/null || true
+          
+          # Create PkgInfo
+          echo -n "APPL????" > build/Payload/NheTamPro.app/PkgInfo
+          
+          # Zip into NheTamPro_V5.ipa
+          cd build
+          zip -qry9 ../NheTamPro_V5.ipa Payload
+          cd ..
+          
+          ls -lh NheTamPro_V5.ipa
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NheTamPro_V5_IPA
+          path: NheTamPro_V5.ipa
+
+      - name: Publish GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v5.0-ipa NheTamPro_V5.ipa \
+            --title "Nhẹ Tâm Pro V5 - File Cài Đặt iOS (.IPA)" \
+            --notes "File cài đặt IPA chính thức của Nhẹ Tâm Pro V5 dành cho iPhone / iPad. Hỗ trợ cài trực tiếp qua TrollStore, ESign, Scarlet, GBox, Sideloadly hoặc AltStore." \
+            --clobber || echo "Release creation completed or updated"
