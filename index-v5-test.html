@@ -1486,19 +1486,75 @@
       return _sha256((str || '').trim().toUpperCase()) === '555fb3481dd0148350253f9ff0756c11f7ab0d09d688eb998f9083a077f2897a';
     }
 
-    // Lá chắn chống F12 / Xem mã nguồn / Chuột phải
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('keydown', (e) => {
-      if (
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'i', 'j', 'c'].includes(e.key)) ||
-        (e.ctrlKey && ['U', 'S', 'u', 's'].includes(e.key)) ||
-        (e.metaKey && e.altKey && ['I', 'J', 'U', 'i', 'j', 'u'].includes(e.key))
-      ) {
-        e.preventDefault();
-        return false;
+
+    /* ================= LÁ CHẮN BẢO VỆ 2 LỚP: DOMAIN LOCK & ANTI-CRACK ================= */
+    (function enforceDomainLock() {
+      try {
+        const host = (window.location.hostname || '').toLowerCase();
+        const isAllowed = 
+          host === 'buianhlinh.github.io' ||
+          host.endsWith('.github.io') ||
+          host === 'localhost' ||
+          host === '127.0.0.1' ||
+          host === ''; // hỗ trợ xem local test
+
+        if (!isAllowed) {
+          document.documentElement.innerHTML = `
+            <div style="background:#050a17;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;text-align:center;padding:24px;">
+              <h1 style="color:#ff1e56;font-family:'Orbitron',sans-serif;font-size:22px;margin-bottom:12px;">⚠️ CẢNH BÁO VI PHẠM BẢN QUYỀN</h1>
+              <p style="color:#94a3b8;max-width:420px;font-size:14px;line-height:1.6;">Ứng dụng NHẸ TÂM PRO V5 VIP thuộc sở hữu trí tuệ độc quyền của <b>Bùi Anh Linh</b>.<br>Phát hiện trang web này sao chép mã nguồn trái phép!</p>
+              <a href="https://buianhlinh.github.io/aimlock-vip/" style="margin-top:20px;padding:12px 28px;background:linear-gradient(135deg,#ff1e56,#ff6b00);color:#fff;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;text-decoration:none;border-radius:12px;box-shadow:0 0 20px rgba(255,30,86,0.5);">👉 BẤM VỀ TRANG CHỦ CHÍNH CHỦ</a>
+            </div>
+          `;
+          setTimeout(() => {
+            window.location.href = 'https://buianhlinh.github.io/aimlock-vip/';
+          }, 3000);
+          throw new Error('Unauthorized Domain');
+        }
+      } catch (err) {}
+    })();
+
+    // Lá chắn chống F12 / Xem mã nguồn / Bẫy Debugger chống bẻ khóa
+    (function initAntiCrackShield() {
+      document.addEventListener('contextmenu', (e) => e.preventDefault());
+      document.addEventListener('keydown', (e) => {
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'i', 'j', 'c'].includes(e.key)) ||
+          (e.ctrlKey && ['U', 'S', 'u', 's'].includes(e.key)) ||
+          (e.metaKey && e.altKey && ['I', 'J', 'U', 'i', 'j', 'u'].includes(e.key))
+        ) {
+          e.preventDefault();
+          return false;
+        }
+      });
+      document.addEventListener('selectstart', (e) => {
+        if (e.target && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+        }
+      });
+
+      // Bẫy Debugger ngầm: Đóng băng kẻ xấu nếu cố tình mở F12 Console để can thiệp biến
+      if (window.location.hostname === 'buianhlinh.github.io') {
+        const noop = () => {};
+        try {
+          window.console.log = noop;
+          window.console.warn = noop;
+          window.console.info = noop;
+          window.console.table = noop;
+        } catch(e) {}
+
+        setInterval(() => {
+          const start = performance.now();
+          (function () {}.constructor('debugger')());
+          if (performance.now() - start > 100) {
+            document.body.innerHTML = '';
+            window.location.reload();
+          }
+        }, 1500);
       }
-    });
+    })();
+
 
     // Nhạc hiệu Luxury Chime mở đầu trước khi giọng nói vang lên
     function playLuxuryChime() {
@@ -1684,11 +1740,8 @@
           if (p.length === 5 && p[2] && p[2].length === 4) {
             const expectedCheck = generateChecksum(p[3] + SECRET_SALT + p[1] + p[2]);
             if (p[4] === expectedCheck) {
-              const savedDevId = 'BL-' + p[2];
-              localStorage.setItem('bl_device_id', savedDevId);
+              // Giữ nguyên mã máy gốc của người dùng, không cho ghi đè
               localStorage.setItem('builinh_saved_key', keyStr);
-              const devEl = document.getElementById('userDeviceId');
-              if (devEl) devEl.innerText = savedDevId;
             }
           }
         }
@@ -1776,9 +1829,17 @@
       if (parts.length === 5) {
         type = parts[1]; keyDeviceId = parts[2]; timeHex = parts[3]; checksum = parts[4];
         if (checksum !== generateChecksum(timeHex + SECRET_SALT + type + keyDeviceId)) {
-          return { valid: false, error: '✕ Key không hợp lệ!' };
+          return { valid: false, error: '✕ Mã Key không hợp lệ hoặc đã bị chỉnh sửa!' };
         }
-        syncDeviceWithKey(keyString);
+        
+        // KHÓA MÃ THIẾT BỊ CHẶT CHẼ: BẮT BUỘC TRÙNG VỚI MÃ MÁY HIỆN TẠI
+        const myDevCode = getMyDeviceId().replace(/^BL-/, '').trim().toUpperCase();
+        if (keyDeviceId !== myDevCode) {
+          return {
+            valid: false,
+            error: '⚠️ Key này đã bị KHÓA cho máy BL-' + keyDeviceId + '! Mã máy của bạn là BL-' + myDevCode + ' (Không thể dùng chung).'
+          };
+        }
       } else if (parts.length === 4) {
         type = parts[1]; timeHex = parts[2]; checksum = parts[3];
         if (checksum !== generateChecksum(timeHex + SECRET_SALT + type)) {
