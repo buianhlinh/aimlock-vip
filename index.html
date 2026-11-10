@@ -1927,6 +1927,24 @@
             alert('⚠️ KEY NÀY TẠM THỜI BỊ VÔ HIỆU HÓA!\nLiên hệ Zalo: 0865529017.');
             return;
           }
+
+          // LÁ CHẮN CLOUD: KHÓA CHẶT THIẾT BỊ TRÊN MÁY CHỦ (CHỐNG CHIA SẺ KEY)
+          const myDev = getMyDeviceId();
+          if (cloudKey.boundDeviceId && cloudKey.boundDeviceId !== myDev) {
+            alert('⚠️ KEY NÀY ĐÃ ĐƯỢC KÍCH HOẠT TRÊN THIẾT BỊ KHÁC (' + cloudKey.boundDeviceId + ')!\n\nMỗi Key chỉ sử dụng trên 1 máy duy nhất. Vui lòng liên hệ Admin Bùi Anh Linh (Zalo 0865529017).');
+            return;
+          }
+
+          // Ghim vĩnh viễn thiết bị vào máy chủ nếu là lần đầu kích hoạt
+          if (!cloudKey.boundDeviceId) {
+            try {
+              fetch(FIREBASE_DB_URL + _0xKP + encodeURIComponent(key.toUpperCase()) + _0xJE, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ boundDeviceId: myDev, activatedAt: new Date().toISOString() })
+              });
+            } catch (err) {}
+          }
           if (cloudKey.note && cloudKey.note.trim() !== '' && cloudKey.note.trim() !== 'Khách hàng (Tự đồng bộ)') {
             customerNoteName = cloudKey.note.trim();
           }
