@@ -1514,15 +1514,16 @@
       } catch (err) {}
     })();
 
-    // Lá chắn chống F12 / Xem mã nguồn / Bẫy Debugger chống bẻ khóa
-    (function initAntiCrackShield() {
+        // ================= LÁ CHẮN TỔNG LỰC: DIỆT MỌI CÔNG CỤ SOI CODE / DEVTOOLS =================
+    (function initUniversalAntiInspectShield() {
+      // 1. Chặn chuột phải, phím tắt F12, Ctrl+U, Ctrl+Shift+I/J/C, Cmd+Option+I/U
       document.addEventListener('contextmenu', (e) => e.preventDefault());
       document.addEventListener('keydown', (e) => {
         if (
           e.key === 'F12' ||
           (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'i', 'j', 'c'].includes(e.key)) ||
           (e.ctrlKey && ['U', 'S', 'u', 's'].includes(e.key)) ||
-          (e.metaKey && e.altKey && ['I', 'J', 'U', 'i', 'j', 'u'].includes(e.key))
+          (e.metaKey && e.altKey && ['I', 'J', 'U', 'C', 'i', 'j', 'u', 'c'].includes(e.key))
         ) {
           e.preventDefault();
           return false;
@@ -1534,98 +1535,145 @@
         }
       });
 
-            // TIÊU DIỆT CÔNG CỤ SOI CODE TRÊN ĐIỆN THOẠI (ERUDA / VCONSOLE / DEVTOOLS)
-      function terminateIntruder(toolName) {
+      // HÀM TIÊU DIỆT & KHÓA TRUY CẬP NGAY LẬP TỨC
+      let isTerminated = false;
+      function terminateIntruder(reason) {
+        if (isTerminated) return;
+        isTerminated = true;
+
+        // Xóa mọi công cụ soi code khỏi DOM
         try {
           if (window.eruda && window.eruda.destroy) window.eruda.destroy();
           if (window.vConsole && window.vConsole.destroy) window.vConsole.destroy();
+          if (window.PageSpy && window.PageSpy.destroy) window.PageSpy.destroy();
         } catch(e) {}
-        const bad = document.querySelector('#eruda, .eruda-container, #__vconsole, .vc-panel, #_page-spy');
-        if (bad) bad.remove();
+
+        const badSelectors = [
+          '#eruda', '.eruda-container', '.eruda-entry-btn', '.eruda-monitor',
+          '#__vconsole', '.vc-panel', '.vc-switch', '.vc-mask',
+          '#_page-spy', '.page-spy', '#pagespy',
+          '#chii-embedded-devtools', '.chii-container',
+          '#spy-debugger', '#FirebugUI', '#fbSharedObject'
+        ];
+        document.querySelectorAll(badSelectors.join(',')).forEach(el => el.remove());
 
         document.documentElement.innerHTML = `
           <div style="background:#050811;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;text-align:center;padding:24px;">
             <div style="font-size:55px;margin-bottom:12px;">🚫</div>
-            <h1 style="color:#ff2a5f;font-family:'Orbitron',sans-serif;font-size:20px;letter-spacing:1px;margin-bottom:12px;">CẢNH BÁO XÂM PHẠM HỆ THỐNG</h1>
+            <h1 style="color:#ff2a5f;font-family:'Orbitron',sans-serif;font-size:20px;letter-spacing:1px;margin-bottom:12px;">CẢNH BÁO AN NINH HỆ THỐNG</h1>
             <p style="color:#94a3b8;max-width:380px;font-size:14px;line-height:1.6;margin-bottom:20px;">
-              Phát hiện công cụ soi mã nguồn trái phép <b>(${toolName || 'Mobile DevTools'})</b>!<br>
-              Hành vi xâm nhập đã bị ghi lại và khóa truy cập.
+              Phát hiện công cụ soi mã nguồn trái phép <b>(${reason || 'Inspector / DevTools'})</b>!<br>
+              Hành vi xâm nhập đã bị chặn đứng và ghi nhận vi phạm.
             </p>
             <div style="color:#00e5ff;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;">HỆ THỐNG ĐÃ TỰ ĐỘNG KHÓA VÀ RỜI KHỎI TRANG</div>
           </div>
         `;
+
         setTimeout(() => {
           window.location.href = 'about:blank';
         }, 1200);
       }
 
-      // 1. Chặn biến window.eruda & window.VConsole bằng Getter/Setter
+      // 2. Chặn toàn bộ biến khởi tạo của các bộ DevTools di động
+      const blockGlobalProps = ['eruda', 'vConsole', 'VConsole', 'PageSpy', 'chii', 'spyDebugger', 'Firebug'];
+      blockGlobalProps.forEach(prop => {
+        try {
+          let _val = undefined;
+          Object.defineProperty(window, prop, {
+            get: () => _val,
+            set: (v) => { _val = undefined; terminateIntruder('Mobile Inspector (' + prop + ')'); },
+            configurable: false
+          });
+        } catch(e) {}
+      });
+
+      // 3. Khóa cứng đối tượng window.console (Các bộ soi code buộc phải ghi đè console để bắt log)
       try {
-        let _e = undefined;
-        Object.defineProperty(window, 'eruda', {
-          get: () => _e,
-          set: (v) => { _e = undefined; terminateIntruder('Eruda Inspector'); },
+        const noop = () => {};
+        const silentConsole = {};
+        ['log', 'warn', 'error', 'info', 'dir', 'table', 'trace', 'debug', 'time', 'timeEnd', 'clear'].forEach(m => {
+          silentConsole[m] = noop;
+        });
+        Object.freeze(silentConsole);
+        Object.defineProperty(window, 'console', {
+          get: () => silentConsole,
+          set: () => terminateIntruder('Console Hijack Attempt'),
           configurable: false
         });
       } catch(e) {}
 
+      // 4. Chặn kỹ thuật tiêm Bookmarklet (Hook document.createElement & appendChild)
       try {
-        let _v = undefined;
-        Object.defineProperty(window, 'VConsole', {
-          get: () => _v,
-          set: (v) => { _v = undefined; terminateIntruder('vConsole'); },
-          configurable: false
-        });
+        const origCreate = document.createElement.bind(document);
+        document.createElement = function(tag, opts) {
+          const el = origCreate(tag, opts);
+          if (typeof tag === 'string' && tag.toLowerCase() === 'script') {
+            let _src = '';
+            Object.defineProperty(el, 'src', {
+              get: () => _src,
+              set: (url) => {
+                const u = String(url).toLowerCase();
+                if (
+                  u.includes('eruda') || u.includes('vconsole') || u.includes('pagespy') ||
+                  u.includes('chii') || u.includes('firebug') || u.includes('inspect') ||
+                  u.includes('jsdelivr') || u.includes('unpkg') || u.includes('cdnjs')
+                ) {
+                  terminateIntruder('Bookmarklet Script Injection (' + u.slice(0, 40) + ')');
+                  return;
+                }
+                _src = url;
+                el.setAttribute('src', url);
+              }
+            });
+          }
+          return el;
+        };
       } catch(e) {}
 
-      // 2. MutationObserver: Chặn đứng ngay khi phần tử Eruda được gắn vào DOM
+      // 5. MutationObserver quét DOM theo thời gian thực (chặn ngay mili-giây đầu tiên)
       try {
-        const obs = new MutationObserver((mutations) => {
+        const badPatterns = ['eruda', 'vconsole', 'pagespy', 'chii', 'spy-debugger', 'firebug'];
+        const observer = new MutationObserver((mutations) => {
           for (const m of mutations) {
             for (const n of m.addedNodes) {
               if (n.nodeType === 1) {
-                if (
-                  n.id === 'eruda' ||
-                  n.classList?.contains('eruda-container') ||
-                  n.id === '__vconsole' ||
-                  n.classList?.contains('vc-panel') ||
-                  n.id === '_page-spy' ||
-                  (n.tagName === 'SCRIPT' && (n.src || '').includes('eruda'))
-                ) {
-                  n.remove();
-                  terminateIntruder('Injected Eruda Script');
-                  return;
+                const id = (n.id || '').toLowerCase();
+                const cls = (n.className || '').toLowerCase();
+                const src = (n.src || '').toLowerCase();
+                for (const p of badPatterns) {
+                  if (id.includes(p) || cls.includes(p) || src.includes(p)) {
+                    try { n.remove(); } catch(err) {}
+                    terminateIntruder('Injected Inspector DOM (' + p + ')');
+                    return;
+                  }
                 }
               }
             }
           }
         });
-        obs.observe(document.documentElement, { childList: true, subtree: true });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
       } catch(e) {}
 
-      // 3. Quét định kỳ mỗi 300ms
+      // 6. Quét tuần hoàn mỗi 350ms (dự phòng)
       setInterval(() => {
-        if (window.eruda || window.vConsole || window.VConsole) {
-          terminateIntruder('Eruda Active');
+        if (window.eruda || window.vConsole || window.VConsole || window.PageSpy || window.chii) {
+          terminateIntruder('Active Inspector Runtime');
           return;
         }
-        const bad = document.querySelector('#eruda, .eruda-container, #__vconsole, .vc-panel, #_page-spy');
-        if (bad) {
-          bad.remove();
-          terminateIntruder('Eruda Element');
+        const badSelectors = [
+          '#eruda', '.eruda-container', '.eruda-entry-btn',
+          '#__vconsole', '.vc-panel', '.vc-switch',
+          '#_page-spy', '.page-spy',
+          '#chii-embedded-devtools', '.chii-container',
+          '#spy-debugger', '#FirebugUI'
+        ];
+        if (document.querySelector(badSelectors.join(','))) {
+          terminateIntruder('Inspector Element Detected');
         }
-      }, 300);
+      }, 350);
 
-      // Bẫy Debugger ngầm: Đóng băng kẻ xấu nếu cố tình mở F12 Console để can thiệp biến
+      // 7. Bẫy Debugger ngầm chống F12 trên máy tính & Safari Web Inspector
       if (window.location.hostname === 'buianhlinh.github.io') {
-        const noop = () => {};
-        try {
-          window.console.log = noop;
-          window.console.warn = noop;
-          window.console.info = noop;
-          window.console.table = noop;
-        } catch(e) {}
-
         setInterval(() => {
           const start = performance.now();
           (function () {}.constructor('debugger')());
