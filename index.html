@@ -1111,7 +1111,7 @@
         ⚡ CẬP NHẬT CẤU HÌNH V5 NGAY ⚡
       </a>
       <button type="button" class="btn-update-later" onclick="closeUpdateModal()">
-        ✕ Để sau (Tiếp tục trải nghiệm V5 ngay)
+        ✓ ĐÃ HIỂU & BẮT ĐẦU TRẢI NGHIỆM V5
       </button>
     </div>
   </div>
@@ -2101,33 +2101,24 @@
     }
 
     
-    // Kiểm tra phiên bản cấu hình: Nếu không phải v=5 (khách dùng link cũ hoặc webclip v=4) thì hiện thông báo cập nhật
-    function checkAppVersion() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const version = urlParams.get('v');
-      
-      // Nếu đã cài bản mới nhất (có ?v=5 trong URL của profile mới), KHÔNG HIỆN THÔNG BÁO
-      if (version === '5') {
-        console.log('✅ Đang chạy phiên bản mới nhất v=5');
-        return;
+    // Bật bảng thông báo bản nâng cấp V5 chính thức ngay khi mở ứng dụng
+    function showUpdateAnnouncement() {
+      const updateModal = document.getElementById('updateModal');
+      if (updateModal) {
+        updateModal.classList.add('active');
+        playBeep(750, 'triangle', 0.2);
+        showToast('🔔 THÔNG BÁO: ĐÃ CẬP NHẬT BẢN CHÍNH THỨC V5 VIP!');
       }
-
-      // Khách mở từ icon cũ (?v=4, ?v=3 hoặc link gốc không có v=5) -> Bật bảng cập nhật sau 600ms
-      setTimeout(() => {
-        const updateModal = document.getElementById('updateModal');
-        if (updateModal) {
-          updateModal.classList.add('active');
-          playBeep(700, 'triangle', 0.2);
-        }
-      }, 600);
     }
 
     function closeUpdateModal() {
       const updateModal = document.getElementById('updateModal');
       if (updateModal) updateModal.classList.remove('active');
+      playBeep(600, 'sine', 0.1);
     }
 
-    window.addEventListener('DOMContentLoaded', checkAppVersion);
+    // Tự động bật thông báo V5 ngay khi mở trang
+    setTimeout(showUpdateAnnouncement, 350);
 
     function launchGame(version) {
       playBeep(850, 'triangle', 0.2);

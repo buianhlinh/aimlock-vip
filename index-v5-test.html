@@ -7,7 +7,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#050811" />
-  <link rel="manifest" href="manifest-v5.json" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="logo.jpg" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>NHẸ TÂM PRO V5 - BÙI ANH LINH</title>
@@ -965,12 +965,157 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    
+    /* ================= BẢNG THÔNG BÁO BẢN CẬP NHẬT V5 CHÍNH THỨC ================= */
+    .update-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 5, 12, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+      padding: 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .update-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .update-card {
+      background: linear-gradient(145deg, #081021, #050a17);
+      border: 1.5px solid var(--cyan);
+      border-radius: 24px;
+      padding: 24px 18px;
+      max-width: 390px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(0, 229, 255, 0.35), inset 0 0 20px rgba(0, 229, 255, 0.1);
+      transform: scale(0.92);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .update-overlay.active .update-card {
+      transform: scale(1);
+    }
+
+    .update-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--crimson), #ff6b00);
+      color: #ffffff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 0 15px rgba(255, 42, 95, 0.6);
+    }
+
+    .update-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 19px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-shadow: 0 0 14px rgba(0, 229, 255, 0.8);
+    }
+
+    .update-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .update-features {
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px dashed rgba(0, 229, 255, 0.35);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      text-align: left;
+      font-size: 12.5px;
+      color: #34d399;
+      line-height: 1.6;
+    }
+
+    .btn-update-now {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ff1e56 0%, #ff6b00 100%);
+      border: none;
+      border-radius: 14px;
+      color: #ffffff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(255, 30, 86, 0.45);
+      transition: all 0.25s;
+    }
+
+    .btn-update-now:active {
+      transform: scale(0.97);
+    }
+
+    .btn-update-later {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 10px;
+      cursor: pointer;
+      padding: 6px;
+    }
+
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
   <div class="cyber-grid"></div>
+
+  <!-- BẢNG THÔNG BÁO BẢN CẬP NHẬT V5 CHÍNH THỨC -->
+  <div class="update-overlay" id="updateModal">
+    <div class="update-card">
+      <div class="update-badge">🔥 BẢN NÂNG CẤP V5 CHÍNH THỨC 🔥</div>
+      <div class="update-title">👑NHẸ TÂM PRO V5 VIP👑</div>
+      <p class="update-desc">
+        Hệ thống Nhẹ Tâm Pro đã chính thức cập nhật phiên bản V5 đỉnh cao mới nhất với nhân vật 3D ALOK, âm thanh AI đọc tên và hỗ trợ mượt mà trên cả iOS & Android!
+      </p>
+      <div class="update-features">
+        ✦ Mô phỏng vuốt nhẹ tâm lên đầu trên nhân vật 3D ALOK VIP<br>
+        ✦ Giọng nói Nữ AI Cloud đọc đích danh tên khách hàng VIP<br>
+        ✦ Tự động nhận diện và hỗ trợ tối ưu cả iOS & Android<br>
+        ✦ Nâng cấp lá chắn bảo mật 3 lớp cấp máy chủ an toàn 100%<br>
+        ✦ Cài đè trực tiếp cấu hình V5 không cần xóa bản cũ
+      </div>
+      <a href="AIMLOCKPLUS.mobileconfig" id="btnUpdateProfile" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-update-now">
+        ⚡ CẬP NHẬT CẤU HÌNH V5 NGAY ⚡
+      </a>
+      <button type="button" class="btn-update-later" onclick="closeUpdateModal()">
+        ✓ ĐÃ HIỂU & BẮT ĐẦU TRẢI NGHIỆM V5
+      </button>
+    </div>
+  </div>
+
 
   <div class="app-shell">
     <!-- TOP SYSTEM BAR -->
@@ -1027,7 +1172,7 @@
         ⚡ ĐĂNG NHẬP HỆ THỐNG ⚡
       </button>
 
-      <a href="AIMLOCK_V5_TEST.mobileconfig" id="btnInstallAppLogin" download="AIMLOCK_V5_TEST.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
+      <a href="AIMLOCKPLUS.mobileconfig" id="btnInstallAppLogin" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
         📲 CÀI CẤU HÌNH APP (IOS & ANDROID)
       </a>
     </div>
@@ -1150,7 +1295,7 @@
             <span class="section-head-title">👑 TÀI KHOẢN & HỖ TRỢ BẢN QUYỀN</span>
           </div>
 
-          <a href="AIMLOCK_V5_TEST.mobileconfig" id="btnInstallAppVip" download="AIMLOCK_V5_TEST.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline" style="margin-bottom: 12px;">
+          <a href="AIMLOCKPLUS.mobileconfig" id="btnInstallAppVip" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline" style="margin-bottom: 12px;">
             📲 TẢI CẤU HÌNH (IOS & ANDROID)
           </a>
 
@@ -1280,7 +1425,7 @@
         <div>✅ <strong>Bước 1:</strong> Đã nạp tự động tệp cấu hình nhạy cảm ứng <strong>Android V5</strong> về máy của bạn.</div>
         <div style="margin-top: 8px;">📲 <strong>Bước 2 (Đưa App ra màn hình chính):</strong> Bấm vào biểu tượng <strong>Dấu 3 chấm (⋮)</strong> ở góc trên trình duyệt Chrome ➔ Chọn <strong>"Cài đặt ứng dụng"</strong> (hoặc <strong>"Thêm vào màn hình chính"</strong>).</div>
       </div>
-      <a href="intent://buianhlinh.github.io/aimlock-vip/index-v5-test.html?v=5#Intent;scheme=https;package=com.android.chrome;end" class="btn-cyber-outline" style="margin-top: 0; margin-bottom: 10px; padding: 11px;">
+      <a href="intent://buianhlinh.github.io/aimlock-vip/?v=5#Intent;scheme=https;package=com.android.chrome;end" class="btn-cyber-outline" style="margin-top: 0; margin-bottom: 10px; padding: 11px;">
         🌐 MỞ TRONG CHROME ĐỂ CÀI APP 1 CHẠM
       </a>
       <button class="btn-cyber-primary" onclick="document.getElementById('androidInstallModal').classList.remove('active')">
@@ -1599,7 +1744,7 @@
     });
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw-v5.js').catch(() => {});
+        navigator.serviceWorker.register('sw.js').catch(() => {});
       });
     }
 
@@ -1616,15 +1761,18 @@
       const modelEl = document.getElementById('deviceModelText');
       const btnLoginInstall = document.getElementById('btnInstallAppLogin');
       const btnVipInstall = document.getElementById('btnInstallAppVip');
+      const btnUpdateProfile = document.getElementById('btnUpdateProfile');
 
       if (isAndroid) {
         if (modelEl) modelEl.innerText = 'HỆ THỐNG ANDROID VIP V5';
         if (btnLoginInstall) btnLoginInstall.innerText = '📲 CÀI CẤU HÌNH APP CHO ANDROID';
         if (btnVipInstall) btnVipInstall.innerText = '📲 TẢI CẤU HÌNH CHO ANDROID';
+        if (btnUpdateProfile) btnUpdateProfile.innerText = '⚡ CÀI CẤU HÌNH V5 CHO ANDROID ⚡';
       } else if (isIOS) {
         if (modelEl) modelEl.innerText = 'HỆ THỐNG IOS VIP V5';
         if (btnLoginInstall) btnLoginInstall.innerText = '📲 CÀI CẤU HÌNH APP RA MÀN HÌNH IPHONE';
         if (btnVipInstall) btnVipInstall.innerText = '📲 TẢI CẤU HÌNH CHO IPHONE';
+        if (btnUpdateProfile) btnUpdateProfile.innerText = '⚡ CÀI CẤU HÌNH V5 CHO IPHONE ⚡';
       } else {
         if (modelEl) modelEl.innerText = 'HỆ THỐNG IOS & ANDROID V5';
       }
@@ -1951,6 +2099,26 @@
       const gameVersion = localStorage.getItem('bl_game_version') || 'normal';
       if (status === 'playing' && startTime > 0) setPlayingUI(startTime, gameVersion);
     }
+
+    
+    // Bật bảng thông báo bản nâng cấp V5 chính thức ngay khi mở ứng dụng
+    function showUpdateAnnouncement() {
+      const updateModal = document.getElementById('updateModal');
+      if (updateModal) {
+        updateModal.classList.add('active');
+        playBeep(750, 'triangle', 0.2);
+        showToast('🔔 THÔNG BÁO: ĐÃ CẬP NHẬT BẢN CHÍNH THỨC V5 VIP!');
+      }
+    }
+
+    function closeUpdateModal() {
+      const updateModal = document.getElementById('updateModal');
+      if (updateModal) updateModal.classList.remove('active');
+      playBeep(600, 'sine', 0.1);
+    }
+
+    // Tự động bật thông báo V5 ngay khi mở trang
+    setTimeout(showUpdateAnnouncement, 350);
 
     function launchGame(version) {
       playBeep(850, 'triangle', 0.2);
