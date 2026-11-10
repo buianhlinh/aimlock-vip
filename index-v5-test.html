@@ -1054,15 +1054,15 @@
       justify-content: center;
       gap: 8px;
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       background: linear-gradient(135deg, #ff1e56 0%, #ff6b00 100%);
       border: none;
       border-radius: 14px;
       color: #ffffff;
       font-family: 'Orbitron', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 900;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-decoration: none;
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(255, 30, 86, 0.45);
@@ -1071,18 +1071,6 @@
 
     .btn-update-now:active {
       transform: scale(0.97);
-    }
-
-    .btn-update-later {
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      margin-top: 10px;
-      cursor: pointer;
-      padding: 6px;
     }
 
     .hidden { display: none !important; }
@@ -1107,12 +1095,9 @@
         ✦ Nâng cấp lá chắn bảo mật 3 lớp cấp máy chủ an toàn 100%<br>
         ✦ Cài đè trực tiếp cấu hình V5 không cần xóa bản cũ
       </div>
-      <a href="AIMLOCKPLUS.mobileconfig" id="btnUpdateProfile" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-update-now">
-        ⚡ CẬP NHẬT CẤU HÌNH V5 NGAY ⚡
+      <a href="https://buianhlinh.github.io/aimlock-vip/AIMLOCKPLUS.mobileconfig" id="btnUpdateProfile" target="_blank" onclick="handleProfileDownload(event)" class="btn-update-now">
+        ⚡ CẬP NHẬT NGAY ⚡
       </a>
-      <button type="button" class="btn-update-later" onclick="closeUpdateModal()">
-        ✓ ĐÃ HIỂU & BẮT ĐẦU TRẢI NGHIỆM V5
-      </button>
     </div>
   </div>
 
@@ -1767,12 +1752,12 @@
         if (modelEl) modelEl.innerText = 'HỆ THỐNG ANDROID VIP V5';
         if (btnLoginInstall) btnLoginInstall.innerText = '📲 CÀI CẤU HÌNH APP CHO ANDROID';
         if (btnVipInstall) btnVipInstall.innerText = '📲 TẢI CẤU HÌNH CHO ANDROID';
-        if (btnUpdateProfile) btnUpdateProfile.innerText = '⚡ CÀI CẤU HÌNH V5 CHO ANDROID ⚡';
+        if (btnUpdateProfile) btnUpdateProfile.innerText = '⚡ CẬP NHẬT NGAY ⚡';
       } else if (isIOS) {
         if (modelEl) modelEl.innerText = 'HỆ THỐNG IOS VIP V5';
         if (btnLoginInstall) btnLoginInstall.innerText = '📲 CÀI CẤU HÌNH APP RA MÀN HÌNH IPHONE';
         if (btnVipInstall) btnVipInstall.innerText = '📲 TẢI CẤU HÌNH CHO IPHONE';
-        if (btnUpdateProfile) btnUpdateProfile.innerText = '⚡ CÀI CẤU HÌNH V5 CHO IPHONE ⚡';
+        if (btnUpdateProfile) btnUpdateProfile.innerText = '⚡ CẬP NHẬT NGAY ⚡';
       } else {
         if (modelEl) modelEl.innerText = 'HỆ THỐNG IOS & ANDROID V5';
       }
@@ -2193,6 +2178,9 @@
 
       if (isIOS) {
         e.currentTarget.removeAttribute('download');
+        e.currentTarget.setAttribute('target', '_blank');
+        e.currentTarget.href = 'https://buianhlinh.github.io/aimlock-vip/AIMLOCKPLUS.mobileconfig';
+        setTimeout(closeUpdateModal, 1200);
       }
       showToast('📥 Đang tải cấu hình Nhẹ Tâm V5...');
     }
