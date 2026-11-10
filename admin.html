@@ -895,7 +895,8 @@
           ? '<span class="badge badge-disabled">🚫 ĐÃ VÔ HIỆU HÓA</span>'
           : '<span class="badge badge-active">🟢 ĐANG HOẠT ĐỘNG</span>';
 
-        const deviceTxt = item.deviceId ? `<span style="color:#38bdf8;">🔒 Máy: ${item.deviceId}</span>` : `<span style="color:#f59e0b;">🌐 Không khóa máy</span>`;
+        let boundTxt = item.boundDeviceId ? `<span style="color:#00e5ff;font-weight:700;">📱 Đã gán máy: ${item.boundDeviceId}</span>` : '';
+        const deviceTxt = item.deviceId ? `<span style="color:#38bdf8;">🔒 Khóa máy: ${item.deviceId}</span>` : (boundTxt || `<span style="color:#f59e0b;">🌐 Chưa gán máy</span>`);
 
         // Tính trạng thái chơi game thực tế của khách
         let playStatusHtml = '';
@@ -945,6 +946,10 @@
               
               <button class="btn-key-action btn-transfer" onclick="changeKeyDevice('${item.key}')">
                 📱 ĐỔI MÁY
+              </button>
+
+              <button class="btn-key-action btn-transfer" style="background:rgba(0,229,255,0.16);border-color:#00e5ff;color:#00e5ff;" onclick="resetBoundDevice('${item.key}')" title="Mở khóa máy để khách đăng nhập trên điện thoại mới">
+                🔄 RESET MÁY
               </button>
 
               <button class="btn-key-action btn-copy-small" onclick="copySpecificKey('${item.key}')">
@@ -1006,6 +1011,49 @@
       } catch (err) {
         console.error(err);
         showToast('✕ Lỗi mạng khi cập nhật trạng thái Key!');
+      }
+    }
+
+    // MỞ KHÓA THIẾT BỊ / RESET GỠ MÁY (CHO PHÉP KHÁCH ĐỔI MÁY MỚI)
+    async function resetBoundDevice(key) {
+      if (!confirm(`📱 XÁC NHẬN MỞ KHÓA MÁY:\n\nBẠN CÓ CHẮC CHẮN MUỐN RESET MÁY CHO KEY:\n[${key}]?\n\nSau khi bấm OK, key này sẽ được gỡ khỏi máy cũ. Khách có thể nhập lại để gán vào máy mới!`)) {
+        return;
+      }
+
+      showToast('⏳ Đang mở khóa thiết bị trên Cloud...');
+
+      try {
+        const patchBody = JSON.stringify({
+          boundDeviceId: null,
+          adminToken: _0xAT,
+          updatedAt: new Date().toLocaleString('vi-VN')
+        });
+
+        const [resp] = await Promise.all([
+          fetch(`${FIREBASE_DB_URL}${_0xKP}${encodeURIComponent(key)}${_0xJE}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: patchBody
+          }),
+          fetch(`${FIREBASE_DB_URL}${_0xVP}/${encodeURIComponent(key)}${_0xJE}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: patchBody
+          })
+        ]);
+
+        if (resp.ok) {
+          if (allKeysData[key]) {
+            delete allKeysData[key].boundDeviceId;
+          }
+          renderKeyList();
+          alert(`✅ ĐÃ MỞ KHÓA MÁY THÀNH CÔNG!\n\nKey [${key}] hiện đã sạch liên kết máy. Khách có thể nhập vào điện thoại mới và đăng nhập bình thường!`);
+        } else {
+          showToast('✕ Lỗi khi mở khóa máy trên Cloud!');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('✕ Lỗi mạng khi mở khóa máy!');
       }
     }
 
