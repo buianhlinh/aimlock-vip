@@ -1169,7 +1169,7 @@
       <!-- THẺ CHÀO MỪNG ĐÍCH DANH TÊN KHÁCH TRÊN HỆ THỐNG KEY -->
       <div class="vip-welcome-card">
         <div class="vip-welcome-left">
-          <div class="vip-welcome-tag">👑 KHÁCH HÀNG VIP BẢN QUYỀN</div>
+          <div class="vip-welcome-tag" id="vipWelcomeTagDisplay">👑 KHÁCH HÀNG VIP</div>
           <div class="vip-customer-name" id="vipCustomerNameDisplay">QUÝ KHÁCH VIP</div>
           <div class="vip-expiry-sub" id="keyExpiryBadge">⏳ Hạn dùng: Vĩnh viễn</div>
         </div>
@@ -2024,6 +2024,11 @@
         playBeep(880, 'triangle', 0.15);
         document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
         document.getElementById('keyExpiryBadge').innerText = '👑 Master Key (Vĩnh Viễn)';
+        const masterTag = document.getElementById('vipWelcomeTagDisplay');
+        if (masterTag) {
+          masterTag.innerHTML = '👑 KHÁCH HÀNG VIP';
+          masterTag.style.color = 'var(--gold)';
+        }
         showToast('👑 Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro');
         speakVietnamese(currentCustomerName);
         document.getElementById('loginBox').classList.add('hidden');
@@ -2106,7 +2111,20 @@
       document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
       document.getElementById('keyExpiryBadge').innerText = '⏳ Hạn dùng: ' + check.remainingText;
 
-      showToast('👑 Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro');
+      // Phân cấp danh xưng: Vĩnh Viễn & 30 Ngày là KHÁCH HÀNG VIP | 7 Ngày đổ xuống là KHÁCH HÀNG
+      const tagEl = document.getElementById('vipWelcomeTagDisplay');
+      const isVipTier = (check.type === 'LT' || check.type === 'Vĩnh Viễn' || check.type === '30D' || key.toUpperCase().includes('-LT-') || key.toUpperCase().includes('-30D-'));
+      if (tagEl) {
+        if (isVipTier) {
+          tagEl.innerHTML = '👑 KHÁCH HÀNG VIP';
+          tagEl.style.color = 'var(--gold)';
+        } else {
+          tagEl.innerHTML = '👤 KHÁCH HÀNG';
+          tagEl.style.color = '#38bdf8';
+        }
+      }
+
+      showToast((isVipTier ? '👑' : '⚡') + ' Chào mừng quý khách ' + currentCustomerName + ' đến với hệ thống Nhẹ Tâm Pro');
       speakVietnamese(currentCustomerName);
 
       document.getElementById('loginBox').classList.add('hidden');
