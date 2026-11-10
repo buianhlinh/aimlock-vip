@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
+    <string>vi</string>
     <key>CFBundleDisplayName</key>
     <string>Nhẹ Tâm Pro</string>
     <key>CFBundleExecutable</key>
@@ -17,15 +17,19 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>5.0.0</string>
+    <string>5.0.1</string>
     <key>CFBundleVersion</key>
-    <string>5.0.0</string>
+    <string>5.0.1</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>UIRequiredDeviceCapabilities</key>
     <array>
         <string>arm64</string>
     </array>
+    
+    <!-- XÓA BỎ VIỀN ĐEN: Bật chế độ Full-Screen cho mọi dòng iPhone từ X đến 16 Pro Max -->
+    <key>UILaunchScreen</key>
+    <dict/>
     <key>UIRequiresFullScreen</key>
     <true/>
     <key>UIStatusBarHidden</key>
@@ -36,6 +40,16 @@
     <array>
         <string>UIInterfaceOrientationPortrait</string>
     </array>
+
+    <!-- MỞ ĐƯỢC GAME FREE FIRE & FREE FIRE MAX -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>freefire</string>
+        <string>freefiremax</string>
+        <string>freefireth</string>
+        <string>zalo</string>
+    </array>
+
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>
