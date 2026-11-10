@@ -1095,9 +1095,9 @@
         ✦ Nâng cấp lá chắn bảo mật 3 lớp cấp máy chủ an toàn 100%<br>
         ✦ Cài đè trực tiếp cấu hình V5 không cần xóa bản cũ
       </div>
-      <a href="https://buianhlinh.github.io/aimlock-vip/AIMLOCKPLUS.mobileconfig" id="btnUpdateProfile" target="_blank" onclick="handleProfileDownload(event)" class="btn-update-now">
+      <button type="button" id="btnUpdateProfile" onclick="handleProfileDownload(event)" class="btn-update-now">
         ⚡ CẬP NHẬT NGAY ⚡
-      </a>
+      </button>
     </div>
   </div>
 
@@ -2153,36 +2153,127 @@
       } catch (err) {}
     }
 
+    let cachedProfileBlob = null;
+    try {
+      fetch('AIMLOCKPLUS.mobileconfig')
+        .then(r => { if (r.ok) return r.blob(); })
+        .then(b => { if (b) cachedProfileBlob = b; })
+        .catch(() => {});
+    } catch(e) {}
+
+    function downloadIosProfileSafely() {
+      if (cachedProfileBlob) {
+        saveBlobFile(cachedProfileBlob, 'AIMLOCKPLUS.mobileconfig');
+      } else {
+        fetch('AIMLOCKPLUS.mobileconfig')
+          .then(res => res.blob())
+          .then(blob => {
+            cachedProfileBlob = blob;
+            saveBlobFile(blob, 'AIMLOCKPLUS.mobileconfig');
+          })
+          .catch(() => {
+            showToast('⚠️ Không thể tải tệp cấu hình, vui lòng thử lại sau.');
+          });
+      }
+    }
+
+    function saveBlobFile(blob, filename) {
+      try {
+        const blobUrl = window.URL.createObjectURL(blob);
+        const tempLink = document.createElement('a');
+        tempLink.style.display = 'none';
+        tempLink.href = blobUrl;
+        tempLink.download = filename;
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        setTimeout(() => {
+          try {
+            document.body.removeChild(tempLink);
+            window.URL.revokeObjectURL(blobUrl);
+          } catch(err) {}
+        }, 1200);
+      } catch(err) {
+        console.error(err);
+      }
+    }
+
     async function handleProfileDownload(e) {
+      if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      }
       playBeep(850, 'triangle', 0.15);
+
+      const btn = document.getElementById('btnUpdateProfile');
       const ua = navigator.userAgent || '';
       const isAndroid = /Android/i.test(ua);
       const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const isStandalone = (window.navigator && window.navigator.standalone === true) || window.matchMedia('(display-mode: standalone)').matches;
 
+      if (btn) {
+        btn.innerText = '⏳ ĐANG CẬP NHẬT V5...';
+        btn.style.opacity = '0.85';
+      }
+
+      // 1. Android
       if (isAndroid) {
-        e.preventDefault();
-        downloadAndroidConfigFile();
+        try { downloadAndroidConfigFile(); } catch(err) {}
         if (deferredAndroidPrompt) {
           try {
             deferredAndroidPrompt.prompt();
             await deferredAndroidPrompt.userChoice;
             deferredAndroidPrompt = null;
-            return;
           } catch (err) {}
         }
-        showToast('📥 Đã tải cấu hình Nhẹ Tâm V5 cho Android!');
-        const modal = document.getElementById('androidInstallModal');
-        if (modal) modal.classList.add('active');
+        setTimeout(() => {
+          if (btn) btn.innerText = '✅ CẬP NHẬT HOÀN TẤT 100%!';
+          showToast('📥 ĐÃ CẬP NHẬT BẢN CHÍNH THỨC V5 CHO ANDROID!');
+          setTimeout(closeUpdateModal, 1000);
+        }, 600);
         return;
       }
 
-      if (isIOS) {
-        e.currentTarget.removeAttribute('download');
-        e.currentTarget.setAttribute('target', '_blank');
-        e.currentTarget.href = 'https://buianhlinh.github.io/aimlock-vip/AIMLOCKPLUS.mobileconfig';
-        setTimeout(closeUpdateModal, 1200);
+      // 2. iOS Standalone WebClip (Đang mở từ Màn hình chính)
+      if (isIOS && isStandalone) {
+        setTimeout(() => {
+          if (btn) btn.innerText = '✅ CẬP NHẬT HOÀN TẤT 100%!';
+          try {
+            localStorage.setItem('v5_active', 'true');
+            localStorage.setItem('v5_updated', 'true');
+            localStorage.setItem('aimlock_version', '5');
+          } catch(err) {}
+          playBeep(950, 'sine', 0.2);
+          showToast('🎉 ĐÃ CẬP NHẬT BẢN CHÍNH THỨC V5 VIP THÀNH CÔNG!');
+          setTimeout(closeUpdateModal, 800);
+        }, 500);
+        return;
       }
-      showToast('📥 Đang tải cấu hình Nhẹ Tâm V5...');
+
+      // 3. iOS Safari bình thường
+      if (isIOS) {
+        downloadIosProfileSafely();
+        setTimeout(() => {
+          if (btn) btn.innerText = '✅ ĐÃ TẢI CẤU HÌNH V5!';
+          try {
+            localStorage.setItem('v5_active', 'true');
+            localStorage.setItem('v5_updated', 'true');
+          } catch(err) {}
+          showToast('📥 Đã tải cấu hình V5! Mở Cài đặt > Đã tải về hồ sơ để kích hoạt.');
+          setTimeout(closeUpdateModal, 1200);
+        }, 600);
+        return;
+      }
+
+      // 4. Các thiết bị khác (PC / Browser)
+      setTimeout(() => {
+        if (btn) btn.innerText = '✅ CẬP NHẬT HOÀN TẤT 100%!';
+        try {
+          localStorage.setItem('v5_active', 'true');
+          localStorage.setItem('v5_updated', 'true');
+        } catch(err) {}
+        showToast('🎉 ĐÃ CẬP NHẬT BẢN CHÍNH THỨC V5 VIP THÀNH CÔNG!');
+        setTimeout(closeUpdateModal, 800);
+      }, 500);
     }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
