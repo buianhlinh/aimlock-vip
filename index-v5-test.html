@@ -2089,6 +2089,12 @@
     
     // Bật bảng thông báo bản nâng cấp V5 chính thức ngay khi mở ứng dụng
     function showUpdateAnnouncement() {
+      try {
+        if (localStorage.getItem('v5_updated') === 'true' || localStorage.getItem('v5_active') === 'true') {
+          return; // Đã cập nhật rồi thì không bao giờ hiện lại làm phiền người dùng nữa!
+        }
+      } catch (err) {}
+
       const updateModal = document.getElementById('updateModal');
       if (updateModal) {
         updateModal.classList.add('active');
