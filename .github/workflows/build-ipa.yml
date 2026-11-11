@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'ios/**'
+      - 'ios_admin/**'
       - '.github/workflows/build-ipa.yml'
   workflow_dispatch:
 
@@ -19,40 +20,57 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Compile Native iOS ARM64 Binary & Package IPA
+      - name: Compile Native iOS ARM64 Binary & Package IPAs
         run: |
           set -e
-          echo "Compiling native iOS Mach-O ARM64 executable..."
-          
-          mkdir -p build/Payload/NheTamPro.app
-          
+          echo "=== 1. Compiling Client App: NheTamPro_V5.ipa ==="
+          mkdir -p build_client/Payload/NheTamPro.app
           xcrun -sdk iphoneos clang -target arm64-apple-ios14.0 \
             -fobjc-arc -O3 \
             -framework UIKit \
             -framework WebKit \
             -framework Foundation \
-            ios/main.m -o build/Payload/NheTamPro.app/NheTamPro
+            ios/main.m -o build_client/Payload/NheTamPro.app/NheTamPro
           
-          cp ios/Info.plist build/Payload/NheTamPro.app/Info.plist
-          cp ios/*.png build/Payload/NheTamPro.app/ 2>/dev/null || true
-          echo -n "APPL????" > build/Payload/NheTamPro.app/PkgInfo
+          cp ios/Info.plist build_client/Payload/NheTamPro.app/Info.plist
+          cp ios/*.png build_client/Payload/NheTamPro.app/ 2>/dev/null || true
+          echo -n "APPL????" > build_client/Payload/NheTamPro.app/PkgInfo
           
-          cd build
+          cd build_client
           zip -qry9 ../NheTamPro_V5.ipa Payload
           cd ..
-          
           ls -lh NheTamPro_V5.ipa
 
-      - name: Commit IPA to Repository
+          echo "=== 2. Compiling Master Admin App: QuanTriKey_VIP.ipa ==="
+          mkdir -p build_admin/Payload/QuanTriKey.app
+          xcrun -sdk iphoneos clang -target arm64-apple-ios14.0 \
+            -fobjc-arc -O3 \
+            -framework UIKit \
+            -framework WebKit \
+            -framework Foundation \
+            ios_admin/main.m -o build_admin/Payload/QuanTriKey.app/QuanTriKey
+          
+          cp ios_admin/Info.plist build_admin/Payload/QuanTriKey.app/Info.plist
+          cp ios_admin/admin.html build_admin/Payload/QuanTriKey.app/admin.html
+          echo -n "APPL????" > build_admin/Payload/QuanTriKey.app/PkgInfo
+          
+          cd build_admin
+          zip -qry9 ../QuanTriKey_VIP.ipa Payload
+          cd ..
+          ls -lh QuanTriKey_VIP.ipa
+
+      - name: Commit IPAs to Repository
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add NheTamPro_V5.ipa
-          git commit -m "Add compiled NheTamPro_V5.ipa for direct download" || echo "Already committed"
+          git add NheTamPro_V5.ipa QuanTriKey_VIP.ipa
+          git commit -m "Add compiled NheTamPro_V5.ipa and QuanTriKey_VIP.ipa" || echo "Already committed"
           git push
 
-      - name: Upload IPA Artifact
+      - name: Upload IPA Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: NheTamPro_V5_IPA
-          path: NheTamPro_V5.ipa
+          name: iOS_IPAs
+          path: |
+            NheTamPro_V5.ipa
+            QuanTriKey_VIP.ipa
