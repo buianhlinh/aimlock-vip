@@ -1,4 +1,4 @@
-<!-- BUILD_TAG: 1794276801 -->
+<!-- BUILD_TAG: 1794381055 -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -1180,7 +1180,10 @@
           <span>🔑 NHẬP KEY BẢN QUYỀN</span>
           <span style="color: var(--gold);">BẢO MẬT 100%</span>
         </div>
-        <input type="password" id="keyInput" class="key-input" placeholder="Nhập mã Key vào đây..." />
+        <div style="position:relative; width:100%; display:flex; align-items:center;">
+          <input type="password" id="keyInput" class="key-input" placeholder="Nhập mã Key vào đây..." style="padding-right: 46px;" />
+          <span onclick="toggleShowKeyInput()" style="position:absolute; right:14px; cursor:pointer; font-size:20px; user-select:none; filter:grayscale(0.3);" title="Ẩn/Hiện Key">👁️</span>
+        </div>
       </div>
 
       <button class="btn-cyber-primary" id="btnLoginSubmit" onclick="handleLogin()">
@@ -1532,7 +1535,12 @@
     }
 
     function _isMasterKey(str) {
-      return _sha256((str || '').trim().toUpperCase()) === '555fb3481dd0148350253f9ff0756c11f7ab0d09d688eb998f9083a077f2897a';
+      const h = _sha256((str || '').trim().toUpperCase());
+      return (
+        h === '555fb3481dd0148350253f9ff0756c11f7ab0d09d688eb998f9083a077f2897a' || // BUILINH
+        h === '95ed51b60ae4c44043f9363e9f0cf0f7acfd2e7d41d7e713e60e82c660859174' || // DAISUQUANDSQ2
+        h === '12e76aa99870dbd076772cf0f82593c3b67d56450ad656d2037332c57e347cf3'    // DSQ2
+      );
     }
 
 
@@ -1994,10 +2002,21 @@
       });
     }
 
+    function toggleShowKeyInput() {
+      const inp = document.getElementById('keyInput');
+      if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
     (function init() {
       const saved = localStorage.getItem('builinh_saved_key');
-      if (saved && document.getElementById('keyInput')) {
-        document.getElementById('keyInput').value = saved;
+      const keyInp = document.getElementById('keyInput');
+      if (saved && keyInp) {
+        keyInp.value = saved;
+      }
+      if (keyInp) {
+        keyInp.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') handleLogin();
+        });
       }
       document.getElementById('userDeviceId').innerText = getMyDeviceId();
 
@@ -2252,9 +2271,7 @@
             localStorage.setItem('bl_faceid_key', currentKey);
             showToast('✅ Đã kích hoạt Face ID thành công!');
             updateFaceIDUI();
-            alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!
-
-Từ lần sau mở ứng dụng trên iPhone 15 Pro Max này, bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" để vào thẳng Menu.');
+            alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!\n\nTừ lần sau mở ứng dụng trên iPhone 15 Pro Max này, bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" để vào thẳng Menu.');
             return;
           }
         }
@@ -2271,9 +2288,7 @@ Từ lần sau mở ứng dụng trên iPhone 15 Pro Max này, bạn chỉ cần
       localStorage.setItem('bl_faceid_key', currentKey);
       showToast('✅ Đã kích hoạt Face ID thành công!');
       updateFaceIDUI();
-      alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!
-
-Từ lần sau bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" là có thể vào thẳng Menu VIP.');
+      alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!\n\nTừ lần sau bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" là có thể vào thẳng Menu VIP.');
     }
 
     async function handleFaceIDLogin() {
@@ -2282,9 +2297,7 @@ Từ lần sau bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" là có th
       const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
 
       if (!isEnrolled || !savedKey) {
-        alert('ℹ️ CHƯA KÍCH HOẠT FACE ID:
-
-Vui lòng đăng nhập bằng Key bản quyền một lần đầu tiên, sau đó ở màn hình VIP bấm "LIÊN KẾT FACE ID" để lưu nhận diện khuôn mặt.');
+        alert('ℹ️ CHƯA KÍCH HOẠT FACE ID:\n\nVui lòng đăng nhập bằng Key bản quyền một lần đầu tiên, sau đó ở màn hình VIP bấm "LIÊN KẾT FACE ID" để lưu nhận diện khuôn mặt.');
         return;
       }
 
