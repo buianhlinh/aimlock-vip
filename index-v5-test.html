@@ -1884,6 +1884,26 @@
       } catch (e) {}
     }
 
+    const BANNED_DEVICES = ['BL-MCSM', 'BL-QFCK', 'BL-8F3D'];
+
+    function enforceDeviceBan(devId) {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch(e) {}
+      document.body.innerHTML = `
+        <div style="background:#020710;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;text-align:center;padding:24px;box-sizing:border-box;">
+          <div style="font-size:65px;margin-bottom:15px;">&#128683;</div>
+          <h1 style="color:#ef4444;font-family:'Orbitron',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:12px;">THIẾT BỊ ĐÃ BỊ KHÓA VĨNH VIỄN</h1>
+          <p style="color:#94a3b8;font-size:15px;line-height:1.6;max-width:420px;margin-bottom:20px;">
+            Thiết bị <b>${devId}</b> đã bị phát hiện có hành vi gian lận, xâm phạm trái phép hệ thống bản quyền.<br>
+            Máy chủ đã kích hoạt lệnh <b>KHÓA VĨNH VIỄN</b> thiết bị này trên toàn bộ hệ thống!
+          </p>
+          <div style="color:#ef4444;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;">HỆ THỐNG TỪ CHỐI KẾT NỐI (DEVICE_BLACKLISTED)</div>
+        </div>
+      `;
+    }
+
     function getMyDeviceId() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -1901,6 +1921,9 @@
         for (let i = 0; i < 4; i++) rand += chars.charAt(Math.floor(Math.random() * chars.length));
         id = "BL-" + rand;
         localStorage.setItem('bl_device_id', id);
+      }
+      if (BANNED_DEVICES.includes(id)) {
+        setTimeout(function() { enforceDeviceBan(id); }, 50);
       }
       return id;
     }
