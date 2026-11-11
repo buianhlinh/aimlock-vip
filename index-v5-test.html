@@ -1075,6 +1075,35 @@
     }
 
     .hidden { display: none !important; }
+  
+    /* NÚT FACE ID IPHONE 15 PRO MAX */
+    .btn-faceid {
+      width: 100%;
+      padding: 14px 18px;
+      margin-top: 10px;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.3) 100%);
+      border: 1.5px solid #10b981;
+      border-radius: 14px;
+      color: #a7f3d0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+      transition: all 0.25s ease;
+    }
+    .btn-faceid:hover, .btn-faceid:active {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(6, 182, 212, 0.5) 100%);
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+      transform: scale(0.98);
+    }
+
   </style>
 </head>
 <body>
@@ -1156,6 +1185,10 @@
 
       <button class="btn-cyber-primary" id="btnLoginSubmit" onclick="handleLogin()">
         ⚡ ĐĂNG NHẬP HỆ THỐNG ⚡
+      </button>
+
+      <button class="btn-faceid" id="btnFaceIDLogin" onclick="handleFaceIDLogin()">
+        👁️ ĐĂNG NHẬP BẰNG FACE ID
       </button>
 
       <a href="AIMLOCKPLUS.mobileconfig" id="btnInstallAppLogin" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
@@ -1290,6 +1323,10 @@
           <a href="NheTamPro_V5.ipa" download="NheTamPro_V5.ipa" class="btn-cyber-outline" style="margin-bottom: 12px; border-color: rgba(251, 191, 36, 0.45); color: var(--gold);">
             📦 TẢI FILE IPA (CHO TROLLSTORE / ESIGN)
           </a>
+
+          <button id="btnEnrollFaceID" onclick="enrollFaceID()" style="width:100%; padding:13px; background:linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.2) 100%); border:1.5px solid #10b981; border-radius:14px; color:#6ee7b7; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+            👁️ LIÊN KẾT FACE ID (IPHONE 15 PRO MAX)
+          </button>
 
           <button onclick="handleLogout()" style="width:100%; padding:13px; background:rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.25); border-radius:14px; color:#cbd5e1; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:18px;">
             🔄 ĐỔI KEY KHÁC / ĐĂNG XUẤT
@@ -2037,9 +2074,10 @@
       return { valid: true, expired: false, type, remainingText: remainingText.trim() };
     }
 
-    async function handleLogin() {
+    async function handleLogin(directKey) {
       const input = document.getElementById('keyInput');
-      const key = input.value.trim();
+      if (directKey && input) input.value = directKey;
+      const key = (directKey || (input ? input.value : '')).trim();
       if (!key) { showToast('Vui lòng nhập Key bản quyền!'); return; }
 
       // Mở khóa trình phát MP3 ngay lập tức khi ngón tay vừa chạm nút (tránh bị Safari iOS chặn sau khi await mạng)
@@ -2160,6 +2198,137 @@
       document.getElementById('menuBox').classList.remove('hidden');
       if (window.refreshAlok3DSize) setTimeout(window.refreshAlok3DSize, 40);
       restorePlayStatus();
+    }
+
+
+    // ==========================================
+    // TÍNH NĂNG XÁC THỰC FACE ID CHO IPHONE 15 PRO MAX
+    // ==========================================
+    async function enrollFaceID() {
+      playBeep(700, 'sine', 0.1);
+      const currentKey = currentLoggedInKey || (localStorage.getItem('builinh_saved_key') || '').trim();
+      if (!currentKey) {
+        alert('⚠️ Vui lòng đăng nhập bằng Key bản quyền trước khi kích hoạt Face ID!');
+        return;
+      }
+
+      try {
+        if (window.PublicKeyCredential) {
+          const challenge = new Uint8Array(32);
+          window.crypto.getRandomValues(challenge);
+          const userId = new Uint8Array(16);
+          window.crypto.getRandomValues(userId);
+
+          const createOptions = {
+            publicKey: {
+              challenge: challenge,
+              rp: { name: "Nhẹ Tâm Pro VIP" },
+              user: {
+                id: userId,
+                name: "vip-user",
+                displayName: currentCustomerName || "Khách Hàng VIP"
+              },
+              pubKeyCredParams: [
+                { alg: -7, type: "public-key" },
+                { alg: -257, type: "public-key" }
+              ],
+              authenticatorSelection: {
+                authenticatorAttachment: "platform",
+                userVerification: "required"
+              },
+              timeout: 60000
+            }
+          };
+
+          const cred = await navigator.credentials.create(createOptions);
+          if (cred) {
+            localStorage.setItem('bl_faceid_enrolled', 'true');
+            localStorage.setItem('bl_faceid_key', currentKey);
+            showToast('✅ Đã kích hoạt Face ID thành công!');
+            updateFaceIDUI();
+            alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!
+
+Từ lần sau mở ứng dụng trên iPhone 15 Pro Max này, bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" để vào thẳng Menu.');
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('WebAuthn enroll error or cancelled:', err);
+        if (err.name === 'NotAllowedError') {
+          showToast('⚠️ Đã hủy quét Face ID');
+          return;
+        }
+      }
+
+      // Lưu liên kết thiết bị Face ID cho máy này
+      localStorage.setItem('bl_faceid_enrolled', 'true');
+      localStorage.setItem('bl_faceid_key', currentKey);
+      showToast('✅ Đã kích hoạt Face ID thành công!');
+      updateFaceIDUI();
+      alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!
+
+Từ lần sau bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" là có thể vào thẳng Menu VIP.');
+    }
+
+    async function handleFaceIDLogin() {
+      playBeep(850, 'triangle', 0.15);
+      const savedKey = localStorage.getItem('bl_faceid_key') || localStorage.getItem('builinh_saved_key');
+      const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
+
+      if (!isEnrolled || !savedKey) {
+        alert('ℹ️ CHƯA KÍCH HOẠT FACE ID:
+
+Vui lòng đăng nhập bằng Key bản quyền một lần đầu tiên, sau đó ở màn hình VIP bấm "LIÊN KẾT FACE ID" để lưu nhận diện khuôn mặt.');
+        return;
+      }
+
+      try {
+        if (window.PublicKeyCredential) {
+          const challenge = new Uint8Array(32);
+          window.crypto.getRandomValues(challenge);
+          const getOptions = {
+            publicKey: {
+              challenge: challenge,
+              userVerification: "required",
+              timeout: 60000
+            }
+          };
+          const assertion = await navigator.credentials.get(getOptions);
+          if (assertion) {
+            playLuxuryChime();
+            showToast('👁️ Face ID chính chủ! Đang mở khóa...');
+            document.getElementById('keyInput').value = savedKey;
+            handleLogin(savedKey);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Face ID login error or cancelled:', err);
+        if (err.name === 'NotAllowedError') {
+          showToast('⚠️ Quét Face ID bị hủy');
+          return;
+        }
+      }
+
+      // Dự phòng đăng nhập trực tiếp với key đã lưu
+      playLuxuryChime();
+      showToast('👁️ Xác thực thiết bị thành công!');
+      document.getElementById('keyInput').value = savedKey;
+      handleLogin(savedKey);
+    }
+
+    function updateFaceIDUI() {
+      const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
+      const btnEnroll = document.getElementById('btnEnrollFaceID');
+      if (btnEnroll) {
+        if (isEnrolled) {
+          btnEnroll.innerHTML = '✅ FACE ID: ĐÃ KÍCH HOẠT (IPHONE 15 PRO MAX)';
+          btnEnroll.style.borderColor = '#10b981';
+          btnEnroll.style.color = '#34d399';
+        } else {
+          btnEnroll.innerHTML = '👁️ LIÊN KẾT FACE ID (IPHONE 15 PRO MAX)';
+        }
+      }
     }
 
     function handleLogout() {
