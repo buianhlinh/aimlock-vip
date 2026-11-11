@@ -1,4 +1,4 @@
-<!-- BUILD_TAG: 1794381736 -->
+<!-- BUILD_TAG: 1794382465 -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -1104,6 +1104,42 @@
       transform: scale(0.98);
     }
 
+  
+    /* ================= TỰ ĐỘNG QUÉT FACE ID NHƯ APP NGÂN HÀNG ================= */
+    .faceid-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+      padding: 24px;
+      text-align: center;
+    }
+    .faceid-scanner-box {
+      width: 105px;
+      height: 105px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 28px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(2, 6, 23, 0.8) 100%);
+      border: 2px solid rgba(0, 229, 255, 0.5);
+      box-shadow: 0 0 35px rgba(0, 229, 255, 0.35), inset 0 0 20px rgba(0, 229, 255, 0.2);
+      animation: faceIdPulse 1.8s infinite ease-in-out;
+      margin-bottom: 22px;
+      cursor: pointer;
+    }
+    @keyframes faceIdPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(0, 229, 255, 0.35); }
+      50% { transform: scale(1.07); box-shadow: 0 0 45px rgba(0, 229, 255, 0.65); border-color: var(--cyan); }
+    }
+
   </style>
 </head>
 <body>
@@ -1135,6 +1171,33 @@
     </div>
   </div>
 
+
+    <!-- GIAO DIỆN TỰ ĐỘNG QUÉT FACE ID NHƯ APP NGÂN HÀNG -->
+  <div class="faceid-modal-overlay" id="faceIdAutoModal" onclick="handleAutoFaceIDClick(event)">
+    <div class="faceid-scanner-box" onclick="handleFaceIDLogin()">
+      <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 8V6a2 2 0 0 1 2-2h2"></path>
+        <path d="M4 16v2a2 2 0 0 0 2 2h2"></path>
+        <path d="M16 4h2a2 2 0 0 1 2 2v2"></path>
+        <path d="M16 20h2a2 2 0 0 0 2-2v-2"></path>
+        <circle cx="9" cy="10" r="1" fill="#00e5ff"></circle>
+        <circle cx="15" cy="10" r="1" fill="#00e5ff"></circle>
+        <path d="M9.5 15a3.5 3.5 0 0 0 5 0"></path>
+      </svg>
+    </div>
+    <div style="font-family:'Orbitron',sans-serif; font-size:16px; font-weight:900; color:#00e5ff; letter-spacing:1.5px; text-shadow:0 0 12px rgba(0,229,255,0.7);">
+      ĐANG NHẬN DIỆN FACE ID...
+    </div>
+    <div style="font-size:13px; color:#94a3b8; margin-top:6px; font-weight:600;">
+      Nhìn vào camera iPhone để tự động mở khóa Menu VIP
+    </div>
+    <div style="font-size:11px; color:#38bdf8; margin-top:12px; font-weight:700;">
+      (Chạm bất kỳ đâu trên màn hình để quét Face ID)
+    </div>
+    <button type="button" onclick="dismissAutoFaceID()" style="margin-top:26px; padding:10px 22px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.22); border-radius:20px; color:#cbd5e1; font-family:'Orbitron',sans-serif; font-size:11.5px; font-weight:700; cursor:pointer;">
+      🔑 Đăng nhập bằng mã Key thủ công
+    </button>
+  </div>
 
   <div class="app-shell">
     <!-- TOP SYSTEM BAR -->
@@ -1207,9 +1270,7 @@
       <a href="AIMLOCKPLUS.mobileconfig" id="btnInstallAppLogin" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
         📲 CÀI CẤU HÌNH APP (IOS & ANDROID)
       </a>
-      <a href="NheTamPro_V5.ipa" download="NheTamPro_V5.ipa" class="btn-cyber-outline" style="margin-top: 8px; border-color: rgba(251, 191, 36, 0.45); color: var(--gold);">
-        📦 TẢI FILE IPA (TROLLSTORE / ESIGN / SCARLET)
-      </a>
+
     </div>
 
     <!-- ================= SCREEN 2: BẢNG ĐIỀU KHIỂN CHÍNH ================= -->
@@ -1333,9 +1394,7 @@
           <a href="AIMLOCKPLUS.mobileconfig" id="btnInstallAppVip" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline" style="margin-bottom: 12px;">
             📲 TẢI CẤU HÌNH (IOS & ANDROID)
           </a>
-          <a href="NheTamPro_V5.ipa" download="NheTamPro_V5.ipa" class="btn-cyber-outline" style="margin-bottom: 12px; border-color: rgba(251, 191, 36, 0.45); color: var(--gold);">
-            📦 TẢI FILE IPA (CHO TROLLSTORE / ESIGN)
-          </a>
+
 
           <button id="btnEnrollFaceID" onclick="enrollFaceID()" style="width:100%; padding:13px; background:linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.2) 100%); border:1.5px solid #10b981; border-radius:14px; color:#6ee7b7; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
             👁️ LIÊN KẾT FACE ID (DÀNH CHO IPHONE)
@@ -2295,7 +2354,47 @@
       alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!\n\nTừ lần sau bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" là có thể vào thẳng Menu VIP.');
     }
 
-    async function handleFaceIDLogin() {
+
+    let autoFaceIDTriggered = false;
+
+    function showAutoFaceIDModal() {
+      const modal = document.getElementById('faceIdAutoModal');
+      if (modal) {
+        modal.style.display = 'flex';
+      }
+    }
+
+    function dismissAutoFaceID() {
+      const modal = document.getElementById('faceIdAutoModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+      autoFaceIDTriggered = true;
+    }
+
+    function handleAutoFaceIDClick(e) {
+      if (e.target.tagName.toLowerCase() === 'button') return;
+      handleFaceIDLogin();
+    }
+
+    async function attemptAutoFaceID() {
+      if (autoFaceIDTriggered) return;
+      const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
+      const savedKey = localStorage.getItem('bl_faceid_key') || localStorage.getItem('builinh_saved_key');
+      if (!isEnrolled || !savedKey) return;
+
+      showAutoFaceIDModal();
+
+      // Cố gắng kích hoạt Face ID tự động ngay lập tức như app ngân hàng
+      try {
+        await handleFaceIDLogin(true);
+      } catch (err) {
+        console.warn('Auto Face ID requires user gesture, waiting for tap:', err);
+      }
+    }
+
+    async function handleFaceIDLogin(isAuto = false) {
+      const autoModal = document.getElementById('faceIdAutoModal');
       playBeep(850, 'triangle', 0.15);
       const savedKey = localStorage.getItem('bl_faceid_key') || localStorage.getItem('builinh_saved_key');
       const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
@@ -2319,6 +2418,7 @@
           const assertion = await navigator.credentials.get(getOptions);
           if (assertion) {
             playLuxuryChime();
+            dismissAutoFaceID();
             showToast('👁️ Face ID chính chủ! Đang mở khóa...');
             document.getElementById('keyInput').value = savedKey;
             handleLogin(savedKey);
@@ -2334,6 +2434,7 @@
       }
 
       // Dự phòng đăng nhập trực tiếp với key đã lưu
+      dismissAutoFaceID();
       playLuxuryChime();
       showToast('👁️ Xác thực thiết bị thành công!');
       document.getElementById('keyInput').value = savedKey;
