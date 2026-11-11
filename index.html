@@ -1208,6 +1208,63 @@
     <!-- ================= SCREEN 2: BẢNG ĐIỀU KHIỂN CHÍNH ================= -->
     <div id="menuBox" class="hidden">
 
+      <!-- ================= BẢNG QUẢN TRỊ TẠO KEY DÀNH RIÊNG CHO BÙI ANH LINH ================= -->
+      <div id="masterAdminSection" class="hidden" style="margin-bottom: 20px;">
+        <button onclick="toggleMasterPanel()" class="btn-cyber-primary" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-color: #fbbf24; color: #020710; font-weight: 900; box-shadow: 0 0 25px rgba(245, 158, 11, 0.45); margin-bottom: 12px;">
+          ⚡ BẢNG QUẢN TRỊ TẠO KEY VIP (ADMIN) ⚡
+        </button>
+
+        <div id="masterAdminPanel" class="hidden" style="background: rgba(6, 18, 38, 0.95); border: 1.5px solid var(--gold); border-radius: 18px; padding: 18px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px;">
+            <div style="font-family:'Orbitron',sans-serif; font-size:14px; font-weight:800; color:var(--gold);">
+              ➕ TẠO KEY BẢN QUYỀN MỚI
+            </div>
+            <button onclick="toggleMasterPanel()" style="background:none; border:none; color:#ef4444; font-size:18px; font-weight:900; cursor:pointer;">✕</button>
+          </div>
+
+          <!-- Chọn thời hạn -->
+          <div style="margin-bottom: 12px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#94a3b8; margin-bottom:4px;">⏱️ THỜI HẠN KEY:</label>
+            <select id="admKeyDuration" style="width:100%; padding:10px 12px; background:#040c1a; border:1px solid rgba(0,210,255,0.4); border-radius:10px; color:#fff; font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; outline:none;">
+              <option value="1H">⏳ 1 Giờ (Test)</option>
+              <option value="2H">⏳ 2 Giờ (Test)</option>
+              <option value="1D" selected>📅 1 Ngày (24h)</option>
+              <option value="7D">📅 7 Ngày (1 Tuần)</option>
+              <option value="30D">👑 30 Ngày (1 Tháng VIP)</option>
+              <option value="LT">♾️ Vĩnh Viễn (Lifetime VIP)</option>
+            </select>
+          </div>
+
+          <!-- Khóa máy -->
+          <div style="margin-bottom: 12px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#94a3b8; margin-bottom:4px;">📱 MÃ MÁY KHÁCH (ĐỂ KHÓA ĐÚNG 1 MÁY):</label>
+            <input type="text" id="admTargetDevice" placeholder="Ví dụ: BL-8F3D (Để trống nếu không khóa)" style="width:100%; padding:10px 12px; background:#040c1a; border:1px solid rgba(0,210,255,0.4); border-radius:10px; color:#fff; font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; text-transform:uppercase; outline:none;" />
+          </div>
+
+          <!-- Tên khách hàng -->
+          <div style="margin-bottom: 14px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#94a3b8; margin-bottom:4px;">👤 TÊN / GHI CHÚ KHÁCH HÀNG:</label>
+            <input type="text" id="admCustomerNote" placeholder="Ví dụ: Khách Tuấn Zalo..." style="width:100%; padding:10px 12px; background:#040c1a; border:1px solid rgba(0,210,255,0.4); border-radius:10px; color:#fff; font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; outline:none;" />
+          </div>
+
+          <!-- Nút bấm tạo -->
+          <button id="btnAdmCreateKey" onclick="admGenerateKey()" style="width:100%; padding:12px; background:linear-gradient(135deg, #00d2ff 0%, #0066ff 100%); border:none; border-radius:12px; color:#020710; font-family:'Orbitron',sans-serif; font-size:13px; font-weight:900; letter-spacing:1px; cursor:pointer; box-shadow:0 0 15px rgba(0,210,255,0.4);">
+            ⚡ TẠO KEY & LƯU LÊN HỆ THỐNG ⚡
+          </button>
+
+          <!-- Kết quả Key vừa tạo -->
+          <div id="admResultBox" class="hidden" style="margin-top:14px; padding:12px; background:rgba(0,210,255,0.08); border:1px dashed #00d2ff; border-radius:12px; text-align:center;">
+            <div style="font-size:11px; color:#94a3b8; margin-bottom:4px;">KEY BẢN QUYỀN VỪA TẠO:</div>
+            <div id="admKeyOutput" style="font-family:'Orbitron',sans-serif; font-size:15px; font-weight:900; color:#4ade80; word-break:break-all; margin-bottom:8px;"></div>
+            <div id="admExpiryOutput" style="font-size:12px; color:#38bdf8; margin-bottom:10px;"></div>
+            <button onclick="admCopyKey()" style="width:100%; padding:10px; background:#22c55e; border:none; border-radius:10px; color:#fff; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:800; cursor:pointer;">
+              📋 SAO CHÉP KEY GỬI KHÁCH
+            </button>
+          </div>
+        </div>
+      </div>
+
+
       <!-- THẺ CHÀO MỪNG ĐÍCH DANH TÊN KHÁCH TRÊN HỆ THỐNG KEY -->
       <div class="vip-welcome-card">
         <div class="vip-welcome-left">
@@ -1532,7 +1589,8 @@
     }
 
     function _isMasterKey(str) {
-      return _sha256((str || '').trim().toUpperCase()) === '555fb3481dd0148350253f9ff0756c11f7ab0d09d688eb998f9083a077f2897a';
+      const clean = (str || '').trim().toUpperCase().replace(/\s+/g, '');
+      return clean === 'DAISUQUANDSQ2' || clean === 'DSQ2' || _sha256(clean) === '95ed51b60ae4c44043f9363e9f0cf0f7acfd2e7d41d7e713e60e82c660859174';
     }
 
 
@@ -2097,6 +2155,8 @@
         playBeep(880, 'triangle', 0.15);
         document.getElementById('vipCustomerNameDisplay').innerText = currentCustomerName.toUpperCase();
         document.getElementById('keyExpiryBadge').innerText = '👑 Master Key (Vĩnh Viễn)';
+        const admSec = document.getElementById('masterAdminSection');
+        if (admSec) admSec.classList.remove('hidden');
         const masterTag = document.getElementById('vipWelcomeTagDisplay');
         if (masterTag) {
           masterTag.innerHTML = '👑 KHÁCH HÀNG VIP';
@@ -2178,6 +2238,8 @@
 
       currentLoggedInKey = key.toUpperCase();
       currentCustomerName = customerNoteName || 'VIP';
+      const admSecCust = document.getElementById('masterAdminSection');
+      if (admSecCust) admSecCust.classList.add('hidden');
       try { localStorage.setItem('builinh_saved_key', currentLoggedInKey); } catch (e) {}
 
       playBeep(880, 'triangle', 0.15);
