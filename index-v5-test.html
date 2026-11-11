@@ -1187,8 +1187,14 @@
         ⚡ ĐĂNG NHẬP HỆ THỐNG ⚡
       </button>
 
+      <div style="display:flex; align-items:center; margin: 10px 0 6px; color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 1px;">
+        <span style="flex:1; height:1px; background: rgba(0, 210, 255, 0.2);"></span>
+        <span style="padding: 0 10px; color: #94a3b8;">HOẶC ĐĂNG NHẬP SINH TRẮC HỌC</span>
+        <span style="flex:1; height:1px; background: rgba(0, 210, 255, 0.2);"></span>
+      </div>
+
       <button class="btn-faceid" id="btnFaceIDLogin" onclick="handleFaceIDLogin()">
-        👁️ ĐĂNG NHẬP BẰNG FACE ID
+        👁️ ĐĂNG NHẬP BẰNG FACE ID (IPHONE)
       </button>
 
       <a href="AIMLOCKPLUS.mobileconfig" id="btnInstallAppLogin" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
@@ -2318,15 +2324,27 @@ Vui lòng đăng nhập bằng Key bản quyền một lần đầu tiên, sau �
     }
 
     function updateFaceIDUI() {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || '');
+      const bioName = isIOS ? 'FACE ID' : 'SINH TRẮC HỌC';
       const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
+      
+      const btnLoginFace = document.getElementById('btnFaceIDLogin');
+      if (btnLoginFace) {
+        if (isEnrolled) {
+          btnLoginFace.innerHTML = isIOS ? '👁️ ĐĂNG NHẬP BẰNG FACE ID' : '👆 ĐĂNG NHẬP BẰNG VÂN TAY / FACE';
+        } else {
+          btnLoginFace.innerHTML = isIOS ? '👁️ KÍCH HOẠT & QUÉT FACE ID' : '👆 KÍCH HOẠT & QUÉT VÂN TAY';
+        }
+      }
+
       const btnEnroll = document.getElementById('btnEnrollFaceID');
       if (btnEnroll) {
         if (isEnrolled) {
-          btnEnroll.innerHTML = '✅ FACE ID: ĐÃ KÍCH HOẠT (DÀNH CHO IPHONE)';
+          btnEnroll.innerHTML = '✅ ' + bioName + ': ĐÃ KÍCH HOẠT';
           btnEnroll.style.borderColor = '#10b981';
           btnEnroll.style.color = '#34d399';
         } else {
-          btnEnroll.innerHTML = '👁️ LIÊN KẾT FACE ID (DÀNH CHO IPHONE)';
+          btnEnroll.innerHTML = '👁️ LIÊN KẾT ' + bioName + ' CHO MÁY NÀY';
         }
       }
     }
