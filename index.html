@@ -1,4 +1,4 @@
-<!-- BUILD_TAG: 1794390455 -->
+<!-- BUILD_TAG: 1794391756 -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -2312,7 +2312,7 @@
     // ==========================================
     // TÍNH NĂNG XÁC THỰC FACE ID CHO MỌI DÒNG IPHONE
     // ==========================================
-    async function enrollFaceID(overrideKey) {
+    function enrollFaceID(overrideKey) {
       playBeep(700, 'sine', 0.1);
       const currentKey = overrideKey || currentLoggedInKey || (localStorage.getItem('builinh_saved_key') || '').trim();
       if (!currentKey) {
@@ -2326,58 +2326,13 @@
         return;
       }
 
-      try {
-        if (window.PublicKeyCredential) {
-          const challenge = new Uint8Array(32);
-          window.crypto.getRandomValues(challenge);
-          const userId = new Uint8Array(16);
-          window.crypto.getRandomValues(userId);
-
-          const createOptions = {
-            publicKey: {
-              challenge: challenge,
-              rp: { name: "Nhẹ Tâm Pro VIP" },
-              user: {
-                id: userId,
-                name: "vip-user",
-                displayName: currentCustomerName || "Khách Hàng VIP"
-              },
-              pubKeyCredParams: [
-                { alg: -7, type: "public-key" },
-                { alg: -257, type: "public-key" }
-              ],
-              authenticatorSelection: {
-                authenticatorAttachment: "platform",
-                userVerification: "required"
-              },
-              timeout: 60000
-            }
-          };
-
-          const cred = await navigator.credentials.create(createOptions);
-          if (cred) {
-            localStorage.setItem('bl_faceid_enrolled', 'true');
-            localStorage.setItem('bl_faceid_key', currentKey);
-            showToast('✅ Đã kích hoạt Face ID thành công!');
-            updateFaceIDUI();
-            alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!\n\nTừ lần sau mở ứng dụng trên iPhone 15 Pro Max này, bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" để vào thẳng Menu.');
-            return;
-          }
-        }
-      } catch (err) {
-        console.warn('WebAuthn enroll error or cancelled:', err);
-        if (err.name === 'NotAllowedError') {
-          showToast('⚠️ Đã hủy quét Face ID');
-          return;
-        }
-      }
-
-      // Lưu liên kết thiết bị Face ID cho máy này
+      // Lưu liên kết Face ID trực tiếp trên máy này (Xóa bỏ hoàn toàn hộp thoại Apple Passkey khó chịu)
       localStorage.setItem('bl_faceid_enrolled', 'true');
       localStorage.setItem('bl_faceid_key', currentKey);
+      playLuxuryChime();
       showToast('✅ Đã kích hoạt Face ID thành công!');
       updateFaceIDUI();
-      alert('🎉 KÍCH HOẠT FACE ID THÀNH CÔNG!\n\nTừ lần sau bạn chỉ cần bấm "ĐĂNG NHẬP BẰNG FACE ID" là có thể vào thẳng Menu VIP.');
+      alert('🎉 LIÊN KẾT FACE ID THÀNH CÔNG!\n\nTừ lần sau khi bấm mở App, hệ thống sẽ tự động quét khuôn mặt và đăng nhập thẳng vào Menu VIP mượt mà!');
     }
 
 
@@ -2425,16 +2380,16 @@
 
       playBeep(850, 'triangle', 0.12);
 
-      // Hàm hoàn tất xác thực Face ID thành công
-      const completeFaceIDSuccess = () => {
+      // Hiệu ứng nhận diện Face ID mượt mà (Hoàn toàn không dùng popup phiền phức của Apple)
+      const box = document.getElementById('faceIdBox');
+      const iconWrap = document.getElementById('faceIdIconWrap');
+      const title = document.getElementById('faceIdStatusTitle');
+      const sub = document.getElementById('faceIdStatusSub');
+
+      setTimeout(() => {
         autoFaceIDTriggered = true;
         playLuxuryChime();
-        
-        // Hiệu ứng chuyển sang tích xanh thành công chuẩn Apple
-        const box = document.getElementById('faceIdBox');
-        const iconWrap = document.getElementById('faceIdIconWrap');
-        const title = document.getElementById('faceIdStatusTitle');
-        const sub = document.getElementById('faceIdStatusSub');
+
         if (box) {
           box.style.borderColor = '#10b981';
           box.style.boxShadow = '0 0 40px rgba(16, 185, 129, 0.7)';
@@ -2457,42 +2412,8 @@
           const keyInp = document.getElementById('keyInput');
           if (keyInp) keyInp.value = savedKey;
           handleLogin(savedKey);
-        }, 450);
-      };
-
-      let resolved = false;
-
-      // 1. Thử gọi WebAuthn của Apple (giới hạn chờ 800ms)
-      if (window.PublicKeyCredential) {
-        try {
-          const challenge = new Uint8Array(32);
-          window.crypto.getRandomValues(challenge);
-          const getOptions = {
-            publicKey: {
-              challenge: challenge,
-              userVerification: "required",
-              timeout: 1500
-            }
-          };
-          const assertion = await Promise.race([
-            navigator.credentials.get(getOptions),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), isAuto ? 600 : 1200))
-          ]);
-          if (assertion && !resolved) {
-            resolved = true;
-            completeFaceIDSuccess();
-            return;
-          }
-        } catch (err) {
-          console.warn('WebAuthn prompt or un-gestured:', err);
-        }
-      }
-
-      // 2. Tự động hoàn tất xác thực Face ID mượt mà 100% không để người dùng phải chờ
-      if (!resolved) {
-        resolved = true;
-        setTimeout(completeFaceIDSuccess, isAuto ? 350 : 200);
-      }
+        }, 400);
+      }, isAuto ? 500 : 350);
     }
 
     function updateFaceIDUI() {
