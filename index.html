@@ -1076,7 +1076,7 @@
 
     .hidden { display: none !important; }
   
-    /* NÚT FACE ID IPHONE 15 PRO MAX */
+    /* NÚT FACE ID CHO MỌI DÒNG IPHONE */
     .btn-faceid {
       width: 100%;
       padding: 14px 18px;
@@ -1325,7 +1325,7 @@
           </a>
 
           <button id="btnEnrollFaceID" onclick="enrollFaceID()" style="width:100%; padding:13px; background:linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.2) 100%); border:1.5px solid #10b981; border-radius:14px; color:#6ee7b7; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
-            👁️ LIÊN KẾT FACE ID (IPHONE 15 PRO MAX)
+            👁️ LIÊN KẾT FACE ID (DÀNH CHO IPHONE)
           </button>
 
           <button onclick="handleLogout()" style="width:100%; padding:13px; background:rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.25); border-radius:14px; color:#cbd5e1; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:18px;">
@@ -2202,11 +2202,11 @@
 
 
     // ==========================================
-    // TÍNH NĂNG XÁC THỰC FACE ID CHO IPHONE 15 PRO MAX
+    // TÍNH NĂNG XÁC THỰC FACE ID CHO MỌI DÒNG IPHONE
     // ==========================================
-    async function enrollFaceID() {
+    async function enrollFaceID(overrideKey) {
       playBeep(700, 'sine', 0.1);
-      const currentKey = currentLoggedInKey || (localStorage.getItem('builinh_saved_key') || '').trim();
+      const currentKey = overrideKey || currentLoggedInKey || (localStorage.getItem('builinh_saved_key') || '').trim();
       if (!currentKey) {
         alert('⚠️ Vui lòng đăng nhập bằng Key bản quyền trước khi kích hoạt Face ID!');
         return;
@@ -2322,11 +2322,11 @@ Vui lòng đăng nhập bằng Key bản quyền một lần đầu tiên, sau �
       const btnEnroll = document.getElementById('btnEnrollFaceID');
       if (btnEnroll) {
         if (isEnrolled) {
-          btnEnroll.innerHTML = '✅ FACE ID: ĐÃ KÍCH HOẠT (IPHONE 15 PRO MAX)';
+          btnEnroll.innerHTML = '✅ FACE ID: ĐÃ KÍCH HOẠT (DÀNH CHO IPHONE)';
           btnEnroll.style.borderColor = '#10b981';
           btnEnroll.style.color = '#34d399';
         } else {
-          btnEnroll.innerHTML = '👁️ LIÊN KẾT FACE ID (IPHONE 15 PRO MAX)';
+          btnEnroll.innerHTML = '👁️ LIÊN KẾT FACE ID (DÀNH CHO IPHONE)';
         }
       }
     }
