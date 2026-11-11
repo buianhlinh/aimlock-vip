@@ -1,4 +1,4 @@
-<!-- BUILD_TAG: 1794381055 -->
+<!-- BUILD_TAG: 1794381736 -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -1111,22 +1111,26 @@
   <div class="cyber-grid"></div>
 
   <!-- BẢNG THÔNG BÁO BẢN CẬP NHẬT V5 CHÍNH THỨC -->
-  <div class="update-overlay" id="updateModal">
-    <div class="update-card">
+  <div class="update-overlay" id="updateModal" onclick="if(event.target === this) closeUpdateModal()" style="display:none;">
+    <div class="update-card" style="position:relative;">
+      <button type="button" onclick="closeUpdateModal()" style="position:absolute; top:12px; right:14px; background:none; border:none; color:#94a3b8; font-size:24px; font-weight:bold; cursor:pointer; line-height:1; z-index:10;" title="Đóng">✕</button>
       <div class="update-badge">🔥 BẢN NÂNG CẤP V5 CHÍNH THỨC 🔥</div>
-      <div class="update-title">👑NHẸ TÂM PRO V5 VIP👑</div>
+      <div class="update-title">⚡NHẸ TÂM PRO V5 VIP⚡</div>
       <p class="update-desc">
         Hệ thống Nhẹ Tâm Pro đã chính thức cập nhật phiên bản V5 đỉnh cao mới nhất với nhân vật 3D ALOK, âm thanh AI đọc tên và hỗ trợ mượt mà trên cả iOS & Android!
       </p>
       <div class="update-features">
-        ✦ Mô phỏng vuốt nhẹ tâm lên đầu trên nhân vật 3D ALOK VIP<br>
-        ✦ Giọng nói Nữ AI Cloud đọc đích danh tên khách hàng VIP<br>
-        ✦ Tự động nhận diện và hỗ trợ tối ưu cả iOS & Android<br>
-        ✦ Nâng cấp lá chắn bảo mật 3 lớp cấp máy chủ an toàn 100%<br>
-        ✦ Cài đè trực tiếp cấu hình V5 không cần xóa bản cũ
+        ✓ Mô phỏng vuốt nhẹ tâm lên đầu trên nhân vật 3D ALOK VIP<br>
+        ✓ Giọng nói Nữ AI Cloud đọc đích danh tên khách hàng VIP<br>
+        ✓ Tự động nhận diện và hỗ trợ tối ưu cả iOS & Android<br>
+        ✓ Nâng cấp lá chắn bảo mật 3 lớp cấp máy chủ an toàn 100%<br>
+        ✓ Cài đè trực tiếp cấu hình V5 không cần xóa bản cũ
       </div>
       <button type="button" id="btnUpdateProfile" onclick="handleProfileDownload(event)" class="btn-update-now">
         ⚡ CẬP NHẬT NGAY ⚡
+      </button>
+      <button type="button" onclick="closeUpdateModal()" style="width:100%; margin-top:8px; padding:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.2); border-radius:12px; color:#cbd5e1; font-family:'Orbitron',sans-serif; font-size:11px; font-weight:700; cursor:pointer;">
+        ✕ ĐÓNG BẢNG / VÀO NHẬP KEY NGAY
       </button>
     </div>
   </div>
@@ -1186,7 +1190,7 @@
         </div>
       </div>
 
-      <button class="btn-cyber-primary" id="btnLoginSubmit" onclick="handleLogin()">
+      <button class="btn-cyber-primary" id="btnLoginSubmit" onclick="handleLogin()" style="position:relative; z-index:99; cursor:pointer;">
         ⚡ ĐĂNG NHẬP HỆ THỐNG ⚡
       </button>
 
@@ -2133,8 +2137,8 @@
       const check = verifyKey(key);
       if (!check.valid) {
         playBeep(250, 'sawtooth', 0.25);
-        if (check.expired) alert(check.error);
-        showToast(check.error);
+        alert(check.error || '⚠️ Mã Key không hợp lệ!');
+        showToast(check.error || '⚠️ Mã Key không hợp lệ!');
         return;
       }
 
@@ -2558,6 +2562,7 @@
 
       const updateModal = document.getElementById('updateModal');
       if (updateModal) {
+        updateModal.style.display = 'flex';
         updateModal.classList.add('active');
         playBeep(750, 'triangle', 0.2);
         showToast('🔔 THÔNG BÁO: ĐÃ CẬP NHẬT BẢN CHÍNH THỨC V5 VIP!');
@@ -2566,12 +2571,12 @@
 
     function closeUpdateModal() {
       const updateModal = document.getElementById('updateModal');
-      if (updateModal) updateModal.classList.remove('active');
+      if (updateModal) { updateModal.classList.remove('active'); updateModal.style.display = 'none'; }
       playBeep(600, 'sine', 0.1);
     }
 
     // Tự động bật thông báo V5 ngay khi mở trang
-    setTimeout(showUpdateAnnouncement, 350);
+    // setTimeout(showUpdateAnnouncement, 350); // Disabled auto-popup to keep login screen 100% accessible
 
     function launchGame(version) {
       playBeep(850, 'triangle', 0.2);
