@@ -1,4 +1,4 @@
-<!-- BUILD_TAG: 1794447531 -->
+<!-- BUILD_TAG: 1794448382 -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -1445,7 +1445,6 @@
     const SECRET_SALT = _0xD([9, 202, 101, 61, 170, 22, 81, 251, 29, 214, 124, 46, 162, 17, 84, 232, 4, 220, 103, 46, 209, 104, 43, 146]);
     const FIREBASE_DB_URL = _0xD([35, 235, 88, 1, 144, 98, 54, 139, 42, 246, 65, 29, 140, 59, 114, 137, 39, 246, 66, 25, 206, 60, 124, 194, 42, 234, 64, 5, 206, 42, 109, 192, 41, 177, 77, 2, 138, 57, 52, 215, 36, 234, 88, 25, 134, 57, 106, 208, 122, 177, 74, 24, 145, 61, 123, 197, 56, 250, 72, 16, 151, 57, 123, 197, 56, 250, 2, 16, 147, 40]);
     const _0xKP = _0xD([100, 244, 73, 8, 144, 119]);
-    const _0xVP = _0xD([100, 254, 72, 28, 138, 54, 70, 210, 42, 234, 64, 5, 188, 58, 117, 150, 123, 173, 26, 94, 136, 61, 96, 215]);
     const _0xJE = _0xD([101, 245, 95, 30, 141]);
     let currentLoggedInKey = "";
     let currentCustomerName = "Quý khách";
@@ -1498,9 +1497,9 @@
     function _isMasterKey(str) {
       const h = _sha256((str || '').trim().toUpperCase());
       return (
-        h === '555fb3481dd0148350253f9ff0756c11f7ab0d09d688eb998f9083a077f2897a' || // BUILINH
-        h === '95ed51b60ae4c44043f9363e9f0cf0f7acfd2e7d41d7e713e60e82c660859174' || // DAISUQUANDSQ2
-        h === '12e76aa99870dbd076772cf0f82593c3b67d56450ad656d2037332c57e347cf3'    // DSQ2
+        h === '555fb3481dd0148350253f9ff0756c11f7ab0d09d688eb998f9083a077f2897a' ||
+        h === '95ed51b60ae4c44043f9363e9f0cf0f7acfd2e7d41d7e713e60e82c660859174' ||
+        h === '12e76aa99870dbd076772cf0f82593c3b67d56450ad656d2037332c57e347cf3'
       );
     }
 
@@ -1896,7 +1895,7 @@
       } catch (e) {}
     }
 
-    const BANNED_DEVICES = ['BL-MCSM', 'BL-QFCK', 'BL-8F3D'];
+    const BANNED_DEVICES = ['BL-MCSM', 'BL-QFCK', 'BL-8F3D', 'BL-YWQ9'];
 
     function enforceDeviceBan(devId) {
       try {
@@ -2318,14 +2317,9 @@
         if (gameVersion) payload.activeGame = gameVersion;
         if (status === 'playing') payload.sessionStartTime = parseInt(localStorage.getItem('bl_session_start') || Date.now());
         const bodyStr = JSON.stringify(payload);
-        await Promise.all([
-          fetch(FIREBASE_DB_URL + _0xKP + encodeURIComponent(currentLoggedInKey) + _0xJE, {
-            method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: bodyStr
-          }),
-          fetch(FIREBASE_DB_URL + _0xVP + '/' + encodeURIComponent(currentLoggedInKey) + _0xJE, {
-            method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: bodyStr
-          })
-        ]);
+        await fetch(FIREBASE_DB_URL + _0xKP + encodeURIComponent(currentLoggedInKey) + _0xJE, {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: bodyStr
+        });
       } catch (e) {}
     }
 
