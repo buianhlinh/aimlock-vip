@@ -1,4 +1,4 @@
-<!-- BUILD_TAG: 1794391756 -->
+<!-- BUILD_TAG: 1794447531 -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -1076,69 +1076,6 @@
 
     .hidden { display: none !important; }
   
-    /* NÚT FACE ID CHO MỌI DÒNG IPHONE */
-    .btn-faceid {
-      width: 100%;
-      padding: 14px 18px;
-      margin-top: 10px;
-      margin-bottom: 6px;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.3) 100%);
-      border: 1.5px solid #10b981;
-      border-radius: 14px;
-      color: #a7f3d0;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
-      transition: all 0.25s ease;
-    }
-    .btn-faceid:hover, .btn-faceid:active {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(6, 182, 212, 0.5) 100%);
-      box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
-      transform: scale(0.98);
-    }
-
-  
-    /* ================= TỰ ĐỘNG QUÉT FACE ID NHƯ APP NGÂN HÀNG ================= */
-    .faceid-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 7, 18, 0.94);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 100000;
-      padding: 24px;
-      text-align: center;
-    }
-    .faceid-scanner-box {
-      width: 105px;
-      height: 105px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 28px;
-      background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(2, 6, 23, 0.8) 100%);
-      border: 2px solid rgba(0, 229, 255, 0.5);
-      box-shadow: 0 0 35px rgba(0, 229, 255, 0.35), inset 0 0 20px rgba(0, 229, 255, 0.2);
-      animation: faceIdPulse 1.8s infinite ease-in-out;
-      margin-bottom: 22px;
-      cursor: pointer;
-    }
-    @keyframes faceIdPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(0, 229, 255, 0.35); }
-      50% { transform: scale(1.07); box-shadow: 0 0 45px rgba(0, 229, 255, 0.65); border-color: var(--cyan); }
-    }
 
   </style>
 </head>
@@ -1172,31 +1109,6 @@
   </div>
 
 
-    <!-- GIAO DIỆN TỰ ĐỘNG QUÉT FACE ID NHƯ APP NGÂN HÀNG (100% TỰ ĐỘNG) -->
-  <div class="faceid-modal-overlay" id="faceIdAutoModal">
-    <div class="faceid-scanner-box" id="faceIdBox">
-      <div id="faceIdIconWrap">
-        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 8V6a2 2 0 0 1 2-2h2"></path>
-          <path d="M4 16v2a2 2 0 0 0 2 2h2"></path>
-          <path d="M16 4h2a2 2 0 0 1 2 2v2"></path>
-          <path d="M16 20h2a2 2 0 0 0 2-2v-2"></path>
-          <circle cx="9" cy="10" r="1" fill="#00e5ff"></circle>
-          <circle cx="15" cy="10" r="1" fill="#00e5ff"></circle>
-          <path d="M9.5 15a3.5 3.5 0 0 0 5 0"></path>
-        </svg>
-      </div>
-    </div>
-    <div id="faceIdStatusTitle" style="font-family:'Orbitron',sans-serif; font-size:16px; font-weight:900; color:#00e5ff; letter-spacing:1.5px; text-shadow:0 0 12px rgba(0,229,255,0.7);">
-      ĐANG NHẬN DIỆN FACE ID...
-    </div>
-    <div id="faceIdStatusSub" style="font-size:13px; color:#94a3b8; margin-top:6px; font-weight:600;">
-      Tự động nhận diện thiết bị & mở khóa Menu VIP
-    </div>
-    <button type="button" onclick="dismissAutoFaceID()" style="margin-top:32px; padding:10px 22px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.22); border-radius:20px; color:#cbd5e1; font-family:'Orbitron',sans-serif; font-size:11.5px; font-weight:700; cursor:pointer;">
-      🔄 Đăng nhập bằng mã Key thủ công
-    </button>
-  </div>
 
   <div class="app-shell">
     <!-- TOP SYSTEM BAR -->
@@ -1254,16 +1166,6 @@
 
       <button class="btn-cyber-primary" id="btnLoginSubmit" onclick="handleLogin()" style="position:relative; z-index:99; cursor:pointer;">
         ⚡ ĐĂNG NHẬP HỆ THỐNG ⚡
-      </button>
-
-      <div style="display:flex; align-items:center; margin: 10px 0 6px; color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: 1px;">
-        <span style="flex:1; height:1px; background: rgba(0, 210, 255, 0.2);"></span>
-        <span style="padding: 0 10px; color: #94a3b8;">HOẶC ĐĂNG NHẬP SINH TRẮC HỌC</span>
-        <span style="flex:1; height:1px; background: rgba(0, 210, 255, 0.2);"></span>
-      </div>
-
-      <button class="btn-faceid" id="btnFaceIDLogin" onclick="handleFaceIDLogin()">
-        👁️ ĐĂNG NHẬP BẰNG FACE ID (IPHONE)
       </button>
 
       <a href="AIMLOCKPLUS.mobileconfig" id="btnInstallAppLogin" download="AIMLOCKPLUS.mobileconfig" onclick="handleProfileDownload(event)" class="btn-cyber-outline">
@@ -1395,19 +1297,6 @@
           </a>
 
 
-          <!-- MỤC LIÊN KẾT FACE ID NHỎ GỌN TINH TẾ -->
-          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <span style="font-size: 20px;">👤</span>
-              <div style="text-align: left;">
-                <div style="font-size: 12px; font-weight: 800; color: #6ee7b7; font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;">FACE ID TỰ ĐỘNG</div>
-                <div id="faceIdStatusSubText" style="font-size: 11px; color: #94a3b8;">Mở app tự quét mặt vào Menu</div>
-              </div>
-            </div>
-            <button id="btnEnrollFaceID" onclick="enrollFaceID()" style="padding: 7px 16px; background: linear-gradient(135deg, #10b981, #06b6d4); border: none; border-radius: 20px; color: #020617; font-family: 'Orbitron', sans-serif; font-size: 10.5px; font-weight: 900; cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s;">
-              LIÊN KẾT
-            </button>
-          </div>
 
           <button onclick="handleLogout()" style="width:100%; padding:13px; background:rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.25); border-radius:14px; color:#cbd5e1; font-family:'Orbitron',sans-serif; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:18px;">
             🔄 ĐỔI KEY KHÁC / ĐĂNG XUẤT
@@ -2113,17 +2002,6 @@
       } else {
         if (modelEl) modelEl.innerText = 'HỆ THỐNG IOS & ANDROID V5';
       }
-      updateFaceIDUI();
-
-      // TỰ ĐỘNG NHẬN DIỆN VÀ QUÉT FACE ID KHI MỞ APP (NHƯ APP NGÂN HÀNG - KHÔNG CẦN CHẠM)
-      if (localStorage.getItem('bl_faceid_enrolled') === 'true') {
-        const savedKey = localStorage.getItem('bl_faceid_key') || localStorage.getItem('builinh_saved_key');
-        if (savedKey) {
-          showAutoFaceIDModal();
-          setTimeout(attemptAutoFaceID, 20);
-          return;
-        }
-      }
     })();
 
     function verifyKey(keyString) {
@@ -2309,157 +2187,9 @@
     }
 
 
-    // ==========================================
-    // TÍNH NĂNG XÁC THỰC FACE ID CHO MỌI DÒNG IPHONE
-    // ==========================================
-    function enrollFaceID(overrideKey) {
-      playBeep(700, 'sine', 0.1);
-      const currentKey = overrideKey || currentLoggedInKey || (localStorage.getItem('builinh_saved_key') || '').trim();
-      if (!currentKey) {
-        alert('⚠️ Vui lòng đăng nhập bằng Key bản quyền trước khi kích hoạt Face ID!');
-        return;
-      }
-
-      // CHỈ LIÊN KẾT 1 LẦN DUY NHẤT: Bấm tiếp sẽ báo đã liên kết rồi
-      if (localStorage.getItem('bl_faceid_enrolled') === 'true') {
-        alert('ℹ️ BẠN ĐÃ LIÊN KẾT FACE ID VỚI KEY NÀY RỒI!\n\nMỗi lần mở ứng dụng, hệ thống sẽ tự động quét khuôn mặt và đăng nhập thẳng vào Menu VIP.');
-        return;
-      }
-
-      // Lưu liên kết Face ID trực tiếp trên máy này (Xóa bỏ hoàn toàn hộp thoại Apple Passkey khó chịu)
-      localStorage.setItem('bl_faceid_enrolled', 'true');
-      localStorage.setItem('bl_faceid_key', currentKey);
-      playLuxuryChime();
-      showToast('✅ Đã kích hoạt Face ID thành công!');
-      updateFaceIDUI();
-      alert('🎉 LIÊN KẾT FACE ID THÀNH CÔNG!\n\nTừ lần sau khi bấm mở App, hệ thống sẽ tự động quét khuôn mặt và đăng nhập thẳng vào Menu VIP mượt mà!');
-    }
-
-
-        let autoFaceIDTriggered = false;
-
-    function showAutoFaceIDModal() {
-      const modal = document.getElementById('faceIdAutoModal');
-      if (modal) modal.style.display = 'flex';
-      const loginBox = document.getElementById('loginBox');
-      if (loginBox) loginBox.classList.add('hidden');
-    }
-
-    function dismissAutoFaceID() {
-      const modal = document.getElementById('faceIdAutoModal');
-      if (modal) modal.style.display = 'none';
-      const loginBox = document.getElementById('loginBox');
-      if (loginBox) loginBox.classList.remove('hidden');
-      autoFaceIDTriggered = true;
-    }
-
-    async function attemptAutoFaceID() {
-      if (autoFaceIDTriggered) return;
-      const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
-      const savedKey = localStorage.getItem('bl_faceid_key') || localStorage.getItem('builinh_saved_key');
-      if (!isEnrolled || !savedKey) return;
-
-      // Ẩn loginBox ngay lập tức và hiện màn hình quét Face ID chuẩn như ngân hàng
-      showAutoFaceIDModal();
-
-      // Tự động quét và đăng nhập
-      await handleFaceIDLogin(true);
-    }
-
-    async function handleFaceIDLogin(isAuto = false) {
-      if (autoFaceIDTriggered && isAuto) return;
-      const savedKey = localStorage.getItem('bl_faceid_key') || localStorage.getItem('builinh_saved_key');
-      const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
-
-      if (!isEnrolled || !savedKey) {
-        if (!isAuto) {
-          alert('ℹ️ CHƯA KÍCH HOẠT FACE ID:\n\nVui lòng đăng nhập bằng Key bản quyền một lần đầu tiên, sau đó ở màn hình VIP bấm "LIÊN KẾT FACE ID" để lưu nhận diện khuôn mặt.');
-        }
-        return;
-      }
-
-      playBeep(850, 'triangle', 0.12);
-
-      // Hiệu ứng nhận diện Face ID mượt mà (Hoàn toàn không dùng popup phiền phức của Apple)
-      const box = document.getElementById('faceIdBox');
-      const iconWrap = document.getElementById('faceIdIconWrap');
-      const title = document.getElementById('faceIdStatusTitle');
-      const sub = document.getElementById('faceIdStatusSub');
-
-      setTimeout(() => {
-        autoFaceIDTriggered = true;
-        playLuxuryChime();
-
-        if (box) {
-          box.style.borderColor = '#10b981';
-          box.style.boxShadow = '0 0 40px rgba(16, 185, 129, 0.7)';
-        }
-        if (iconWrap) {
-          iconWrap.innerHTML = '<svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>';
-        }
-        if (title) {
-          title.innerText = 'XÁC THỰC FACE ID THÀNH CÔNG!';
-          title.style.color = '#10b981';
-        }
-        if (sub) {
-          sub.innerText = 'Đang mở khóa Menu VIP...';
-          sub.style.color = '#6ee7b7';
-        }
-
-        setTimeout(() => {
-          dismissAutoFaceID();
-          showToast('👁️ Face ID chính chủ! Đã mở khóa Menu VIP');
-          const keyInp = document.getElementById('keyInput');
-          if (keyInp) keyInp.value = savedKey;
-          handleLogin(savedKey);
-        }, 400);
-      }, isAuto ? 500 : 350);
-    }
-
-    function updateFaceIDUI() {
-      const isEnrolled = localStorage.getItem('bl_faceid_enrolled') === 'true';
-      const btnEnroll = document.getElementById('btnEnrollFaceID');
-      const subText = document.getElementById('faceIdStatusSubText');
-      const btnLoginFace = document.getElementById('btnFaceIDLogin');
-
-      if (isEnrolled) {
-        if (btnEnroll) {
-          btnEnroll.innerText = 'ĐÃ BẬT ✓';
-          btnEnroll.style.background = 'rgba(16, 185, 129, 0.18)';
-          btnEnroll.style.color = '#34d399';
-          btnEnroll.style.border = '1px solid #10b981';
-        }
-        if (subText) {
-          subText.innerText = 'Đã kích hoạt tự quét khi mở app';
-          subText.style.color = '#34d399';
-        }
-        if (btnLoginFace) {
-          btnLoginFace.innerHTML = '👤 TỰ ĐỘNG QUÉT FACE ID (ĐÃ BẬT)';
-        }
-      } else {
-        if (btnEnroll) {
-          btnEnroll.innerText = 'LIÊN KẾT';
-          btnEnroll.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
-          btnEnroll.style.color = '#020617';
-          btnEnroll.style.border = 'none';
-        }
-        if (subText) {
-          subText.innerText = 'Mở app tự quét mặt vào Menu';
-          subText.style.color = '#94a3b8';
-        }
-        if (btnLoginFace) {
-          btnLoginFace.innerHTML = '👤 ĐĂNG NHẬP BẰNG FACE ID';
-        }
-      }
-    }
-
     function handleLogout() {
       playBeep(450, 'sine', 0.1);
-      autoFaceIDTriggered = true; // Ngăn tự động đăng nhập lại sau khi chủ động bấm Đăng Xuất
-      localStorage.removeItem('bl_faceid_enrolled'); // Xóa liên kết Face ID để người dùng có thể đổi Key mới
-      localStorage.removeItem('bl_faceid_key');
       localStorage.removeItem('builinh_saved_key');
-      updateFaceIDUI();
       document.getElementById('menuBox').classList.add('hidden');
       document.getElementById('loginBox').classList.remove('hidden');
       const keyInp = document.getElementById('keyInput');
