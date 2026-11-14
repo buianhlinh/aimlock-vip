@@ -32,9 +32,12 @@ jobs:
 
       - name: Compile Android APK
         run: |
-          set -e
           cd android
-          gradle assembleDebug --stacktrace --no-daemon
+          gradle assembleDebug --no-daemon --stacktrace > build_output.log 2>&1 || {
+            echo "=== BUILD FAILED: LAST 100 LINES OF LOG ==="
+            tail -n 100 build_output.log
+            exit 1
+          }
           
           APK_PATH=$(find app/build/outputs/apk -name "*.apk" | head -n 1)
           if [ -z "$APK_PATH" ]; then
