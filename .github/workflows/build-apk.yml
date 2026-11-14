@@ -25,29 +25,35 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Accept Android SDK Licenses
+        run: |
+          mkdir -p "$ANDROID_HOME/licenses" || true
+          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
+          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+          echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "$ANDROID_HOME/licenses/android-sdk-license"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.5
 
       - name: Generate Release Keystore & Compile APK
         run: |
           set -e
-          echo "=== Generating Release Keystore ==="
           cd android
+          echo "=== Generating Release Keystore ==="
           keytool -genkeypair -v -keystore app/keystore.jks \
             -alias nhetampro -keyalg RSA -keysize 2048 -validity 10000 \
             -storepass buianhlinh2026 -keypass buianhlinh2026 \
             -dname "CN=Bui Anh Linh, OU=NheTamPro, O=BuiLinhVIP, L=Hanoi, C=VN"
           
           echo "=== Building Release APK ==="
-          gradle wrapper --gradle-version 8.5
-          ./gradlew assembleRelease --no-daemon
+          gradle assembleRelease --no-daemon
           
-          APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          APK_PATH=$(find app/build/outputs/apk -name "*.apk" | head -n 1)
           if [ -z "$APK_PATH" ]; then
-            APK_PATH=$(find app/build/outputs/apk -name "*.apk" | head -n 1)
+            echo "ERROR: No APK found after build!"
+            exit 1
           fi
           echo "Built APK located at: $APK_PATH"
           cp "$APK_PATH" ../NheTamPro_V5.apk
