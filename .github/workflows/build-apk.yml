@@ -34,10 +34,6 @@ jobs:
         run: |
           set -e
           cd android
-          echo "=== Available Android SDK Platforms ==="
-          ls -la "$ANDROID_HOME/platforms" || true
-          
-          echo "=== Building APK ==="
           gradle assembleDebug --stacktrace --no-daemon
           
           APK_PATH=$(find app/build/outputs/apk -name "*.apk" | head -n 1)

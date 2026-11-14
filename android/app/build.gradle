@@ -14,24 +14,13 @@ android {
         versionName "5.0.0"
     }
 
-    signingConfigs {
-        release {
-            storeFile file("keystore.jks")
-            storePassword "buianhlinh2026"
-            keyAlias "nhetampro"
-            keyPassword "buianhlinh2026"
-        }
-    }
-
     buildTypes {
         release {
-            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            signingConfig signingConfigs.release
+            minifyEnabled false
         }
     }
 
