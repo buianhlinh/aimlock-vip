@@ -25,30 +25,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Accept Android SDK Licenses
-        run: |
-          mkdir -p "$ANDROID_HOME/licenses" || true
-          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
-          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-          echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "$ANDROID_HOME/licenses/android-sdk-license"
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 8.5
 
-      - name: Generate Release Keystore & Compile APK
+      - name: Compile Android APK
         run: |
           set -e
           cd android
-          echo "=== Generating Release Keystore ==="
-          keytool -genkeypair -v -keystore app/keystore.jks \
-            -alias nhetampro -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass buianhlinh2026 -keypass buianhlinh2026 \
-            -dname "CN=Bui Anh Linh, OU=NheTamPro, O=BuiLinhVIP, L=Hanoi, C=VN"
+          echo "=== Available Android SDK Platforms ==="
+          ls -la "$ANDROID_HOME/platforms" || true
           
-          echo "=== Building Release APK ==="
-          gradle assembleRelease --no-daemon
+          echo "=== Building APK ==="
+          gradle assembleDebug --stacktrace --no-daemon
           
           APK_PATH=$(find app/build/outputs/apk -name "*.apk" | head -n 1)
           if [ -z "$APK_PATH" ]; then
