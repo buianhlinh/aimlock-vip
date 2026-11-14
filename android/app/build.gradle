@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.buianhlinh.nhetampro'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.buianhlinh.nhetampro"
+        minSdk 21
+        targetSdk 34
+        versionCode 5
+        versionName "5.0.0"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("keystore.jks")
+            storePassword "buianhlinh2026"
+            keyAlias "nhetampro"
+            keyPassword "buianhlinh2026"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+}

@@ -1,0 +1,70 @@
+name: Build Nhe Tam Pro Android APK
+
+on:
+  push:
+    paths:
+      - 'android/**'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Generate Release Keystore & Compile APK
+        run: |
+          set -e
+          echo "=== Generating Release Keystore ==="
+          cd android
+          keytool -genkeypair -v -keystore app/keystore.jks \
+            -alias nhetampro -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass buianhlinh2026 -keypass buianhlinh2026 \
+            -dname "CN=Bui Anh Linh, OU=NheTamPro, O=BuiLinhVIP, L=Hanoi, C=VN"
+          
+          echo "=== Building Release APK ==="
+          gradle wrapper --gradle-version 8.5
+          ./gradlew assembleRelease --no-daemon
+          
+          APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            APK_PATH=$(find app/build/outputs/apk -name "*.apk" | head -n 1)
+          fi
+          echo "Built APK located at: $APK_PATH"
+          cp "$APK_PATH" ../NheTamPro_V5.apk
+          cd ..
+          ls -lh NheTamPro_V5.apk
+
+      - name: Commit Client APK to Repository
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main || true
+          git add NheTamPro_V5.apk
+          git commit -m "Update compiled NheTamPro_V5.apk" || echo "Already committed"
+          git push
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android_Client_APK
+          path: NheTamPro_V5.apk
