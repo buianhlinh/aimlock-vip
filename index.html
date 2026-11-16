@@ -2815,6 +2815,37 @@
         if (loadingEl) loadingEl.innerText = '3D ERROR';
       }
     })();
+
+    // ===== AUTO UPDATE - Tu dong cap nhat khong can xoa cache =====
+    (function () {
+      const CURRENT_BUILD = '1794700000';
+      const CHECK_INTERVAL = 60000; // Kiem tra moi 60 giay
+
+      function checkForUpdate() {
+        fetch(window.location.href + '?_=' + Date.now(), {
+          method: 'GET',
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        })
+        .then(res => res.text())
+        .then(html => {
+          const match = html.match(/BUILD_TAG:\s*(\d+)/);
+          if (match && match[1] && match[1] !== CURRENT_BUILD) {
+            // Co ban moi - tu dong reload (localStorage/ma may van giu nguyen)
+            console.log('[AutoUpdate] Ban moi phat hien, dang cap nhat...');
+            window.location.reload(true);
+          }
+        })
+        .catch(() => {}); // Im lang neu loi mang
+      }
+
+      // Bat dau kiem tra sau 10 giay dau, roi cu 60 giay 1 lan
+      setTimeout(() => {
+        checkForUpdate();
+        setInterval(checkForUpdate, CHECK_INTERVAL);
+      }, 10000);
+    })();
+    // ===== END AUTO UPDATE =====
   </script>
 </body>
 </html>
