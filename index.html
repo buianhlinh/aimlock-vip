@@ -1979,7 +1979,24 @@
     });
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
+        navigator.serviceWorker.register('sw.js').then((reg) => {
+          // Kiem tra cap nhat ngay lap tuc
+          reg.update();
+          // Kiem tra lai moi 60 giay
+          setInterval(() => { reg.update(); }, 60000);
+          // Khi co SW moi dang cho kich hoat
+          reg.addEventListener('updatefound', () => {
+            const newSW = reg.installing;
+            if (newSW) {
+              newSW.addEventListener('statechange', () => {
+                if (newSW.state === 'activated') {
+                  // SW moi da kich hoat - reload ngay
+                  window.location.reload(true);
+                }
+              });
+            }
+          });
+        }).catch(() => {});
       });
     }
 
