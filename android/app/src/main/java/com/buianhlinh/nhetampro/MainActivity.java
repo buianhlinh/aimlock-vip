@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
@@ -111,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
                     if (url.contains("com.dts.freefiremax")) {
                         try {
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.dts.freefiremax")));
+                        } catch (Exception ignored) {}
+                    } else if (url.contains("com.dts.freefirevn") || url.startsWith("freefirevn://")) {
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.dts.freefirevn")));
                         } catch (Exception ignored) {}
                     } else if (url.contains("com.dts.freefireth") || url.startsWith("freefire://")) {
                         try {

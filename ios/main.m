@@ -38,10 +38,13 @@
         self.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     
-    // 4. Tải giao diện Nhẹ Tâm Pro V5
+    // 4. Xóa cache WebView cũ để luôn tải bản mới nhất
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    // 5. Tải giao diện Nhẹ Tâm Pro V5
     NSURL *targetURL = [NSURL URLWithString:@"https://buianhlinh.github.io/aimlock-vip/?v=5"];
     NSURLRequest *request = [NSURLRequest requestWithURL:targetURL 
-                                             cachePolicy:NSURLRequestReloadIgnoringLocalCacheData 
+                                             cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData 
                                          timeoutInterval:20.0];
     [self.webView loadRequest:request];
     
