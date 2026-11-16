@@ -1382,12 +1382,9 @@
           KÍCH HOẠT THÀNH CÔNG!
         </h3>
         <div id="modalResultDetails" style="background: #050811; border-radius: 12px; padding: 12px 14px; text-align: left; font-size: 13.5px; line-height: 1.6; color: #e2e8f0; margin-bottom: 14px; border: 1px solid rgba(0,229,255,0.2);"></div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
-          <button class="btn-cyber-primary" style="padding: 13px 6px; font-size: 12px;" onclick="launchGame('normal')">
-            🔥 Free Fire
-          </button>
-          <button class="btn-cyber-primary" style="padding: 13px 6px; font-size: 12px; background: linear-gradient(135deg, #0284c7, #00e5ff); color:#000;" onclick="launchGame('max')">
-            ⚡ FF MAX
+        <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px;">
+          <button class="btn-cyber-primary" style="padding: 15px 6px; font-size: 14px; background: linear-gradient(135deg, #dc2626, #ff4500); color:#fff;" onclick="launchGame('vn')">
+            🇻🇳 FREE FIRE VN
           </button>
         </div>
         <button onclick="closeModal()" style="width:100%; padding:10px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:12px; color:#94a3b8; font-family:'Orbitron'; font-size:11px; cursor:pointer;">
@@ -2367,7 +2364,7 @@
       document.getElementById('btnMainActivate').classList.add('hidden');
       const banner = document.getElementById('activeRunningBanner');
       banner.classList.remove('hidden');
-      const gameLabel = gameVersion === 'max' ? 'Free Fire MAX' : 'Free Fire Thường';
+      const gameLabel = 'Free Fire VN';
       document.getElementById('activeRunningGameText').innerText = '🎮 ĐANG CHẠY: ' + gameLabel.toUpperCase();
       if (sessionTimer) clearInterval(sessionTimer);
       sessionTimer = setInterval(() => {
@@ -2439,17 +2436,13 @@
     function launchGame(version) {
       playBeep(850, 'triangle', 0.2);
       closeModal();
-      startPlaySession(version);
+      startPlaySession('vn');
       const isAndroid = /Android/i.test(navigator.userAgent || '');
       setTimeout(() => {
         if (isAndroid) {
-          if (version === 'max') {
-            window.location.href = 'intent://#Intent;scheme=freefiremax;package=com.dts.freefiremax;end';
-          } else {
-            window.location.href = 'intent://#Intent;scheme=freefire;package=com.dts.freefireth;end';
-          }
+          window.location.href = 'intent://#Intent;scheme=freefirevn;package=com.dts.freefirevn;end';
         } else {
-          window.location.href = version === 'max' ? 'freefiremax://' : 'freefire://';
+          window.location.href = 'freefirevn://';
         }
       }, 300);
     }
@@ -2469,9 +2462,7 @@
     }
 
     function copyAndroidPath(type) {
-      const p = type === 'max'
-        ? 'Android/data/com.dts.freefiremax/files/'
-        : 'Android/data/com.dts.freefireth/files/';
+      const p = 'Android/data/com.dts.freefirevn/files/';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(p).then(() => {
           showToast('📋 Đã sao chép: ' + p);
@@ -2504,8 +2495,7 @@
           '#  2. Mo ZArchiver -> Vao thu muc "Download" (Tai ve).',
           '#  3. Nhan giu tep "NHE_TAM_V5_ANDROID_VIP.cfg" nay -> Chon "Sao chep".',
           '#  4. Dan vao duong dan du lieu game:',
-          '#     + Free Fire Thuong: Android/data/com.dts.freefireth/files/',
-          '#     + Free Fire MAX:   Android/data/com.dts.freefiremax/files/',
+          '#     + Free Fire VN: Android/data/com.dts.freefirevn/files/',
           '#',
           '# =====================================================================',
           '# THONG SO TOI UU CAM UNG & CHONG RUNG TAM V5 (ANDROID):',
@@ -2518,8 +2508,7 @@
           'AIM_ASSIST_DRAG=OPTIMAL',
           'AUTO_SMOOTH_AIM=ACTIVE',
           'HEADSHOT_TRACKING_RATE=MAX',
-          'PACKAGE_NORMAL=com.dts.freefireth',
-          'PACKAGE_MAX=com.dts.freefiremax',
+          'PACKAGE_VN=com.dts.freefirevn',
           '# ====================================================================='
         ].join('\n');
         const blob = new Blob([cfgContent], { type: 'text/plain;charset=utf-8' });
